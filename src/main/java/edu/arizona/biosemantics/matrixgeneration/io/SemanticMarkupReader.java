@@ -2,6 +2,7 @@ package edu.arizona.biosemantics.matrixgeneration.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -77,10 +78,11 @@ public class SemanticMarkupReader implements Reader {
 		XPathExpression<Element> sourceXpath = 
 				xpathFactory.compile("/treatment/meta/source", Filters.element());
 		XPathExpression<Element> taxonIdentificationXpath = 
-				xpathFactory.compile("/treatment/taxon_identification[@status=ACCEPTED]/taxon_name", Filters.element());
+				xpathFactory.compile("/treatment/taxon_identification[@status='ACCEPTED']/taxon_name", Filters.element());
 		XPathExpression<Element> statementXpath = 
-				xpathFactory.compile("/treatment/description[@type=morphology]/statement", Filters.element());
+				xpathFactory.compile("/treatment/description[@type='morphology']/statement", Filters.element());
 		
+		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		for(File file : inputDirectory.listFiles()) {
 			if(file.isFile()) {
 				Taxon taxon = new Taxon();
@@ -92,14 +94,19 @@ public class SemanticMarkupReader implements Reader {
 				taxon.setAuthor(author);
 				taxon.setYear(date);
 				
-				LinkedList<RankData> rankData = new LinkedList<RankData>();
+				LinkedList<RankData> rankDatas = new LinkedList<RankData>();
 				for(Element taxonName : taxonIdentificationXpath.evaluate(document)) {
 					String rank = taxonName.getAttributeValue("rank");
 					String authority = taxonName.getAttributeValue("authority");
 					String name = taxonName.getText();
-					rankData.add(new RankData(authority, Rank.valueOf(rank), name));
+					RankData rankData = new RankData(authority, Rank.valueOf(rank.toUpperCase()), name);
+					if(!rankDataInstances.containsKey(rankData))
+						rankDataInstances.put(rankData, rankData);
+					rankDatas.add(rankDataInstances.get(rankData));
 				}
-				TaxonName taxonName = new TaxonName(rankData, author, date);
+				Collections.sort(rankDatas);
+				
+				TaxonName taxonName = new TaxonName(rankDatas, author, date);
 				taxonNames.add(taxonName);
 				
 				StringBuilder descriptionBuilder = new StringBuilder();
@@ -114,6 +121,7 @@ public class SemanticMarkupReader implements Reader {
 				}
 				taxon.setDescription(descriptionBuilder.toString().trim());
 				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
+				taxon.setRankData(taxonName.getRankData().getLast());
 			}
 		}
 	}

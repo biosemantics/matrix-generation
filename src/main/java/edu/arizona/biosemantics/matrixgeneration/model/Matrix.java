@@ -8,19 +8,24 @@ public class Matrix {
 	/* contains the root taxa */
 	private List<Taxon> taxa;
 	/* all characters */
-	private Set<Character> character;
+	private Set<Character> characters;
 	
-	public Matrix(List<Taxon> taxa, Set<Character> character) {
+	public Matrix(List<Taxon> taxa, Set<Character> characters) {
 		this.taxa = taxa;
-		this.character = character;
+		this.characters = characters;
 	}
 
 	public List<Taxon> getTaxa() {
 		return taxa;
 	}
 
-	public Set<Character> getCharacter() {
-		return character;
+	public Set<Character> getCharacters() {
+		return characters;
+	}
+	
+	@Override
+	public String toString() {
+		return "taxa: " + taxa + "\ncharacters: " + characters;
 	}
 		
 }

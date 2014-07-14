@@ -2,15 +2,20 @@ package edu.arizona.biosemantics.matrixgeneration.transform;
 
 import java.util.List;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 
+/**
+ * 5. allow the user to decide whether the character states of a higher taxon should be inherited by the lower taxa.
+ * @author rodenhausen
+ */
 public class InheritanceTransformer implements Transformer {
 
 	@Override
-	public void transform(List<Taxon> taxa) {
-		for(Taxon taxon : taxa) {
+	public void transform(Matrix matrix) {
+		for(Taxon taxon : matrix.getTaxa()) {
 			inheritCharacterValues(taxon);
 		}
 	}

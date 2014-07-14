@@ -37,5 +37,10 @@ public class Structure {
 	public void setName(String value) {
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		return name + ": " + values;
+	}
 
 }

@@ -56,12 +56,12 @@ public class Taxon {
 		}
 	}
 
-	private String name;
 	private String author;
 	private String year;
 	
-	public Rank rank;
+	private RankData rankData;
 	public LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
+	
 	private LinkedHashMap<String, Structure> structures = new LinkedHashMap<String, Structure>();
 	
 	private String description;
@@ -70,20 +70,12 @@ public class Taxon {
 		return children;
 	}
 	
-	public Rank getRank() {
-		return rank;
+	public RankData getRankData() {
+		return rankData;
 	}
 
-	public void setRank(Rank rank) {
-		this.rank = rank;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setRankData(RankData rankData) {
+		this.rankData = rankData;
 	}
 
 	public String getAuthor() {
@@ -128,6 +120,11 @@ public class Taxon {
 
 	public void addChild(Taxon taxon) {
 		children.add(taxon);
+	}
+	
+	@Override
+	public String toString() {
+		return rankData + " by " + author + " in " + year + ": " + structures + "\nchildren: " + children;
 	}
 
 }
