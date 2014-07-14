@@ -1,11 +1,9 @@
 package edu.arizona.biosemantics.matrixgeneration.io;
 
-import java.util.List;
-
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 
 public interface Writer {
 
-	public void write(List<Taxon> taxa) throws Exception;
+	public void write(Matrix matrix) throws Exception;
 	
 }

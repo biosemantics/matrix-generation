@@ -34,4 +34,8 @@ public class Structure {
 		return name;
 	}
 
+	public void setName(String value) {
+		this.name = name;
+	}
+
 }

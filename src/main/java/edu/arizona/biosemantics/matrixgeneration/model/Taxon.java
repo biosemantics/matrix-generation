@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class Taxon {
-
-	public enum Level {
+	
+	public enum Rank {
 		LIFE(0), SUPERDOMAIN(1), DOMAIN(1), SUBDOMAIN(2), SUPERKINGDOM(3), KINGDOM(
 				4), SUBKINGDOM(5), SUPERPHYLUM(6), PHYLUM(7), SUBPHYLUM(8), SUPERCLASS(
 				9), CLASS(10), SUBCLASS(11), SUPERORDER(12), ORDER(13), SUBORDER(
@@ -25,10 +25,10 @@ public class Taxon {
 
 		private int id;
 
-		Level() {
+		Rank() {
 		}
 
-		Level(int id) {
+		Rank(int id) {
 			this.id = id;
 		}
 
@@ -36,23 +36,23 @@ public class Taxon {
 			return id;
 		}
 
-		public static boolean isValidParentChild(Level parent, Level child) {
-			int parentLevelId = parent == null ? -1 : parent.getId();
-			int childLevelId = child == null ? -1 : child.getId();
+		public static boolean isValidParentChild(Rank parent, Rank child) {
+			int parentRankId = parent == null ? -1 : parent.getId();
+			int childRankId = child == null ? -1 : child.getId();
 			// special case group allows children of itself as it is the lowest
 			// rank
 			if (parent != null && child != null && parent.equals(UNRANKED)
 					&& child.equals(UNRANKED))
 				return true;
-			return parentLevelId < childLevelId;
+			return parentRankId < childRankId;
 		}
 
-		public static boolean equalOrBelowGenus(Level level) {
-			return level.getId() >= GENUS.getId();
+		public static boolean equalOrBelowGenus(Rank rank) {
+			return rank.getId() >= GENUS.getId();
 		}
 
-		public static boolean aboveGenus(Level level) {
-			return level.getId() < GENUS.getId();
+		public static boolean aboveGenus(Rank rank) {
+			return rank.getId() < GENUS.getId();
 		}
 	}
 
@@ -60,7 +60,7 @@ public class Taxon {
 	private String author;
 	private String year;
 	
-	public Level level;
+	public Rank rank;
 	public LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	private LinkedHashMap<String, Structure> structures = new LinkedHashMap<String, Structure>();
 	
@@ -69,17 +69,13 @@ public class Taxon {
 	public LinkedHashSet<Taxon> getChildren() {
 		return children;
 	}
-
-	public void setChildren(LinkedHashSet<Taxon> children) {
-		this.children = children;
+	
+	public Rank getRank() {
+		return rank;
 	}
 
-	public Level getLevel() {
-		return level;
-	}
-
-	public void setLevel(Level level) {
-		this.level = level;
+	public void setRank(Rank rank) {
+		this.rank = rank;
 	}
 
 	public String getName() {
@@ -128,6 +124,10 @@ public class Taxon {
 
 	public Structure getStructure(String name) {
 		return structures.get(name);
+	}
+
+	public void addChild(Taxon taxon) {
+		children.add(taxon);
 	}
 
 }
