@@ -24,6 +24,11 @@ public class InheritanceTransformer implements Transformer {
 		//propagate character values to children 
 		//possibly need to clone structure/value if they subsequently could be modified separately
 		for(Structure structure : taxon.getStructures()) {
+			if(structure.getCharacters().isEmpty()) {
+				for(Taxon child : taxon.getChildren()) 
+					if(!child.containsStructure(structure.getName()))
+						child.addStructure(structure);
+			}
 			for(Character character : structure.getCharacters()) {		
 				for(Taxon child : taxon.getChildren()) {
 					if(child.containsStructure(structure.getName())) {

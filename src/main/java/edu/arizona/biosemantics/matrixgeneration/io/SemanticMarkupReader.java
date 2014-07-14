@@ -21,6 +21,7 @@ import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.Relation;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
@@ -40,9 +41,14 @@ public class SemanticMarkupReader implements Reader {
 	@Override
 	public Matrix read() throws Exception {
 		Set<Character> characters = new HashSet<Character>();
+		
+		Map<String, Structure> idStructureMap = new HashMap<String, Structure>();
+		Map<String, Relation> idRelationMap = new HashMap<String, Relation>();
+		
 		List<TaxonName> taxonNames = new LinkedList<TaxonName>();
 		Map<RankData, Taxon> rankTaxaMap = new HashMap<RankData, Taxon>();
-		readPlainData(characters, taxonNames, rankTaxaMap);
+		
+		readPlainData(idStructureMap, idRelationMap, characters, taxonNames, rankTaxaMap);
 		List<Taxon> taxa = createTaxaHierarchy(taxonNames, rankTaxaMap);
 		return new Matrix(taxa, characters);
 	}
@@ -72,7 +78,7 @@ public class SemanticMarkupReader implements Reader {
 		return rootTaxa;
 	}
 
-	private void readPlainData(Set<Character> characters, List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap) throws JDOMException, IOException {
+	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Set<Character> characters, List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap) throws JDOMException, IOException {
 		SAXBuilder saxBuilder = new SAXBuilder();
 		XPathFactory xpathFactory = XPathFactory.instance();
 		XPathExpression<Element> sourceXpath = 
@@ -116,7 +122,12 @@ public class SemanticMarkupReader implements Reader {
 					
 					List<Element> structures = statement.getChildren("structure");
 					for(Element structure : structures) {
-						taxon.addStructure(createStructure(structure, characters));
+						taxon.addStructure(createStructure(structure, idStructureMap, characters));
+					}
+					
+					List<Element> relations = statement.getChildren("relation");
+					for(Element relation : relations) {
+						taxon.addRelation(createRelation(relation, idStructureMap, idRelationMap));
 					}
 				}
 				taxon.setDescription(descriptionBuilder.toString().trim());
@@ -126,9 +137,28 @@ public class SemanticMarkupReader implements Reader {
 		}
 	}
 
-	private Structure createStructure(Element structure, Set<Character> characters) {
+	private Relation createRelation(Element relation, Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap) {
+		Relation result = new Relation();
+		String id = relation.getAttributeValue("id");
+		idRelationMap.put(id, result);
+		String fromId = relation.getAttributeValue("from");
+		String toId = relation.getAttributeValue("to");
+		Structure fromStructure = idStructureMap.get(fromId);
+		Structure toStructure = idStructureMap.get(toId);
+		result.setFrom(fromStructure);
+		result.setTo(toStructure);
+		String name = relation.getAttributeValue("name");
+		String negated = relation.getAttributeValue("negation");
+		result.setName(name);
+		result.setNegated(Boolean.valueOf(negated));
+		return result;
+	}
+
+	private Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Set<Character> characters) {
 		Structure result = new Structure();
 		result.setName(structure.getAttributeValue("name"));
+		String id = structure.getAttributeValue("id");
+		idStructureMap.put(id, result);
 		
 		for(Element characterElement : structure.getChildren("character")) {
 			String modifier = characterElement.getAttributeValue("modifier");

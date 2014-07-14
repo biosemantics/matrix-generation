@@ -23,6 +23,8 @@ public class Main {
 		Transformer transformer = new InheritanceTransformer();
 		transformer.transform(matrix);
 		
+		System.out.println("------ after transform -------");
+		System.out.println(matrix.toString());
 		Writer writer = new CSVWriter();
 		writer.write(matrix);
 	}

@@ -63,6 +63,7 @@ public class Taxon {
 	public LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
 	private LinkedHashMap<String, Structure> structures = new LinkedHashMap<String, Structure>();
+	private LinkedHashMap<Relation, Relation> relations = new LinkedHashMap<Relation, Relation>();
 	
 	private String description;
 	
@@ -125,6 +126,22 @@ public class Taxon {
 	@Override
 	public String toString() {
 		return rankData + " by " + author + " in " + year + ": " + structures + "\nchildren: " + children;
+	}
+
+	public void addRelation(Relation relation) {
+		relations.put(relation, relation);
+	}
+	
+	public Collection<Relation> getRelations() {
+		return relations.values();
+	}
+	
+	public Relation getRelation(Relation relation) {
+		return relations.get(relation);
+	}
+	
+	public boolean containsRelation(Relation relation) {
+		return this.relations.containsKey(relation);
 	}
 
 }
