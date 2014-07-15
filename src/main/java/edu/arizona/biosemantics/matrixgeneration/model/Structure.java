@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class Structure {
+public class Structure implements Cloneable {
 
 	private String name;
 	private LinkedHashMap<Character, Value> values = new LinkedHashMap<Character, Value>();
@@ -14,7 +14,7 @@ public class Structure {
 		return values.containsKey(character);
 	}
 
-	public Value getValue(Character character) {
+	public Value getCharacterValue(Character character) {
 		return values.get(character);
 	}
 
@@ -22,7 +22,7 @@ public class Structure {
 		return values.put(character, value);
 	}
 
-	public Value remove(Character character) {
+	public Value removeCharacterValue(Character character) {
 		return values.remove(character);
 	}
 
@@ -41,6 +41,20 @@ public class Structure {
 	@Override
 	public String toString() {
 		return name + ": " + values;
+	}
+
+	public boolean containsCharacterValue(Character character) {
+		return values.containsKey(character);
+	}
+	
+	@Override
+	public Structure clone() {
+		Structure structure = new Structure();
+		structure.setName(this.name);
+		for(Character character : values.keySet()) {
+			structure.setCharacterValue(character, this.getCharacterValue(character).clone());
+		}
+		return structure;
 	}
 
 }

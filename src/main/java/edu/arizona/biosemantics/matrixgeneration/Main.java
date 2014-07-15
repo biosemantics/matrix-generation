@@ -25,7 +25,7 @@ public class Main {
 		
 		System.out.println("------ after transform -------");
 		System.out.println(matrix.toString());
-		Writer writer = new CSVWriter();
+		Writer writer = new CSVWriter(new File("matrix.csv"));
 		writer.write(matrix);
 	}
 	

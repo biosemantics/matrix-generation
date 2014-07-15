@@ -33,6 +33,14 @@ import edu.arizona.biosemantics.matrixgeneration.model.Value;
 public class SemanticMarkupReader implements Reader {
 	
 	private File inputDirectory;
+	private SAXBuilder saxBuilder = new SAXBuilder();
+	private XPathFactory xpathFactory = XPathFactory.instance();
+	private XPathExpression<Element> sourceXpath = 
+			xpathFactory.compile("/treatment/meta/source", Filters.element());
+	private XPathExpression<Element> taxonIdentificationXpath = 
+			xpathFactory.compile("/treatment/taxon_identification[@status='ACCEPTED']/taxon_name", Filters.element());
+	private XPathExpression<Element> statementXpath = 
+			xpathFactory.compile("/treatment/description[@type='morphology']/statement", Filters.element());
 
 	public SemanticMarkupReader(File inputDirectory) {
 		this.inputDirectory = inputDirectory;
@@ -49,8 +57,8 @@ public class SemanticMarkupReader implements Reader {
 		Map<RankData, Taxon> rankTaxaMap = new HashMap<RankData, Taxon>();
 		
 		readPlainData(idStructureMap, idRelationMap, characters, taxonNames, rankTaxaMap);
-		List<Taxon> taxa = createTaxaHierarchy(taxonNames, rankTaxaMap);
-		return new Matrix(taxa, characters);
+		List<Taxon> rootTaxa = createTaxaHierarchy(taxonNames, rankTaxaMap);
+		return new Matrix(rootTaxa, characters);
 	}
 
 	private List<Taxon> createTaxaHierarchy(List<TaxonName> taxonNames, 
@@ -78,63 +86,67 @@ public class SemanticMarkupReader implements Reader {
 		return rootTaxa;
 	}
 
-	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Set<Character> characters, List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap) throws JDOMException, IOException {
-		SAXBuilder saxBuilder = new SAXBuilder();
-		XPathFactory xpathFactory = XPathFactory.instance();
-		XPathExpression<Element> sourceXpath = 
-				xpathFactory.compile("/treatment/meta/source", Filters.element());
-		XPathExpression<Element> taxonIdentificationXpath = 
-				xpathFactory.compile("/treatment/taxon_identification[@status='ACCEPTED']/taxon_name", Filters.element());
-		XPathExpression<Element> statementXpath = 
-				xpathFactory.compile("/treatment/description[@type='morphology']/statement", Filters.element());
-		
+	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Set<Character> characters, List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		for(File file : inputDirectory.listFiles()) {
 			if(file.isFile()) {
-				Taxon taxon = new Taxon();
-				
 				Document document = saxBuilder.build(file);
 				Element sourceElement = sourceXpath.evaluateFirst(document);
-				String author = sourceElement.getChild("author").getText();
-				String date = sourceElement.getChild("date").getText();
-				taxon.setAuthor(author);
-				taxon.setYear(date);
+				String author = sourceElement.getChildText("author");
+				String date = sourceElement.getChildText("date");
 				
-				LinkedList<RankData> rankDatas = new LinkedList<RankData>();
-				for(Element taxonName : taxonIdentificationXpath.evaluate(document)) {
-					String rank = taxonName.getAttributeValue("rank");
-					String authority = taxonName.getAttributeValue("authority");
-					String name = taxonName.getText();
-					RankData rankData = new RankData(authority, Rank.valueOf(rank.toUpperCase()), name);
-					if(!rankDataInstances.containsKey(rankData))
-						rankDataInstances.put(rankData, rankData);
-					rankDatas.add(rankDataInstances.get(rankData));
-				}
-				Collections.sort(rankDatas);
-				
+				LinkedList<RankData> rankDatas = createRankDatas(document, rankDataInstances);
 				TaxonName taxonName = new TaxonName(rankDatas, author, date);
 				taxonNames.add(taxonName);
 				
-				StringBuilder descriptionBuilder = new StringBuilder();
-				for (Element statement : statementXpath.evaluate(document)) {
-					String text = statement.getChild("text").getText();
-					descriptionBuilder.append(text + ". ");
-					
-					List<Element> structures = statement.getChildren("structure");
-					for(Element structure : structures) {
-						taxon.addStructure(createStructure(structure, idStructureMap, characters));
-					}
-					
-					List<Element> relations = statement.getChildren("relation");
-					for(Element relation : relations) {
-						taxon.addRelation(createRelation(relation, idStructureMap, idRelationMap));
-					}
-				}
-				taxon.setDescription(descriptionBuilder.toString().trim());
-				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
-				taxon.setRankData(taxonName.getRankData().getLast());
+				RankData rankData = (taxonName.getRankData().getLast());
+				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, rankData);
+				rankTaxaMap.put(rankData, taxon);
 			}
 		}
+	}
+
+	private Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
+			Map<String, Relation> idRelationMap, Set<Character> characters, RankData rankData) {
+		Element sourceElement = sourceXpath.evaluateFirst(document);
+		String author = sourceElement.getChildText("author");
+		String date = sourceElement.getChildText("date");
+		Taxon taxon = new Taxon();
+		StringBuilder descriptionBuilder = new StringBuilder();
+		for (Element statement : statementXpath.evaluate(document)) {
+			String text = statement.getChild("text").getText();
+			descriptionBuilder.append(text + ". ");
+			
+			List<Element> structures = statement.getChildren("structure");
+			for(Element structure : structures) {
+				taxon.addStructure(createStructure(structure, idStructureMap, characters));
+			}
+			
+			List<Element> relations = statement.getChildren("relation");
+			for(Element relation : relations) {
+				taxon.addRelation(createRelation(relation, idStructureMap, idRelationMap));
+			}
+		}
+		taxon.setDescription(descriptionBuilder.toString().trim());
+		taxon.setAuthor(author);
+		taxon.setYear(date);
+		taxon.setRankData(rankData);
+		return taxon;
+	}
+
+	private LinkedList<RankData> createRankDatas(Document document, HashMap<RankData, RankData> rankDataInstances) {
+		LinkedList<RankData> rankDatas = new LinkedList<RankData>();
+		for(Element taxonName : taxonIdentificationXpath.evaluate(document)) {
+			String rank = taxonName.getAttributeValue("rank");
+			String authority = taxonName.getAttributeValue("authority");
+			String name = taxonName.getText();
+			RankData rankData = new RankData(authority, Rank.valueOf(rank.toUpperCase()), name);
+			if(!rankDataInstances.containsKey(rankData))
+				rankDataInstances.put(rankData, rankData);
+			rankDatas.add(rankDataInstances.get(rankData));
+		}
+		Collections.sort(rankDatas);
+		return rankDatas;
 	}
 
 	private Relation createRelation(Element relation, Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap) {
@@ -161,16 +173,38 @@ public class SemanticMarkupReader implements Reader {
 		idStructureMap.put(id, result);
 		
 		for(Element characterElement : structure.getChildren("character")) {
-			String modifier = characterElement.getAttributeValue("modifier");
+
+			String v = characterElement.getAttributeValue("value");
+			Value value = new Value(v);
+			value.setCharType(characterElement.getAttributeValue("char_type"));
+			value.setConstraint(characterElement.getAttributeValue("constraint"));
+			value.setConstraintId(characterElement.getAttributeValue("constraintid"));
+			value.setFrom(characterElement.getAttributeValue("from"));
+			value.setFromInclusive(characterElement.getAttributeValue("from_inclusive"));
+			value.setFromUnit(characterElement.getAttributeValue("from_unit"));
+			value.setModifier(characterElement.getAttributeValue("modifier"));
+			value.setGeographicalConstraint(characterElement.getAttributeValue("geographical_constraint"));
+			value.setInBrackets(characterElement.getAttributeValue("in_brackets"));
+			value.setOrganConstraint(characterElement.getAttributeValue("organ_constraint"));
+			value.setOtherConstraint(characterElement.getAttributeValue("other_constraint"));
+			value.setParallelismConstraint(characterElement.getAttributeValue("parallelism_constraint"));
+			value.setTaxonConstraint(characterElement.getAttributeValue("taxon_constraint"));
+			value.setTo(characterElement.getAttributeValue("to"));
+			value.setToInclusive(characterElement.getAttributeValue("to_inclusive"));
+			value.setToUnit(characterElement.getAttributeValue("to_unit"));
+			value.setType(characterElement.getAttributeValue("type"));
+			value.setUpperRestricted(characterElement.getAttributeValue("upper_restricted"));
+			value.setUnit(characterElement.getAttributeValue("unit"));
+			value.setValue(characterElement.getAttributeValue("value"));
+			value.setOntologyId(characterElement.getAttributeValue("ontologyid"));
+			value.setProvenance(characterElement.getAttributeValue("provenance"));
+			value.setNotes(characterElement.getAttributeValue("notes"));	
+						
 			String name = characterElement.getAttributeValue("name");
-			String value = characterElement.getAttributeValue("value");
-			
-			Character character = new Character(name);
+			Character character = new Character(name, result.getName());
 			characters.add(character);
 			
-			//TODO: What to do with modifier?
-			String fullValue = modifier != null ? modifier + " " + value : value;
-			result.setCharacterValue(character, new Value(fullValue));
+			result.setCharacterValue(character, value);
 		}
 		
 		return result;
