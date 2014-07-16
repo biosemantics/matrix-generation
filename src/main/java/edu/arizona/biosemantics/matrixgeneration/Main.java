@@ -13,6 +13,7 @@ import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.InheritanceTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.matrix.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer.Unit;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CellValueTransformer;
@@ -40,15 +41,18 @@ public class Main {
 		Transformer switchUnits = new NormalizeUnitsTransformer(Unit.mm);
 		switchUnits.transform(matrix);
 		
+		Transformer splitRangeValues = new SplitRangeValuesTransformer();
+		splitRangeValues.transform(matrix);
+		
 		System.out.println("transformed matrix: \n " + matrix.toString());
 		
-		/*List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
+		List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
 		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer());
 		CellValueTransformer cellValueTransformer = new CombinedCellValueTransformer(byChoiceCellValueTransformers, 
-				new SimpleCellValueTransformer()); */
+				new SimpleCellValueTransformer());
 		ColumnHeadTransformer columnHeadTransformer = new NameOrganColumnHeadTransformer();
 		RowHeadTransformer rowHeadTransformer = new TaxonomyRowHeadTransformer();
-		CellValueTransformer cellValueTransformer = new SimpleCellValueTransformer();
+		//CellValueTransformer cellValueTransformer = new SimpleCellValueTransformer();
 		
 		RawMatrixTransformer rawMatrixTransformer = new RawMatrixTransformer(columnHeadTransformer,
 				rowHeadTransformer, cellValueTransformer);

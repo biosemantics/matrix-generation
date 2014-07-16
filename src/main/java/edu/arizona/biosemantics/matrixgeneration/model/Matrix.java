@@ -1,6 +1,7 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +24,11 @@ public class Matrix {
 	}
 
 	public List<Taxon> getTaxa() {
-		return taxa;
+		return Collections.unmodifiableList(taxa);
 	}
 
 	public Set<Character> getCharacters() {
-		return characters.keySet();
+		return Collections.unmodifiableSet(characters.keySet());
 	}
 
 	@JsonIgnore

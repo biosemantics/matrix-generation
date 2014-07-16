@@ -1,5 +1,7 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,14 +37,16 @@ public class RawMatrixTransformer {
 			RowHead rowHead = rowHeadTransformer.transform(taxon);
 			rowHeads.add(rowHead);
 		}
-		for(Character character : matrix.getCharacters()) {
+		List<Character> characters = new ArrayList<Character>(matrix.getCharacters());
+		Collections.sort(characters);
+		for(Character character : characters) {
 			ColumnHead columnHead = columnHeadTransformer.transform(character);
 			columnHeads.add(columnHead);
 		}
 		for(Taxon taxon : matrix.getTaxa()) {
 			List<CellValue> taxonsCellValues = new LinkedList<CellValue>();
 			cellValues.add(taxonsCellValues);
-			for(Character character : matrix.getCharacters()) {		
+			for(Character character : characters) {		
 				CellValue cellValue = new CellValue("");
 				String structureName = character.getStructureName();
 				Structure structure = taxon.getStructure(structureName);

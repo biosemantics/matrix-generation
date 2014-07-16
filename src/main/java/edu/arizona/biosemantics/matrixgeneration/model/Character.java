@@ -1,6 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
-public class Character {
+public class Character implements Comparable<Character> {
 
 	private String name;
 	private String structureName;
@@ -50,4 +50,11 @@ public class Character {
 		return true;
 	}
 
+	@Override
+	public int compareTo(Character character) {
+		if(structureName.equals(character.getStructureName()))
+			return name.compareTo(character.getName());
+		return structureName.compareTo(character.getStructureName());
+	}	
+	
 }
