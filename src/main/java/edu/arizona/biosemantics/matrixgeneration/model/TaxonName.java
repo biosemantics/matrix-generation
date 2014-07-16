@@ -26,9 +26,4 @@ public class TaxonName {
 	public String getDate() {
 		return date;
 	}
-
-	@Override
-	public String toString() {
-		return rankData.toString() + ":" + author + "," + date;
-	}
 }

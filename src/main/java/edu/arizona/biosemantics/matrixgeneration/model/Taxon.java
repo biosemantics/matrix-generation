@@ -59,7 +59,7 @@ public class Taxon {
 	private String author;
 	private String year;
 	
-	private RankData rankData;
+	private TaxonName taxonName;
 	public LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
 	private LinkedHashMap<String, Structure> structures = new LinkedHashMap<String, Structure>();
@@ -69,30 +69,6 @@ public class Taxon {
 	
 	public LinkedHashSet<Taxon> getChildren() {
 		return children;
-	}
-	
-	public RankData getRankData() {
-		return rankData;
-	}
-
-	public void setRankData(RankData rankData) {
-		this.rankData = rankData;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getYear() {
-		return year;
-	}
-
-	public void setYear(String year) {
-		this.year = year;
 	}
 
 	public String getDescription() {
@@ -108,7 +84,12 @@ public class Taxon {
 	}
 
 	public void addStructure(Structure structure) {
-		structures.put(structure.getName(), structure);
+		if(structures.containsKey(structure.getName())) {
+			Structure targetStructure = structures.get(structure.getName());
+			for(Character character : structure.getCharacters()) 
+				targetStructure.setCharacterValue(character, structure.getCharacterValue(character));
+		} else
+			structures.put(structure.getName(), structure);
 	}
 
 	public Collection<Structure> getStructures() {
@@ -121,11 +102,6 @@ public class Taxon {
 
 	public void addChild(Taxon taxon) {
 		children.add(taxon);
-	}
-	
-	@Override
-	public String toString() {
-		return rankData + " by " + author + " in " + year + ": " + structures + "\nchildren: " + children;
 	}
 
 	public void addRelation(Relation relation) {
@@ -142,6 +118,14 @@ public class Taxon {
 	
 	public boolean containsRelation(Relation relation) {
 		return this.relations.containsKey(relation);
+	}
+
+	public TaxonName getTaxonName() {
+		return taxonName;
+	}
+	
+	public void setTaxonName(TaxonName taxonName) {
+		this.taxonName = taxonName;
 	}
 
 }

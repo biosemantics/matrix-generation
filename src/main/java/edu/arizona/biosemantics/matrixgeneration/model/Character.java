@@ -50,8 +50,4 @@ public class Character {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return name + " of " + structureName;
-	}
 }

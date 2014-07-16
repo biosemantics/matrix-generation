@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.transform;
+package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,17 +18,17 @@ public class NormalizeUnitsTransformer implements Transformer {
 
 	public static enum Unit {
 		
-		nm(100000.0), 
-		µ(1000.0),
-		µm(1000.0), 
+		nm(1/100000.0), 
+		µ(1/1000.0),
+		µm(1/1000.0), 
 		mm(1.0), 
-		cm(0.1), 
-		dm(0.01),
-		m(0.001), 
-		km(0.000001), 
-		in(0.03937007874016), 
-		ft(0.003280839895013), 
-		yd(0.001093613298338);
+		cm(1/0.1), 
+		dm(1/0.01),
+		m(1/0.001), 
+		km(1/0.000001), 
+		in(1/0.03937007874016), 
+		ft(1/0.003280839895013), 
+		yd(1/0.001093613298338);
 		
 		private Double toMMFactor;
 
@@ -60,7 +60,7 @@ public class NormalizeUnitsTransformer implements Transformer {
 		}*/
 		Double targetUnitFactor = targetUnit.getToMMFactor();
 		for(Value value : matrix.getValues()) {
-			if(isNumeric(value.getValue())) {
+			if(value.getValue() != null && value.getUnit() != null && isNumeric(value.getValue())) {
 				try {
 					Double doubleValue = Double.parseDouble(normalizeNumeric(value.getValue()));
 					try{
@@ -74,7 +74,7 @@ public class NormalizeUnitsTransformer implements Transformer {
 					log(LogLevel.ERROR, "Can't parse value", e);
 				}
 			}
-			if((isNumeric(value.getFrom()))) {
+			if(value.getFrom() != null && value.getFromUnit() != null && isNumeric(value.getFrom())) {
 				try{
 					Double doubleValue = Double.parseDouble(normalizeNumeric(value.getFrom()));
 					try{
@@ -88,7 +88,7 @@ public class NormalizeUnitsTransformer implements Transformer {
 					log(LogLevel.ERROR, "Can't parse from", e);
 				}
 			}
-			if((isNumeric(value.getTo()))) {
+			if(value.getTo() != null && value.getToUnit() != null && isNumeric(value.getTo())) {
 				try{
 					Double doubleValue = Double.parseDouble(normalizeNumeric(value.getTo()));
 					try{
@@ -102,7 +102,7 @@ public class NormalizeUnitsTransformer implements Transformer {
 					log(LogLevel.ERROR, "Can't parse to", e);
 				}
 			}
-			if((isNumeric(value.getFromInclusive()))) {
+			if(value.getFromInclusive() != null  && value.getFromUnit() != null && isNumeric(value.getFromInclusive())) {
 				try{
 					Double doubleValue = Double.parseDouble(normalizeNumeric(value.getFromInclusive()));
 					try{
@@ -116,7 +116,7 @@ public class NormalizeUnitsTransformer implements Transformer {
 					log(LogLevel.ERROR, "Can't parse from inclusive", e);
 				}
 			}
-			if((isNumeric(value.getToInclusive()))) {
+			if(value.getToInclusive() != null && value.getToUnit() != null && isNumeric(value.getToInclusive())) {
 				try{
 					Double doubleValue = Double.parseDouble(normalizeNumeric(value.getToInclusive()));
 					try{

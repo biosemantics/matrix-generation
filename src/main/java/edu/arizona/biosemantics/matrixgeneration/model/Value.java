@@ -1,5 +1,7 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class Value implements Cloneable {
 
 	private String value;
@@ -31,11 +33,6 @@ public class Value implements Cloneable {
 	}
 	
 	public String getValue() {
-		return value;
-	}
-	
-	@Override
-	public String toString() {
 		return value;
 	}
 
@@ -143,6 +140,7 @@ public class Value implements Cloneable {
 		return charType;
 	}
 
+	@JsonIgnore
 	public String getConstraintId() {
 		return constraintId;
 	}
@@ -163,26 +161,32 @@ public class Value implements Cloneable {
 		return modifier;
 	}
 
+	@JsonIgnore
 	public String getGeographicalConstraint() {
 		return geographicalConstraint;
 	}
 
+	@JsonIgnore
 	public String getInBrackets() {
 		return inBrackets;
 	}
 
+	@JsonIgnore
 	public String getOrganConstraint() {
 		return organConstraint;
 	}
 
+	@JsonIgnore
 	public String getOtherConstraint() {
 		return otherConstraint;
 	}
 
+	@JsonIgnore
 	public String getParallelismConstraint() {
 		return parallelismConstraint;
 	}
 
+	@JsonIgnore
 	public String getTaxonConstraint() {
 		return taxonConstraint;
 	}
@@ -207,18 +211,21 @@ public class Value implements Cloneable {
 		return unit;
 	}
 
+	@JsonIgnore
 	public String getOntologyId() {
 		return ontologyId;
 	}
 
+	@JsonIgnore
 	public String getProvenance() {
 		return provenance;
 	}
 
+	@JsonIgnore
 	public String getNotes() {
 		return notes;
 	}
-	
+
 	@Override
 	public Value clone() {
 		Value value = new Value(this.value);

@@ -5,6 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import edu.arizona.biosemantics.matrixgeneration.log.LogLevel;
+
 public class Structure implements Cloneable {
 
 	private String name;
@@ -19,6 +23,9 @@ public class Structure implements Cloneable {
 	}
 
 	public Value setCharacterValue(Character character, Value value) {
+		if(values.containsKey(character))
+			log(LogLevel.WARN, "Structure " + this.getName() + " already contains a value for character " + character.getName() + 
+					". Tried to set:\n" + value.toString() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
 		return values.put(character, value);
 	}
 
@@ -37,16 +44,15 @@ public class Structure implements Cloneable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@Override
-	public String toString() {
-		return name + ": " + values;
-	}
 
 	public boolean containsCharacterValue(Character character) {
 		return values.containsKey(character);
 	}
 	
+	public LinkedHashMap<Character, Value> getValues() {
+		return values;
+	}
+
 	@Override
 	public Structure clone() {
 		Structure structure = new Structure();

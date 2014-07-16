@@ -48,7 +48,7 @@ public class SemanticMarkupReader implements Reader {
 
 	@Override
 	public Matrix read() throws Exception {
-		Set<Character> characters = new HashSet<Character>();
+		Map<Character, Character> characters = new HashMap<Character, Character>();
 		
 		Map<String, Structure> idStructureMap = new HashMap<String, Structure>();
 		Map<String, Relation> idRelationMap = new HashMap<String, Relation>();
@@ -86,7 +86,7 @@ public class SemanticMarkupReader implements Reader {
 		return rootTaxa;
 	}
 
-	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Set<Character> characters, List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap) throws JDOMException, IOException {		
+	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Map<Character, Character> characters, List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		for(File file : inputDirectory.listFiles()) {
 			if(file.isFile()) {
@@ -99,19 +99,16 @@ public class SemanticMarkupReader implements Reader {
 				TaxonName taxonName = new TaxonName(rankDatas, author, date);
 				taxonNames.add(taxonName);
 				
-				RankData rankData = (taxonName.getRankData().getLast());
-				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, rankData);
-				rankTaxaMap.put(rankData, taxon);
+				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName);
+				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
 			}
 		}
 	}
 
 	private Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
-			Map<String, Relation> idRelationMap, Set<Character> characters, RankData rankData) {
-		Element sourceElement = sourceXpath.evaluateFirst(document);
-		String author = sourceElement.getChildText("author");
-		String date = sourceElement.getChildText("date");
+			Map<String, Relation> idRelationMap, Map<Character, Character> characters, TaxonName taxonName) {
 		Taxon taxon = new Taxon();
+		taxon.setTaxonName(taxonName);
 		StringBuilder descriptionBuilder = new StringBuilder();
 		for (Element statement : statementXpath.evaluate(document)) {
 			String text = statement.getChild("text").getText();
@@ -128,9 +125,6 @@ public class SemanticMarkupReader implements Reader {
 			}
 		}
 		taxon.setDescription(descriptionBuilder.toString().trim());
-		taxon.setAuthor(author);
-		taxon.setYear(date);
-		taxon.setRankData(rankData);
 		return taxon;
 	}
 
@@ -166,7 +160,7 @@ public class SemanticMarkupReader implements Reader {
 		return result;
 	}
 
-	private Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Set<Character> characters) {
+	private Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters) {
 		Structure result = new Structure();
 		result.setName(structure.getAttributeValue("name"));
 		String id = structure.getAttributeValue("id");
@@ -202,7 +196,9 @@ public class SemanticMarkupReader implements Reader {
 						
 			String name = characterElement.getAttributeValue("name");
 			Character character = new Character(name, result.getName());
-			characters.add(character);
+			if(!characters.containsKey(character))
+				characters.put(character, character);
+			character = characters.get(character);
 			
 			result.setCharacterValue(character, value);
 		}

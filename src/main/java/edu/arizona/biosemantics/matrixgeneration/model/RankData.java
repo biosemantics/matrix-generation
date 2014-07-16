@@ -30,11 +30,6 @@ public class RankData implements Comparable<RankData> {
 	public int compareTo(RankData o) {
 		return rank.getId() - o.rank.getId();
 	}
-	
-	@Override
-	public String toString() {
-		return rank.name() + "=" + name + " by " + author;
-	}
 
 	@Override
 	public int hashCode() {

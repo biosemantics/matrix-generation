@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.transform;
+package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
