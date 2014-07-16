@@ -145,26 +145,62 @@ public class SemanticMarkupReader implements Reader {
 
 	private Relation createRelation(Element relation, Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap) {
 		Relation result = new Relation();
-		String id = relation.getAttributeValue("id");
-		idRelationMap.put(id, result);
 		String fromId = relation.getAttributeValue("from");
 		String toId = relation.getAttributeValue("to");
 		Structure fromStructure = idStructureMap.get(fromId);
 		Structure toStructure = idStructureMap.get(toId);
-		result.setFrom(fromStructure);
-		result.setTo(toStructure);
+		String id = relation.getAttributeValue("id");
+		idRelationMap.put(id, result);
 		String name = relation.getAttributeValue("name");
 		String negated = relation.getAttributeValue("negation");
+		String alterName = relation.getAttributeValue("alter_name");
+		String geographicalConstraint = relation.getAttributeValue("geographical_constraint");
+		String inBrackets = relation.getAttributeValue("in_brackets");
+		String modifier = relation.getAttributeValue("modifier");
+		String notes = relation.getAttributeValue("notes");
+		String ontologyId = relation.getAttributeValue("ontologyid");
+		String organConstraint = relation.getAttributeValue("organ_constraint");
+		String parallelismConstraint = relation.getAttributeValue("parallelism_constraint");
+		String provenance = relation.getAttributeValue("provenance");
+		String taxonConstraint = relation.getAttributeValue("taxon_constraint");
+		
+		result.setAlterName(alterName);
+		result.setFrom(fromStructure);
+		result.setGeographicalConstraint(geographicalConstraint);
+		result.setId(id);
+		result.setInBrackets(inBrackets);
+		result.setModifier(modifier);
 		result.setName(name);
 		result.setNegated(Boolean.valueOf(negated));
+		result.setNotes(notes);
+		result.setOntologyId(ontologyId);
+		result.setOrganConstraint(organConstraint);
+		result.setParallelismConstriant(parallelismConstraint);
+		result.setProvenance(provenance);
+		result.setTaxonConstraint(taxonConstraint);
+		result.setTo(toStructure);
 		return result;
 	}
 
 	private Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters) {
 		Structure result = new Structure();
-		result.setName(structure.getAttributeValue("name"));
 		String id = structure.getAttributeValue("id");
 		idStructureMap.put(id, result);
+		
+		result.setName(structure.getAttributeValue("name"));
+		result.setAlterName(structure.getAttributeValue("alter_name"));
+		result.setConstraint(structure.getAttributeValue("constraint"));
+		result.setConstraintid(structure.getAttributeValue("constraintid"));
+		result.setGeographicalConstraint(structure.getAttributeValue("geographical_constraint"));
+		result.setId(id);
+		result.setInBracket(structure.getAttributeValue("in_bracket"));
+		result.setInBrackets(structure.getAttributeValue("in_brackets"));
+		result.setNameOriginal(structure.getAttributeValue("name_original"));
+		result.setParallelismConstraint(structure.getAttributeValue("paralellism_constraint"));
+		result.setNotes(structure.getAttributeValue("notes"));
+		result.setOntologyId(structure.getAttributeValue("ontologyid"));
+		result.setProvenance(structure.getAttributeValue("provenance"));
+		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
 		for(Element characterElement : structure.getChildren("character")) {
 
@@ -195,7 +231,7 @@ public class SemanticMarkupReader implements Reader {
 			value.setNotes(characterElement.getAttributeValue("notes"));	
 						
 			String name = characterElement.getAttributeValue("name");
-			Character character = new Character(name, result.getName());
+			Character character = new Character(name, result.getName(), result.getConstraint());
 			if(!characters.containsKey(character))
 				characters.put(character, character);
 			character = characters.get(character);

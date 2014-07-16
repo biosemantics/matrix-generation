@@ -1,8 +1,11 @@
 package edu.arizona.biosemantics.matrixgeneration;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.io.CSVWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.Reader;
@@ -29,8 +32,38 @@ import edu.arizona.biosemantics.matrixgeneration.transform.raw.TaxonomyRowHeadTr
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
-		
+	private Set<String> frequencyModifiers = new HashSet<String>(Arrays.asList(new String[] { "frequently", "rarely", "often" }));
+	private Set<String> negationModifiers = new HashSet<String>(Arrays.asList(new String[] { "not" }));
+	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than"} ));
+	
+	private List<String> prependModifierPatterns;
+	private List<String> appendModifierPatterns;
+	
+	public Main() {
+		prependModifierPatterns = createPrependModifierPatterns();
+		appendModifierPatterns = createAppendModifierPatterns();
+	}
+	
+	private List<String> createAppendModifierPatterns() {
+		List<String> result = new LinkedList<String>();
+		for(String comparisonModifier : comparisonModifiers) {
+			result.add("^" + comparisonModifier + " \\.*$");
+		}
+		return result;
+	}
+
+	private List<String> createPrependModifierPatterns() {
+		List<String> result = new LinkedList<String>();
+		for(String frequencyModifier : frequencyModifiers) {
+			result.add("^" + frequencyModifier + "$");
+		}
+		for(String negationModifier : negationModifiers) {
+			result.add("^" + negationModifier + "$");
+		}
+		return result;
+	}
+
+	public void run() throws Exception {
 		Reader reader = new SemanticMarkupReader(new File("input"));
 		Matrix matrix = reader.read();
 		System.out.println("read matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n" + matrix.toString());
@@ -47,9 +80,9 @@ public class Main {
 		System.out.println("transformed matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n " + matrix.toString());
 		
 		List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
-		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer());
+		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer(prependModifierPatterns, appendModifierPatterns));
 		CellValueTransformer cellValueTransformer = new CombinedCellValueTransformer(byChoiceCellValueTransformers, 
-				new SimpleCellValueTransformer());
+				new SimpleCellValueTransformer(prependModifierPatterns, appendModifierPatterns));
 		ColumnHeadTransformer columnHeadTransformer = new NameOrganColumnHeadTransformer();
 		RowHeadTransformer rowHeadTransformer = new TaxonomyRowHeadTransformer();
 		//CellValueTransformer cellValueTransformer = new SimpleCellValueTransformer();
@@ -61,6 +94,11 @@ public class Main {
 		System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
 		Writer writer = new CSVWriter(new File("matrix.csv"));
 		writer.write(rawMatrix);
+	}
+	
+	public static void main(String[] args) throws Exception {
+		Main main = new Main();
+		main.run();
 	}
 	
 }

@@ -32,8 +32,8 @@ public class SplitRangeValuesTransformer implements Transformer {
 		}
 		
 		for(Character character : toSplitCharacters) {
-			Character maxCharacter = new Character(character.getName() + "_max", character.getStructureName());
-			Character minCharacter = new Character(character.getName() + "_min", character.getStructureName());
+			Character maxCharacter = new Character(character.getName() + "_max", character.getStructureName(), character.getStructureConstraint());
+			Character minCharacter = new Character(character.getName() + "_min", character.getStructureName(), character.getStructureConstraint());
 			matrix.addCharacter(maxCharacter);
 			matrix.addCharacter(minCharacter);
 			
