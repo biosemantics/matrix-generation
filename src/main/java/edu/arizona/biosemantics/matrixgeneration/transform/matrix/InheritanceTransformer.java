@@ -13,7 +13,7 @@ public class InheritanceTransformer implements Transformer {
 
 	@Override
 	public void transform(Matrix matrix) {
-		for(Taxon taxon : matrix.getTaxa()) {
+		for(Taxon taxon : matrix.getRootTaxa()) {
 			inheritCharacterValues(taxon);
 		}
 	}

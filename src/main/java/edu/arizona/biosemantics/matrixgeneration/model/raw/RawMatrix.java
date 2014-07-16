@@ -31,4 +31,10 @@ public class RawMatrix {
 	public List<List<CellValue>> getCellValues() {
 		return cellValues;
 	}
+	public int getRowCount() {
+		return rowHeads.size();
+	}
+	public int getColumnCount() {
+		return columnHeads.size();
+	}
 }

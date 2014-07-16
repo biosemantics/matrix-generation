@@ -48,7 +48,7 @@ public class CSVWriter implements Writer {
 			line = new String[columnHeads.size() + 1];
 			column=0;
 			line[column++] = rowHead.getValue();
-			for(CellValue cellValue : cellValues.get(row)) {
+			for(CellValue cellValue : cellValues.get(row++)) {
 				line[column++] = cellValue.getValue();
 			}
 			lines.add(line);

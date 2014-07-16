@@ -33,7 +33,7 @@ public class Main {
 		
 		Reader reader = new SemanticMarkupReader(new File("input"));
 		Matrix matrix = reader.read();
-		System.out.println("read matrix: \n" + matrix.toString());
+		System.out.println("read matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n" + matrix.toString());
 		
 		Transformer inherit = new InheritanceTransformer();
 		inherit.transform(matrix);
@@ -44,7 +44,7 @@ public class Main {
 		Transformer splitRangeValues = new SplitRangeValuesTransformer();
 		splitRangeValues.transform(matrix);
 		
-		System.out.println("transformed matrix: \n " + matrix.toString());
+		System.out.println("transformed matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n " + matrix.toString());
 		
 		List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
 		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer());
@@ -58,7 +58,7 @@ public class Main {
 				rowHeadTransformer, cellValueTransformer);
 		RawMatrix rawMatrix = rawMatrixTransformer.transform(matrix);
 		
-		System.out.println("raw matrix: \n " + rawMatrix.toString());
+		System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
 		Writer writer = new CSVWriter(new File("matrix.csv"));
 		writer.write(rawMatrix);
 	}

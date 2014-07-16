@@ -35,7 +35,7 @@ public class RawMatrixTransformer {
 		
 		for(Taxon taxon : matrix.getTaxa()) {
 			RowHead rowHead = rowHeadTransformer.transform(taxon);
-			rowHeads.add(rowHead);
+			rowHeads.add(rowHead);	
 		}
 		List<Character> characters = new ArrayList<Character>(matrix.getCharacters());
 		Collections.sort(characters);
