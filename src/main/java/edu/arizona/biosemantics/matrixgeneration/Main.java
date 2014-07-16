@@ -34,7 +34,7 @@ public class Main {
 
 	private Set<String> frequencyModifiers = new HashSet<String>(Arrays.asList(new String[] { "frequently", "rarely", "often" }));
 	private Set<String> negationModifiers = new HashSet<String>(Arrays.asList(new String[] { "not" }));
-	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than"} ));
+	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than" } ));
 	
 	private List<String> prependModifierPatterns;
 	private List<String> appendModifierPatterns;
@@ -47,7 +47,7 @@ public class Main {
 	private List<String> createAppendModifierPatterns() {
 		List<String> result = new LinkedList<String>();
 		for(String comparisonModifier : comparisonModifiers) {
-			result.add("^" + comparisonModifier + " \\.*$");
+			result.add("^" + comparisonModifier + " .*$");
 		}
 		return result;
 	}
