@@ -5,7 +5,6 @@ import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer.ByChoiceCellValueTransformer;
 
 public class RangeValueByChoiceCellValueTransformer implements ByChoiceCellValueTransformer {
 

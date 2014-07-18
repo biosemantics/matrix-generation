@@ -19,10 +19,10 @@ import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnits
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer.Unit;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.ColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.NameOrganColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RangeValueByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RawMatrixTransformer;

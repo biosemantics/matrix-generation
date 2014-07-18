@@ -11,13 +11,6 @@ import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
  * @author rodenhausen
  */
 public class CombinedCellValueTransformer implements CellValueTransformer {
-
-	public static interface ByChoiceCellValueTransformer extends CellValueTransformer {
-		
-		public boolean isTransformable(Value value);
-		
-	}
-
 	private List<ByChoiceCellValueTransformer> transformers;
 	private CellValueTransformer defaultTransformer;
 	
