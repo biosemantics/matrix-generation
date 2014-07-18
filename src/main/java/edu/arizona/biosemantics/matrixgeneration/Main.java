@@ -9,6 +9,7 @@ import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.io.CSVWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.Reader;
+import edu.arizona.biosemantics.matrixgeneration.io.SDDWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.SemanticMarkupReader;
 import edu.arizona.biosemantics.matrixgeneration.io.Writer;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
@@ -19,10 +20,10 @@ import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnits
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer.Unit;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.ColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.NameOrganColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RangeValueByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RawMatrixTransformer;
@@ -92,7 +93,8 @@ public class Main {
 		RawMatrix rawMatrix = rawMatrixTransformer.transform(matrix);
 		
 		System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
-		Writer writer = new CSVWriter(new File("matrix.csv"));
+		//Writer writer = new CSVWriter(new File("matrix.csv"));
+		Writer writer = new SDDWriter(new File("matrix.sdd"));
 		writer.write(rawMatrix);
 	}
 	
