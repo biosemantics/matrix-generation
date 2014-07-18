@@ -1,39 +1,65 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class RawMatrix {
 
-	private List<RowHead> rowHeads;
+	private List<RowHead> rootRowHeads;
 	private List<ColumnHead> columnHeads;
-	private List<List<CellValue>> cellValues;
+	private Map<RowHead, List<CellValue>> cellValues;
 	
-	public RawMatrix(List<RowHead> rowHeads, List<ColumnHead> columnHeads,
-			List<List<CellValue>> cellValues) {
+	public RawMatrix(List<RowHead> rootRowHeads, List<ColumnHead> columnHeads,
+			Map<RowHead, List<CellValue>> cellValues) {
 		super();
-		this.rowHeads = Collections.unmodifiableList(rowHeads);
+		this.rootRowHeads = Collections.unmodifiableList(rootRowHeads);
 		this.columnHeads = Collections.unmodifiableList(columnHeads);
-		this.cellValues = Collections.unmodifiableList(cellValues);
-		if(rowHeads.size() != cellValues.size())
+		this.cellValues = Collections.unmodifiableMap(cellValues);
+		if(getRowCount() != cellValues.size())
 			throw new IllegalArgumentException("");
-		for(List<CellValue> rowsCellValues : cellValues) {
+		for(List<CellValue> rowsCellValues : cellValues.values()) {
 			if(rowsCellValues.size() != columnHeads.size())
 				throw new IllegalArgumentException("");
 		}
 	}
-	public List<RowHead> getRowHeads() {
-		return rowHeads;
+	
+	public List<RowHead> getRootRowHeads() {
+		return rootRowHeads;
 	}
+	
+	public List<RowHead> getRowHeads() {
+		List<RowHead> result = new LinkedList<RowHead>();
+		for(RowHead rootRowHead : rootRowHeads) {
+			addRowHeadAndDescendants(rootRowHead, result);
+		}
+		return result;
+	}
+	
+	private void addRowHeadAndDescendants(RowHead rowHead, List<RowHead> result) {
+		result.add(rowHead);
+		for(RowHead child : rowHead.getChildren()) {
+			addRowHeadAndDescendants(child, result);
+		}
+	}
+	
 	public List<ColumnHead> getColumnHeads() {
 		return columnHeads;
 	}
-	public List<List<CellValue>> getCellValues() {
+	
+	public Map<RowHead, List<CellValue>> getCellValues() {
 		return cellValues;
 	}
+	
 	public int getRowCount() {
-		return rowHeads.size();
+		return getRowHeads().size();
 	}
+	
+	public int getRootRowCount() {
+		return rootRowHeads.size();
+	}
+	
 	public int getColumnCount() {
 		return columnHeads.size();
 	}

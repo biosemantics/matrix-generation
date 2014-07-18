@@ -1,7 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
 import java.util.List;
-import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
@@ -44,7 +43,7 @@ public class RangeValueByChoiceCellValueTransformer implements ByChoiceCellValue
 			}
 		}
 		
-		return new CellValue(result.trim());
+		return new CellValue(result.trim(), value);
 	}
 
 	@Override

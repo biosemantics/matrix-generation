@@ -15,7 +15,7 @@ public class TaxonomyRowHeadTransformer implements RowHeadTransformer {
 			name += rankData.getRank()+ "=" + rankData.getName() + "_" + rankData.getAuthor();
 		}
 		name += "_" + taxonName.getAuthor() + "_" + taxonName.getDate();
-		return new RowHead(name);
+		return new RowHead(name, taxon);
 	}
 
 	

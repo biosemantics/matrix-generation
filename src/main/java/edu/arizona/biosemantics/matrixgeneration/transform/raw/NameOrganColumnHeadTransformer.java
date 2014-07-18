@@ -10,7 +10,7 @@ public class NameOrganColumnHeadTransformer implements ColumnHeadTransformer {
 		
 		return new ColumnHead(character.getName() + " of " + 
 				character.getStructureConstraintOrEmpty() + " " + 
-				character.getStructureName());
+				character.getStructureName(), character);
 	}
 
 

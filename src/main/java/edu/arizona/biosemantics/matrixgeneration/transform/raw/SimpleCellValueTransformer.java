@@ -46,7 +46,7 @@ public class SimpleCellValueTransformer implements CellValueTransformer {
 				}
 			}
 		}
-		return new CellValue(result.trim());
+		return new CellValue(result.trim(), value);
 	}
 
 }

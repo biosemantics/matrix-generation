@@ -60,7 +60,7 @@ public class Taxon {
 	private String year;
 	
 	private TaxonName taxonName;
-	public LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
+	private LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
 	private LinkedHashMap<String, Structure> structures = new LinkedHashMap<String, Structure>();
 	private LinkedHashMap<Relation, Relation> relations = new LinkedHashMap<Relation, Relation>();
