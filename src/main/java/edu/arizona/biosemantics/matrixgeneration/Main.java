@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.io.CSVWriter;
+import edu.arizona.biosemantics.matrixgeneration.io.NexusWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.Reader;
 import edu.arizona.biosemantics.matrixgeneration.io.SDDWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.SemanticMarkupReader;
@@ -20,10 +21,10 @@ import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnits
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer.Unit;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.ColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.NameOrganColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RangeValueByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RawMatrixTransformer;
@@ -67,7 +68,7 @@ public class Main {
 	public void run() throws Exception {
 		Reader reader = new SemanticMarkupReader(new File("input"));
 		Matrix matrix = reader.read();
-		System.out.println("read matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n" + matrix.toString());
+		//System.out.println("read matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n" + matrix.toString());
 		
 		Transformer inherit = new InheritanceTransformer();
 		inherit.transform(matrix);
@@ -78,7 +79,7 @@ public class Main {
 		Transformer splitRangeValues = new SplitRangeValuesTransformer();
 		splitRangeValues.transform(matrix);
 		
-		System.out.println("transformed matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n " + matrix.toString());
+		//System.out.println("transformed matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n " + matrix.toString());
 		
 		List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
 		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer(prependModifierPatterns, appendModifierPatterns));
@@ -92,9 +93,10 @@ public class Main {
 				rowHeadTransformer, cellValueTransformer);
 		RawMatrix rawMatrix = rawMatrixTransformer.transform(matrix);
 		
-		System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
+		//System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
 		//Writer writer = new CSVWriter(new File("matrix.csv"));
-		Writer writer = new SDDWriter(new File("matrix.sdd"));
+		//Writer writer = new SDDWriter(new File("matrix.sdd"));
+		Writer writer = new NexusWriter(new File("matrix.nxs"));
 		writer.write(rawMatrix);
 	}
 	

@@ -7,10 +7,11 @@ public class NameOrganColumnHeadTransformer implements ColumnHeadTransformer {
 
 	@Override
 	public ColumnHead transform(Character character) {
-		
-		return new ColumnHead(character.getName() + " of " + 
-				character.getStructureConstraintOrEmpty() + " " + 
-				character.getStructureName(), character);
+		String structureString = 
+				(character.getStructureConstraint() == null || character.getStructureConstraint().isEmpty()) ?
+						character.getStructureName() : 
+							character.getStructureConstraint() + " " + character.getStructureName();
+		return new ColumnHead(character.getName() + " of " + structureString, character);
 	}
 
 
