@@ -61,8 +61,7 @@ public class SDDWriter implements Writer {
 		marshaller.marshal(datasets, file);			
 	}
 
-	private Datasets createDatasets(RawMatrix rawMatrix) throws Exception {
-		
+	private Datasets createDatasets(RawMatrix rawMatrix) throws Exception {		
 		Datasets datasets = objectFactory.createDatasets();
 		
 		TechnicalMetadata metadata = objectFactory.createTechnicalMetadata();

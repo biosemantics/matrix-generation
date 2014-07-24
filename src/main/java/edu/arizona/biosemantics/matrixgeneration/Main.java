@@ -40,8 +40,12 @@ public class Main {
 	
 	private List<String> prependModifierPatterns;
 	private List<String> appendModifierPatterns;
+	private String inputDir;
+	private String outputFile;
 	
-	public Main() {
+	public Main(String inputDir, String outputFile) {
+		this.inputDir = inputDir;
+		this.outputFile = outputFile;
 		prependModifierPatterns = createPrependModifierPatterns();
 		appendModifierPatterns = createAppendModifierPatterns();
 	}
@@ -66,18 +70,18 @@ public class Main {
 	}
 
 	public void run() throws Exception {
-		Reader reader = new SemanticMarkupReader(new File("input"));
+		Reader reader = new SemanticMarkupReader(new File(inputDir));
 		Matrix matrix = reader.read();
 		//System.out.println("read matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n" + matrix.toString());
 		
 		Transformer inherit = new InheritanceTransformer();
 		inherit.transform(matrix);
 		
-		Transformer switchUnits = new NormalizeUnitsTransformer(Unit.mm);
-		switchUnits.transform(matrix);
+		//Transformer switchUnits = new NormalizeUnitsTransformer(Unit.mm);
+		//switchUnits.transform(matrix);
 		
-		Transformer splitRangeValues = new SplitRangeValuesTransformer();
-		splitRangeValues.transform(matrix);
+		//Transformer splitRangeValues = new SplitRangeValuesTransformer();
+		//splitRangeValues.transform(matrix);
 		
 		//System.out.println("transformed matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n " + matrix.toString());
 		
@@ -94,14 +98,14 @@ public class Main {
 		RawMatrix rawMatrix = rawMatrixTransformer.transform(matrix);
 		
 		//System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
-		//Writer writer = new CSVWriter(new File("matrix.csv"));
+		Writer writer = new CSVWriter(new File(outputFile));
 		//Writer writer = new SDDWriter(new File("matrix.sdd"));
-		Writer writer = new NexusWriter(new File("matrix.nxs"));
+		//Writer writer = new NexusWriter(new File("matrix.nxs"));
 		writer.write(rawMatrix);
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Main main = new Main();
+		Main main = new Main("input", "matrix.csv");
 		main.run();
 	}
 	
