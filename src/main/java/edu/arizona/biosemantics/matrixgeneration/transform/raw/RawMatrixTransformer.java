@@ -13,6 +13,7 @@ import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
+import edu.arizona.biosemantics.matrixgeneration.model.raw.Column;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
@@ -22,16 +23,19 @@ public class RawMatrixTransformer {
 	private ColumnHeadTransformer columnHeadTransformer;
 	private RowHeadTransformer rowHeadTransformer;
 	private CellValueTransformer cellValueTransformer;
+	private List<AddColumn> addColumns;
 
 	public RawMatrixTransformer(ColumnHeadTransformer columnHeadTransformer, RowHeadTransformer rowHeadTransformer,
-			CellValueTransformer cellValueTransformer) {
+			CellValueTransformer cellValueTransformer, List<AddColumn> addColumns) {
 		this.columnHeadTransformer = columnHeadTransformer;
 		this.rowHeadTransformer = rowHeadTransformer;
 		this.cellValueTransformer = cellValueTransformer;
+		this.addColumns = addColumns;
 	}
 
 	public RawMatrix transform(Matrix matrix) {
 		List<RowHead> rootRowHeads = new LinkedList<RowHead>();
+		List<RowHead> rowHeads = getRowHeads(rootRowHeads);
 		List<ColumnHead> columnHeads = new LinkedList<ColumnHead>();
 		Map<RowHead, List<CellValue>> cellValues = new HashMap<RowHead, List<CellValue>>();
 		
@@ -50,7 +54,31 @@ public class RawMatrixTransformer {
 			addRowsAndDescendantsCellValues(rowHead, characters, cellValues);
 		}
 		
+		for(AddColumn addColumn : addColumns) {
+			Column column = addColumn.getColumn(matrix, rowHeads);
+			columnHeads.add(1, column.getColumnHead());
+			Map<RowHead, CellValue> values = column.getCellValues();
+			for(RowHead key : values.keySet()) {
+				cellValues.get(key).add(1, values.get(key));
+			}
+		}
+		
 		return new RawMatrix(rootRowHeads, columnHeads, cellValues);
+	}
+
+	private List<RowHead> getRowHeads(List<RowHead> rootRowHeads) {
+		List<RowHead> result = new LinkedList<RowHead>();
+		for(RowHead rowHead : rootRowHeads) {
+			addRowHeadAndDescendants(rowHead, result);
+		}
+		return result;
+	}
+
+	private void addRowHeadAndDescendants(RowHead rowHead, List<RowHead> result) {
+		result.add(rowHead);
+		for(RowHead child : rowHead.getChildren()) {
+			addRowHeadAndDescendants(child, result);
+		}
 	}
 
 	private void addRowsAndDescendantsCellValues(RowHead rowHead, List<Character> characters, Map<RowHead, List<CellValue>> cellValues) {

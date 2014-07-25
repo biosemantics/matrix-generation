@@ -21,6 +21,8 @@ import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnits
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer.Unit;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddColumn;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddSourceColumn;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.CellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.ColumnHeadTransformer;
@@ -93,8 +95,10 @@ public class Main {
 		RowHeadTransformer rowHeadTransformer = new TaxonomyRowHeadTransformer();
 		//CellValueTransformer cellValueTransformer = new SimpleCellValueTransformer();
 		
+		List<AddColumn> addColumns = new LinkedList<AddColumn>();
+		addColumns.add(new AddSourceColumn());
 		RawMatrixTransformer rawMatrixTransformer = new RawMatrixTransformer(columnHeadTransformer,
-				rowHeadTransformer, cellValueTransformer);
+				rowHeadTransformer, cellValueTransformer, addColumns);
 		RawMatrix rawMatrix = rawMatrixTransformer.transform(matrix);
 		
 		//System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
@@ -105,7 +109,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Main main = new Main("input", "matrix.csv");
+		Main main = new Main("C:/test/users/1070/input_2", "matrix.csv");
 		main.run();
 	}
 	

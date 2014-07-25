@@ -1,5 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +67,7 @@ public class Taxon {
 	private LinkedHashMap<Relation, Relation> relations = new LinkedHashMap<Relation, Relation>();
 	
 	private String description;
+	private File sourceFile;
 	
 	public LinkedHashSet<Taxon> getChildren() {
 		return children;
@@ -126,6 +128,14 @@ public class Taxon {
 	
 	public void setTaxonName(TaxonName taxonName) {
 		this.taxonName = taxonName;
+	}
+
+	public File getSourceFile() {
+		return sourceFile;
+	}
+
+	public void setSourceFile(File sourceFile) {
+		this.sourceFile = sourceFile;
 	}
 
 }
