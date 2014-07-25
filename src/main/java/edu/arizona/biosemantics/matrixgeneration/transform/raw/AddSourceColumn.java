@@ -18,7 +18,7 @@ public class AddSourceColumn implements AddColumn {
 		Map<RowHead, CellValue> values = new HashMap<RowHead, CellValue>();
 		
 		for(RowHead rowHead : rowHeads) {
-			values.put(rowHead, new CellValue(rowHead.getSource().getSourceFile().getAbsolutePath(), null));
+			values.put(rowHead, new CellValue(rowHead.getSource().getSourceFile().getName(), null));
 		}
 		
 		return new Column(head, values);

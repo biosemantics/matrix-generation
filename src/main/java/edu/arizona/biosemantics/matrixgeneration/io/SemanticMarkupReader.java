@@ -137,9 +137,10 @@ public class SemanticMarkupReader implements Reader {
 		LinkedList<RankData> rankDatas = new LinkedList<RankData>();
 		for(Element taxonName : taxonIdentificationXpath.evaluate(document)) {
 			String rank = taxonName.getAttributeValue("rank");
+			String date = taxonName.getAttributeValue("date");
 			String authority = taxonName.getAttributeValue("authority");
 			String name = taxonName.getText();
-			RankData rankData = new RankData(authority, Rank.valueOf(rank.toUpperCase()), name);
+			RankData rankData = new RankData(authority, date, Rank.valueOf(rank.toUpperCase()), name);
 			if(!rankDataInstances.containsKey(rankData))
 				rankDataInstances.put(rankData, rankData);
 			rankDatas.add(rankDataInstances.get(rankData));

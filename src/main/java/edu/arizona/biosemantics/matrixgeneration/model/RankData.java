@@ -6,10 +6,12 @@ public class RankData implements Comparable<RankData> {
 	private String author;
 	private Rank rank;
 	private String name;
+	private String date;
 
-	public RankData(String author, Rank rank, String name) {
+	public RankData(String author, String date, Rank rank, String name) {
 		super();
 		this.author = author;
+		this.date = date;
 		this.rank = rank;
 		this.name = name;
 	}
@@ -63,5 +65,9 @@ public class RankData implements Comparable<RankData> {
 		if (rank != other.rank)
 			return false;
 		return true;
+	}
+
+	public String getDate() {
+		return date;
 	}
 }

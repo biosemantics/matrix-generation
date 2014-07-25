@@ -35,7 +35,6 @@ public class RawMatrixTransformer {
 
 	public RawMatrix transform(Matrix matrix) {
 		List<RowHead> rootRowHeads = new LinkedList<RowHead>();
-		List<RowHead> rowHeads = getRowHeads(rootRowHeads);
 		List<ColumnHead> columnHeads = new LinkedList<ColumnHead>();
 		Map<RowHead, List<CellValue>> cellValues = new HashMap<RowHead, List<CellValue>>();
 		
@@ -54,12 +53,13 @@ public class RawMatrixTransformer {
 			addRowsAndDescendantsCellValues(rowHead, characters, cellValues);
 		}
 		
+		List<RowHead> rowHeads = getRowHeads(rootRowHeads);
 		for(AddColumn addColumn : addColumns) {
 			Column column = addColumn.getColumn(matrix, rowHeads);
-			columnHeads.add(1, column.getColumnHead());
+			columnHeads.add(0, column.getColumnHead());
 			Map<RowHead, CellValue> values = column.getCellValues();
 			for(RowHead key : values.keySet()) {
-				cellValues.get(key).add(1, values.get(key));
+				cellValues.get(key).add(0, values.get(key));
 			}
 		}
 		
