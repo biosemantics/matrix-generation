@@ -30,6 +30,8 @@ import org.tdwg.rs.ubif._2006.*;
 import edu.arizona.biosemantics.matrixgeneration.Configuration;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.RankData;
+import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
@@ -37,7 +39,8 @@ import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
 public class SDDWriter implements Writer {
-	
+
+	private ObjectFactory objectFactory = new ObjectFactory();
 	private MetadataCreator metdataCreator = new MetadataCreator();
 	private DatasetHandler datasetHandler = new DatasetHandler();
 	private TaxonNameHandler taxonNameHandler = new TaxonNameHandler();
@@ -47,7 +50,6 @@ public class SDDWriter implements Writer {
 	private CharacterSetHandler characterSetHandler = new CharacterSetHandler();
 	private CharacterTreeHandler characterTreeHandler = new CharacterTreeHandler();
 	private CodeDescriptionHandler codeDescriptionHandler = new CodeDescriptionHandler();
-	private ObjectFactory objectFactory = new ObjectFactory();
 	private final String NODE_PREFIX = "th_node_";
 	private	ValueTypeDeterminer valueTypeDeterminer = new ValueTypeDeterminer();
 	
@@ -370,8 +372,8 @@ public class SDDWriter implements Writer {
 			for(RowHead rowHead : rawMatrix.getRootRowHeads()) {
 				//possibly want to keep the rowheads in a list, see original datasethandler and its getTaxa method
 				taxonNameHandler.processRowHead(rowHead);
-				taxonHierarchyHandler.processRowHead(rowHead, null);
 				characterSetHandler.processRowHead(rowHead, rawMatrix);
+				characterTreeHandler.processRowHead(rowHead);
 				descriptiveConceptHandler.processRowHead(rowHead, rawMatrix);
 			}
 			dataset.setTaxonNames(taxonNameHandler.getTaxonNames());
@@ -405,7 +407,9 @@ public class SDDWriter implements Writer {
 			taxonNameCore.setRank(taxonomicRank);
 			taxonNameSet.getTaxonName().add(taxonNameCore);
 			
+			taxonHierarchyHandler.processRowHead(rowHead);
 			characterTreeHandler.processTaxonName(taxonNameCore);
+			codeDescriptionHandler.processTaxonName(taxonNameCore);
 		}
 
 		public TaxonNameSet getTaxonNames() {
@@ -433,7 +437,7 @@ public class SDDWriter implements Writer {
 			taxonHierarchySet.getTaxonHierarchy().add(taxonHierarchyCore);
 		}
 		
-		public void processRowHead(RowHead rowHead, RowHead parent) {
+		public void processRowHead(RowHead rowHead) {
 			TaxonNameCore taxonName = lookupTaxonNameCore(rowHead);
 			TaxonHierarchyNode taxonNode = objectFactory.createTaxonHierarchyNode();
 			taxonNode.setId(NODE_PREFIX + rowHead.getValue());
@@ -441,9 +445,9 @@ public class SDDWriter implements Writer {
 			ref.setRef(taxonName.getId());
 			taxonNode.setTaxonName(ref);
 			
-			if(parent != null) {
+			if(rowHead.getParent() != null) {
 				TaxonHierarchyNodeRef parentNodeRef = objectFactory.createTaxonHierarchyNodeRef();
-				parentNodeRef.setRef(NODE_PREFIX + parent.getValue());
+				parentNodeRef.setRef(NODE_PREFIX + rowHead.getParent().getValue());
 				taxonNode.setParent(parentNodeRef);
 			}
 			taxonHierarchyNodeSeq.getNode().add(taxonNode);
@@ -485,18 +489,20 @@ public class SDDWriter implements Writer {
 			List<ColumnHead> columnHeads = rawMatrix.getColumnHeads();
 			Set<StructureIdentifier> createdStructures = new HashSet<StructureIdentifier>();
 			for(ColumnHead columnHead : columnHeads) {
-				StructureIdentifier structureIdentifier = columnHead.getSource().getStructureIdentifier();
-				if(!createdStructures.contains(structureIdentifier)) {
-					createdStructures.add(structureIdentifier);
-					DescriptiveConcept dc = objectFactory.createDescriptiveConcept();
-					String structureName = (structureIdentifier.getStructureConstraintOrEmpty() + " " + 
-							structureIdentifier.getStructureName()).trim();
-					dc.setId(DC_PREFIX.concat(structureName));
-					Representation rep = makeRep(structureName);
-					dc.setRepresentation(rep);
-					dcsToAdd.put(dc.getId(), dc);
-					modifierHandler.processColumnHead(columnHead, rawMatrix);
-					characterTreeHandler.processTaxonConceptStructureTriple(new TaxonConceptStructureTriple(rowHead, dc, structureIdentifier));
+				if(columnHead.hasCharacterSource()) {
+					StructureIdentifier structureIdentifier = columnHead.getSource().getStructureIdentifier();
+					if(!createdStructures.contains(structureIdentifier)) {
+						createdStructures.add(structureIdentifier);
+						DescriptiveConcept dc = objectFactory.createDescriptiveConcept();
+						String structureName = (structureIdentifier.getStructureConstraintOrEmpty() + " " + 
+								structureIdentifier.getStructureName()).trim();
+						dc.setId(DC_PREFIX.concat(structureName));
+						Representation rep = makeRep(structureName);
+						dc.setRepresentation(rep);
+						dcsToAdd.put(dc.getId(), dc);
+						modifierHandler.processColumnHead(columnHead, rawMatrix);
+						characterTreeHandler.processTaxonConceptStructureTriple(new TaxonConceptStructureTriple(rowHead, dc, structureIdentifier));
+					}
 				}
 			}
 		}
@@ -751,7 +757,7 @@ public class SDDWriter implements Writer {
 							new HashMap<TaxonCharacterStateTriple, CellValue>();
 					possibleModifier.put(triple, cellValue);
 					modifierHandler.processPossibleModifier(possibleModifier);
-					characterTreeHandler.processRowHead(rowHead);
+					characterTreeHandler.processTaxonCharacterStructureTripe(new TaxonCharacterStructureTriple(rowHead, character, columnHead.getSource().getStructureIdentifier()));
 				}
 			}
 		}
@@ -852,9 +858,13 @@ public class SDDWriter implements Writer {
 			String from = value.getFrom();
 			if(from == null || from.isEmpty())
 				from = value.getFromInclusive();
+			if(from == null || from.isEmpty())
+				from = value.getValue();
 			String to = value.getTo();
 			if(to == null || to.isEmpty())
 				to = value.getToInclusive();
+			if(to == null || to.isEmpty())
+				to = value.getValue();
 			
 			if (valueTypeDeterminer.isSingleton(cellValue.getSource())) {
 				QuantitativeCharMapping mapping = objectFactory.createQuantitativeCharMapping();
@@ -1173,7 +1183,7 @@ public class SDDWriter implements Writer {
 				addTempCharacterTree(rowHead.getValue());
 				characterTree = tempTrees.get(rowHead.getValue());
 			}
-			else
+			else if(characterTree == null)
 				characterTree = tempTrees.get(rowHead.getValue());
 			if(characterTree.getNodes() == null) {
 				CharTreeNodeSeq ctNodeSeq = objectFactory.createCharTreeNodeSeq();
@@ -1347,7 +1357,8 @@ public class SDDWriter implements Writer {
 		datasetHandler.create(rawMatrix);
 		descriptiveConceptHandler.create();
 		characterSetHandler.create();
-		codeDescriptionHandler.addSummaryDataToCodedDescriptions(null, null);		
+		codeDescriptionHandler.addSummaryDataToCodedDescriptions(characterSetHandler.getMatrix(), 
+				modifierHandler.getMatrixModifiers());		
 		datasets.getDataset().add(datasetHandler.getDataset());
 		return datasets;
 	}

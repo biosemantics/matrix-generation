@@ -105,6 +105,7 @@ public class RawMatrixTransformer {
 		for(Taxon child : taxon.getChildren()) {
 			RowHead childRowHead = rowHeadTransformer.transform(child);
 			rowHead.addChild(childRowHead);
+			childRowHead.setParent(rowHead);
 			createDescendantRowHeads(child, childRowHead);
 		}
 	}

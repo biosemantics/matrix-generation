@@ -9,6 +9,7 @@ public class RowHead {
 	private Taxon source;
 	private String value;
 	private LinkedHashSet<RowHead> children = new LinkedHashSet<RowHead>();
+	private RowHead parent;
 	
 	public RowHead(String value, Taxon source) {
 		this.value = value;
@@ -33,6 +34,14 @@ public class RowHead {
 
 	public int getChildrenCount() {
 		return children.size();
+	}
+
+	public void setParent(RowHead parent) {
+		this.parent = parent;
+	}
+	
+	public RowHead getParent() {
+		return parent;
 	}
 
 }

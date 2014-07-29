@@ -67,6 +67,10 @@ public class SemanticMarkupReader implements Reader {
 
 	private List<Taxon> createTaxaHierarchy(List<TaxonName> taxonNames, 
 			Map<RankData, Taxon> rankTaxaMap) {
+		for(RankData rankData : rankTaxaMap.keySet()) {
+			rankData.setTaxon(rankTaxaMap.get(rankData));
+		}
+		
 		List<Taxon> rootTaxa = new LinkedList<Taxon>();
 		for(TaxonName taxonName : taxonNames) {
 			LinkedList<RankData> rankData = taxonName.getRankData();

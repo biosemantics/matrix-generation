@@ -7,6 +7,7 @@ public class RankData implements Comparable<RankData> {
 	private Rank rank;
 	private String name;
 	private String date;
+	private Taxon taxon;
 
 	public RankData(String author, String date, Rank rank, String name) {
 		super();
@@ -69,5 +70,13 @@ public class RankData implements Comparable<RankData> {
 
 	public String getDate() {
 		return date;
+	}
+	
+	public void setTaxon(Taxon taxon) {
+		this.taxon = taxon;
+	}
+	
+	public Taxon getTaxon() {
+		return taxon;
 	}
 }
