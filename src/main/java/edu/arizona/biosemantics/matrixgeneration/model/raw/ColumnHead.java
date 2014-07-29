@@ -20,6 +20,9 @@ public class ColumnHead {
 		return source;
 	}
 	
+	public boolean hasCharacterSource() {
+		return source != null;
+	}
 	
 
 }

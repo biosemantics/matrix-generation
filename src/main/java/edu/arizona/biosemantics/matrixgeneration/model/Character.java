@@ -1,8 +1,16 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Character implements Comparable<Character> {
 
 	public static class StructureIdentifier {
+		
+		//added for now only for sdd output which is based on a structure hierarchy built from
+		//part_of relationships
+		private StructureIdentifier parent = null;
+		private List<StructureIdentifier> children = new LinkedList<StructureIdentifier>();
 		
 		private String structureName;
 		private String structureConstraint;
@@ -18,6 +26,20 @@ public class Character implements Comparable<Character> {
 
 		public String getStructureConstraint() {
 			return structureConstraint;
+		}
+		
+		public String getStructureConstraintOrEmpty() {
+			if(getStructureConstraint() == null)
+				return "";
+			return getStructureConstraint();
+		}	
+		
+		public StructureIdentifier getParent() {
+			return parent;
+		}
+
+		public List<StructureIdentifier> getChildren() {
+			return children;
 		}
 
 		@Override
@@ -75,7 +97,15 @@ public class Character implements Comparable<Character> {
 	public String getStructureConstraint() {
 		return structureIdentifier.getStructureConstraint();
 	}
+	
+	public String getStructureConstraintOrEmpty() {
+		return structureIdentifier.getStructureConstraintOrEmpty();
+	}	
 
+	public StructureIdentifier getStructureIdentifier() {
+		return structureIdentifier;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -119,11 +149,5 @@ public class Character implements Comparable<Character> {
 		}
 		return getStructureName().compareTo(character.getStructureName());
 	}
-
-	public String getStructureConstraintOrEmpty() {
-		if(structureIdentifier.getStructureConstraint() == null)
-			return "";
-		return structureIdentifier.getStructureConstraint();
-	}	
 	
 }
