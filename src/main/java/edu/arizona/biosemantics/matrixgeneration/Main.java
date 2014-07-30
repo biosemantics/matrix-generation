@@ -7,12 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import edu.arizona.biosemantics.matrixgeneration.io.CSVWriter;
-import edu.arizona.biosemantics.matrixgeneration.io.NexusWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.Reader;
-import edu.arizona.biosemantics.matrixgeneration.io.SDDWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.SemanticMarkupReader;
-import edu.arizona.biosemantics.matrixgeneration.io.Writer;
+import edu.arizona.biosemantics.matrixgeneration.io.raw.Writer;
+import edu.arizona.biosemantics.matrixgeneration.io.raw.CSVWriter;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
