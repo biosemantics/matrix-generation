@@ -32,7 +32,9 @@ public class RangeValueByChoiceCellValueTransformer implements ByChoiceCellValue
 		
 		String from = value.getFrom() == null ? value.getFromInclusive() : value.getFrom();
 		String to = value.getTo() == null ? value.getToInclusive() : value.getTo();
-		result += from + value.getFromUnit() + " - " + to + value.getToUnit();
+		
+		result += from + (value.getFromUnit() == null ? "" : value.getFromUnit()) +
+				" - " + to + (value.getToUnit() == null ? "" : value.getToUnit());
 		
 		if(modifier != null) {
 			for(String appendModifierPattern : appendModifierPatterns) {
