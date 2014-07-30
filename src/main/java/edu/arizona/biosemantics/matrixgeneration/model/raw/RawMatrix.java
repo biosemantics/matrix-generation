@@ -5,18 +5,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
+
 public class RawMatrix {
 
 	private List<RowHead> rootRowHeads;
 	private List<ColumnHead> columnHeads;
 	private Map<RowHead, List<CellValue>> cellValues;
+	private Matrix source;
 	
 	public RawMatrix(List<RowHead> rootRowHeads, List<ColumnHead> columnHeads,
-			Map<RowHead, List<CellValue>> cellValues) {
+			Map<RowHead, List<CellValue>> cellValues, Matrix source) {
 		super();
 		this.rootRowHeads = Collections.unmodifiableList(rootRowHeads);
 		this.columnHeads = Collections.unmodifiableList(columnHeads);
 		this.cellValues = Collections.unmodifiableMap(cellValues);
+		this.source = source;
 		if(getRowCount() != cellValues.size())
 			throw new IllegalArgumentException("");
 		for(List<CellValue> rowsCellValues : cellValues.values()) {
@@ -63,4 +67,10 @@ public class RawMatrix {
 	public int getColumnCount() {
 		return columnHeads.size();
 	}
+
+	public Matrix getSource() {
+		return source;
+	}
+	
+	
 }

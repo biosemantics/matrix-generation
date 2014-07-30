@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.io;
+package edu.arizona.biosemantics.matrixgeneration.io.raw;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +28,10 @@ import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.tdwg.rs.ubif._2006.*;
 
 import edu.arizona.biosemantics.matrixgeneration.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.io.ValueTypeDeterminer;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.RankData;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
@@ -52,102 +54,6 @@ public class SDDWriter implements Writer {
 	private CodeDescriptionHandler codeDescriptionHandler = new CodeDescriptionHandler();
 	private final String NODE_PREFIX = "th_node_";
 	private	ValueTypeDeterminer valueTypeDeterminer = new ValueTypeDeterminer();
-	
-
-	
-	/** StateFactory code before **/
-	private static class ValueTypeDeterminer {	
-		public enum ValueType {
-			SINGLETON_NUMERIC, SINGLETON_CATEGORICAL, RANGE_CATEGORICAL, RANGE_NUMERIC, EMPTY
-		}
-		public boolean isSingletonNumeric(Value value) {
-			return determine(value).equals(ValueType.SINGLETON_NUMERIC);
-		}
-		public boolean isSingletonCategorical(Value value) {
-			return determine(value).equals(ValueType.SINGLETON_CATEGORICAL);
-		}
-		public boolean isRangeCategorical(Value value) {
-			return determine(value).equals(ValueType.RANGE_CATEGORICAL);
-		}
-		public boolean isRangeNumeric(Value value) {
-			return determine(value).equals(ValueType.RANGE_NUMERIC);
-		}
-		public boolean isEmpty(Value value) {
-			return determine(value).equals(ValueType.EMPTY);
-		}
-		private ValueType determine(Value value) {
-			if(value.getValue() == null) {
-				if(value.getFromUnit() != null && value.getToUnit() != null) {
-					Double from = null, to = null;
-					try {
-						from = Double.parseDouble(value.getFrom());
-						to = Double.parseDouble(value.getTo());
-					}
-					catch(NumberFormatException e) {
-						System.out.println("Bad number:" + e.getMessage() + " in value: " + value.toString());
-						from = -1.0;
-						to = -1.0;
-					}
-					return ValueType.RANGE_NUMERIC;
-				}
-				else {
-					//Let's first check if it's a count, by trying to parse it as an integer.
-					Double from = null, to = null;
-					try {
-						from = Double.parseDouble(value.getFrom());
-						if (value.getTo()!=null)
-							to = Double.parseDouble(value.getTo());
-						else 
-							to = 9999.00;
-						return ValueType.RANGE_NUMERIC;
-					}
-					catch (NumberFormatException e) {
-						String sto;
-						if (value.getTo()!=null)
-							sto = value.getTo();
-						else 
-							sto = "9999.00";
-						return ValueType.RANGE_CATEGORICAL;
-					}
-				}
-			}
-			else {
-				if(value.getUnit() != null) {
-					Double v = null;
-					try {
-						v = Double.parseDouble(value.getValue());
-					}
-					catch(NumberFormatException e) {
-						System.out.println("Bad number:" + e.getMessage() + " in value: " + value.toString());
-						v = -1.0;
-					}
-					return ValueType.SINGLETON_CATEGORICAL;
-				} else {
-					//Need to check here for counts, too
-					Double v = null;
-					try {
-						v = Double.parseDouble(value.getValue());
-						return ValueType.SINGLETON_NUMERIC;
-					}
-					catch (NumberFormatException e) {
-						if(value.getValue().equals("/"))
-							return ValueType.EMPTY;
-						else
-							return ValueType.SINGLETON_CATEGORICAL;
-					}
-				}
-			}
-		}
-		public boolean isSingleton(Value value) {
-			ValueType result = determine(value);
-			return result.equals(ValueType.SINGLETON_CATEGORICAL) || result.equals(ValueType.SINGLETON_NUMERIC);
-		}
-		public boolean isRange(Value value) {
-			ValueType result = determine(value);
-			return result.equals(ValueType.RANGE_CATEGORICAL) || result.equals(ValueType.RANGE_NUMERIC);
-		}
-		
-	}
 	
 	private class TaxonCharacterStateTriple {
 		
@@ -501,7 +407,8 @@ public class SDDWriter implements Writer {
 						dc.setRepresentation(rep);
 						dcsToAdd.put(dc.getId(), dc);
 						modifierHandler.processColumnHead(columnHead, rawMatrix);
-						characterTreeHandler.processTaxonConceptStructureTriple(new TaxonConceptStructureTriple(rowHead, dc, structureIdentifier));
+						characterTreeHandler.processTaxonConceptStructureTriple(
+								new TaxonConceptStructureTriple(rowHead, dc, structureIdentifier), rawMatrix);
 					}
 				}
 			}
@@ -709,7 +616,7 @@ public class SDDWriter implements Writer {
 					AbstractCharacterDefinition character = null;
 					CharacterLocalStateDef localStateDef = null;
 					//resolve full character name
-					String fullCharName = resolveFullCharacterName(columnHead);
+					String fullCharName = resolveFullCharacterName(columnHead, rawMatrix);
 					Representation charRep = makeRep(fullCharName);
 					///get each associated state (and it's value)
 					
@@ -1031,8 +938,9 @@ public class SDDWriter implements Writer {
 				charTreeSet.getCharacterTree().add(characterTree);
 			}
 		}
-		public void processTaxonConceptStructureTriple(TaxonConceptStructureTriple triple) {
-			addConceptNodesToCharacterTree(triple.rowHead, triple.descriptiveConcept, triple.structureIdentifier);
+		public void processTaxonConceptStructureTriple(TaxonConceptStructureTriple triple, RawMatrix rawMatrix) {
+			addConceptNodesToCharacterTree(triple.rowHead, triple.descriptiveConcept, triple.structureIdentifier, 
+					rawMatrix);
 		}
 		
 		public void processRowHead(RowHead rowHead) {
@@ -1084,7 +992,8 @@ public class SDDWriter implements Writer {
 		 * @param dc
 		 * @param structureNode
 		 */
-		private void addConceptNodesToCharacterTree(RowHead rowHead, DescriptiveConcept dc, StructureIdentifier structureIdentifier) {
+		private void addConceptNodesToCharacterTree(RowHead rowHead, DescriptiveConcept dc, StructureIdentifier structureIdentifier, 
+				RawMatrix rawMatrix) {
 			CharacterTree characterTree = findCharacterTree(rowHead);
 			if(characterTree.getNodes() == null) {
 				CharTreeNodeSeq ctNodeSeq = objectFactory.createCharTreeNodeSeq();
@@ -1093,8 +1002,14 @@ public class SDDWriter implements Writer {
 			//make a new DC node for the tree, set it's reference to the id of the actual Descriptive Concept, set
 			//the ID to be the id of the DC object with 'dc_node' in front, and point to the parent of the DC object.
 			Object dcNode = resolveDescriptiveConceptNode(dc);
-			if(structureIdentifier.getParent() != null) {
-				StructureIdentifier parentStructure = structureIdentifier.getParent();
+			
+			//TODO: 
+			// it is unclear and underspecified how to set up a structure hierarchy when 
+			// a structure hierarchy can be taxon specific and somehow merged over all taxa 
+			// (StructureIdentifier (independent) vs Structure (taxon-specific))
+			Matrix matrix = rawMatrix.getSource();
+			if(matrix.getParent(structureIdentifier) != null) {
+				StructureIdentifier parentStructure = matrix.getParent(structureIdentifier);
 				CharTreeNodeRef ctNodeRef = objectFactory.createCharTreeNodeRef();
 				ctNodeRef.setRef(DC_NODE_PREFIX + descriptiveConceptHandler.DC_PREFIX + 
 						(parentStructure.getStructureConstraintOrEmpty() + " " + parentStructure.getStructureName()).trim());
@@ -1372,17 +1287,23 @@ public class SDDWriter implements Writer {
 		return rep;
 	}
 	
-	public String resolveFullCharacterName(ColumnHead columnHead) {
+	public String resolveFullCharacterName(ColumnHead columnHead, RawMatrix rawMatrix) {
+		Matrix matrix = rawMatrix.getSource();
 		Character character = columnHead.getSource();
 		StructureIdentifier structureIdentifier = character.getStructureIdentifier();
 		String structName = (character.getStructureConstraintOrEmpty() + " " + character.getStructureName()).trim();
 		String charName = structName + "_" + character.getName();
-		StructureIdentifier parentStructureIdentifier = structureIdentifier.getParent();
+		
+		//TODO: 
+		// it is unclear and underspecified how to set up a structure hierarchy when 
+		// a structure hierarchy can be taxon specific and somehow merged over all taxa 
+		// (StructureIdentifier (independent) vs Structure (taxon-specific))
+		StructureIdentifier parentStructureIdentifier = matrix.getParent(structureIdentifier);
 		while(parentStructureIdentifier != null) {
 			structName = (parentStructureIdentifier.getStructureConstraintOrEmpty() + " " + character.getStructureName()).trim();
 			if(!structName.equals("whole_organism"))
 				charName = structName + "_" + charName;
-			parentStructureIdentifier = parentStructureIdentifier.getParent();
+			parentStructureIdentifier = matrix.getParent(parentStructureIdentifier);
 		}
 		return charName;
 	}

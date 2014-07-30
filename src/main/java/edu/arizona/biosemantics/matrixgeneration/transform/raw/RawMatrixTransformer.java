@@ -63,7 +63,7 @@ public class RawMatrixTransformer {
 			}
 		}
 		
-		return new RawMatrix(rootRowHeads, columnHeads, cellValues);
+		return new RawMatrix(rootRowHeads, columnHeads, cellValues, matrix);
 	}
 
 	private List<RowHead> getRowHeads(List<RowHead> rootRowHeads) {

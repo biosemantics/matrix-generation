@@ -2,6 +2,8 @@ package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.util.LinkedList;
 
+import com.hp.hpl.jena.rdf.model.RDFNode;
+
 public class TaxonName {
 	
 	private LinkedList<RankData> rankData;
@@ -25,5 +27,14 @@ public class TaxonName {
 
 	public String getDate() {
 		return date;
+	}
+
+	public String getDisplayName() {
+		String result = "";
+		for(RankData data : rankData) {
+			result += data.displayName() + ";";
+		}
+		result = result.substring(0, result.length() - 1);
+		return result + ":" + author + "," + date;
 	}
 }

@@ -130,12 +130,4 @@ public class Taxon {
 		this.taxonName = taxonName;
 	}
 
-	public File getSourceFile() {
-		return sourceFile;
-	}
-
-	public void setSourceFile(File sourceFile) {
-		this.sourceFile = sourceFile;
-	}
-
 }

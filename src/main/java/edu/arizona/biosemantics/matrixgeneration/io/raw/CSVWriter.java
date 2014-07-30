@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.io;
+package edu.arizona.biosemantics.matrixgeneration.io.raw;
 
 import java.io.File;
 import java.io.FileWriter;

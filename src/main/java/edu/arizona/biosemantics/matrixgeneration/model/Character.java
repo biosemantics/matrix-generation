@@ -7,11 +7,6 @@ public class Character implements Comparable<Character> {
 
 	public static class StructureIdentifier {
 		
-		//added for now only for sdd output which is based on a structure hierarchy built from
-		//part_of relationships
-		private StructureIdentifier parent = null;
-		private List<StructureIdentifier> children = new LinkedList<StructureIdentifier>();
-		
 		private String structureName;
 		private String structureConstraint;
 		
@@ -33,14 +28,6 @@ public class Character implements Comparable<Character> {
 				return "";
 			return getStructureConstraint();
 		}	
-		
-		public StructureIdentifier getParent() {
-			return parent;
-		}
-
-		public List<StructureIdentifier> getChildren() {
-			return children;
-		}
 
 		@Override
 		public int hashCode() {
@@ -75,6 +62,10 @@ public class Character implements Comparable<Character> {
 			} else if (!structureName.equals(other.structureName))
 				return false;
 			return true;
+		}
+
+		public String getDisplayName() {
+			return (getStructureConstraintOrEmpty() + " " + getStructureName()).trim();
 		}
 	}
 	
