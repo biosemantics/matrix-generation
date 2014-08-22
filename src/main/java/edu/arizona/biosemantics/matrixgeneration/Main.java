@@ -107,7 +107,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Main main = new Main("C:/test/users/1070/input_2", "matrix.csv");
+		Main main = new Main(args[0], args[1]);
 		main.run();
 	}
 	
