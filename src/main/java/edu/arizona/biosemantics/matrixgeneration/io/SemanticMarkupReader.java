@@ -113,7 +113,7 @@ public class SemanticMarkupReader implements Reader {
 				
 				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName, structureIdTaxonStructuresMap);
 				sourceFilesMap.put(taxon, file);
-				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
+ 				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
 			}
 		}
 	}
@@ -155,6 +155,10 @@ public class SemanticMarkupReader implements Reader {
 			rankDatas.add(rankDataInstances.get(rankData));
 		}
 		Collections.sort(rankDatas);
+		
+		for(int i=1; i<rankDatas.size(); i++) {
+			rankDatas.get(i).setParent(rankDatas.get(0));
+		}
 		return rankDatas;
 	}
 
