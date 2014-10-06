@@ -26,7 +26,7 @@ public class Configuration {
 	public Configuration() throws IOException {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		Properties properties = new Properties();
-		properties.load(loader.getResourceAsStream("config.properties"));
+		properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/config.properties"));
 		this.projectVersion = properties.getProperty("project.version");
 		this.rdfPrefixStructure = properties.getProperty("rdfPrefixSturcture");
 		this.rdfPrefixCharacter = properties.getProperty("rdfPrefixCharacter");
