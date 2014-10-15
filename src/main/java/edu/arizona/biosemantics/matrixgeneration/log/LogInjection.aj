@@ -5,7 +5,7 @@ package edu.arizona.biosemantics.matrixgeneration.log;
  * 
  * @author rodenhausen
  */
-public aspect LogInjectionAspect {
+public aspect LogInjection {
 
 	/**
 	 * log method is defined for ILoggables

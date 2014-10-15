@@ -2,8 +2,6 @@ package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.util.LinkedList;
 
-import com.hp.hpl.jena.rdf.model.RDFNode;
-
 public class TaxonName {
 	
 	private LinkedList<RankData> rankData;

@@ -9,16 +9,13 @@ import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.io.Reader;
 import edu.arizona.biosemantics.matrixgeneration.io.SemanticMarkupReader;
-import edu.arizona.biosemantics.matrixgeneration.io.raw.Writer;
 import edu.arizona.biosemantics.matrixgeneration.io.raw.CSVWriter;
+import edu.arizona.biosemantics.matrixgeneration.io.raw.Writer;
+import edu.arizona.biosemantics.matrixgeneration.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.InheritanceTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.matrix.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.matrix.NormalizeUnitsTransformer.Unit;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddColumn;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddSourceColumn;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.ByChoiceCellValueTransformer;
@@ -42,10 +39,14 @@ public class Main {
 	private List<String> appendModifierPatterns;
 	private String inputDir;
 	private String outputFile;
+	private boolean inheritValues;
+	private boolean generateAbsentPresent;
 	
-	public Main(String inputDir, String outputFile) {
+	public Main(String inputDir, String outputFile, boolean inheritValues, boolean generateAbsentPresent) {
 		this.inputDir = inputDir;
 		this.outputFile = outputFile;
+		this.inheritValues = inheritValues;
+		this.generateAbsentPresent = generateAbsentPresent;
 		prependModifierPatterns = createPrependModifierPatterns();
 		appendModifierPatterns = createAppendModifierPatterns();
 	}
@@ -70,12 +71,20 @@ public class Main {
 	}
 
 	public void run() throws Exception {
+		log(LogLevel.INFO, "Start Matrix Generation");
+		log(LogLevel.INFO, "Input dir: " + inputDir);
+		log(LogLevel.INFO, "Output file: " + outputFile);
+		log(LogLevel.INFO, "Inherit values: " + inheritValues);
+		log(LogLevel.INFO, "Genreate Absent Present: " + generateAbsentPresent);
+		
 		Reader reader = new SemanticMarkupReader(new File(inputDir));
 		Matrix matrix = reader.read();
-		//System.out.println("read matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n" + matrix.toString());
+		log(LogLevel.INFO, "Read matrix. Taxa: " + matrix.getTaxaCount() + ", Characters: " + matrix.getCharactersCount());
 		
-		Transformer inherit = new InheritanceTransformer();
-		inherit.transform(matrix);
+		if(inheritValues) {
+			Transformer inherit = new InheritanceTransformer();
+			inherit.transform(matrix);
+		}
 		
 		//Transformer switchUnits = new NormalizeUnitsTransformer(Unit.mm);
 		//switchUnits.transform(matrix);
@@ -83,7 +92,9 @@ public class Main {
 		//Transformer splitRangeValues = new SplitRangeValuesTransformer();
 		//splitRangeValues.transform(matrix);
 		
-		//System.out.println("transformed matrix: " + matrix.getTaxaCount() + " taxa, " + matrix.getCharactersCount() + " characters.\n " + matrix.toString());
+		//System.out.println("transformed matrix: " + \n " + matrix.toString());
+		log(LogLevel.INFO, "Matrix successfully transformed. Taxa: " + matrix.getTaxaCount() + 
+				", Characters: " + matrix.getCharactersCount());
 		
 		List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
 		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer(prependModifierPatterns, appendModifierPatterns));
@@ -98,16 +109,19 @@ public class Main {
 		RawMatrixTransformer rawMatrixTransformer = new RawMatrixTransformer(columnHeadTransformer,
 				rowHeadTransformer, cellValueTransformer, addColumns);
 		RawMatrix rawMatrix = rawMatrixTransformer.transform(matrix);
+		log(LogLevel.INFO, "Raw matrix successfully transformed. Rows: " + rawMatrix.getRowCount() + 
+				", Columns: " + rawMatrix.getColumnCount());
 		
 		//System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
 		Writer writer = new CSVWriter(new File(outputFile));
 		//Writer writer = new SDDWriter(new File("matrix.sdd"));
 		//Writer writer = new NexusWriter(new File("matrix.nxs"));
 		writer.write(rawMatrix);
+		log(LogLevel.INFO, "Matrix successfully writen");
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Main main = new Main(args[0], args[1]);
+		Main main = new Main(args[0], args[1], Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
 		main.run();
 	}
 	

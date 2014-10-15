@@ -11,7 +11,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  * 
  * @author rodenhausen
  */
-public aspect StringifyInjectionAspect {
+public aspect StringifyInjection {
 
 	@XmlTransient
 	@Transient

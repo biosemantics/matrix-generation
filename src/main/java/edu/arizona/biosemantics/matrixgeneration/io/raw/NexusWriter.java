@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
-import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
@@ -26,14 +25,14 @@ public class NexusWriter implements Writer {
 	}
 	
 	@Override
-	public void write(RawMatrix rawMatrix) throws Exception {
+	public void write(RawMatrix rawMatrix) throws IOException  {
 		Map<Integer, List<String>> columnStates = getColumnStates(rawMatrix);
-		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		writeMetaData(bw, rawMatrix, columnStates);
-		writeCharacterLabels(bw, rawMatrix, columnStates);
-		writeMatrix(bw, rawMatrix, columnStates);
-		bw.flush();
-		bw.close();
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+			writeMetaData(bw, rawMatrix, columnStates);
+			writeCharacterLabels(bw, rawMatrix, columnStates);
+			writeMatrix(bw, rawMatrix, columnStates);
+			bw.flush();
+		}
 	}
 
 	private void writeCharacterLabels(BufferedWriter bw, RawMatrix rawMatrix,

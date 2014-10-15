@@ -1,16 +1,9 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import edu.arizona.biosemantics.matrixgeneration.log.LogLevel;
-import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
 
 public class Structure implements Cloneable {
 

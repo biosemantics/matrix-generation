@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -21,14 +17,14 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.RankData;
 import edu.arizona.biosemantics.matrixgeneration.model.Relation;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon.Rank;
-import edu.arizona.biosemantics.matrixgeneration.model.RankData;
 import edu.arizona.biosemantics.matrixgeneration.model.TaxonName;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 
@@ -52,7 +48,7 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	@Override
-	public Matrix read() throws Exception {
+	public Matrix read() throws JDOMException, IOException {
 		Map<Character, Character> characters = new HashMap<Character, Character>();
 		
 		Map<String, Structure> idStructureMap = new HashMap<String, Structure>();

@@ -1,7 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
 import java.util.List;
-import java.util.Set;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;

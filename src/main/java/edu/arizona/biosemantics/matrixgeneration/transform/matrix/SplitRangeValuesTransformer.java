@@ -3,11 +3,11 @@ package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
 
 public class SplitRangeValuesTransformer implements Transformer {
 

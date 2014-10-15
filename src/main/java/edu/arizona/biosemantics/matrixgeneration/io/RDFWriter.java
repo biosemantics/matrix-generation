@@ -1,13 +1,8 @@
 package edu.arizona.biosemantics.matrixgeneration.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -21,15 +16,12 @@ import com.hp.hpl.jena.rdf.model.impl.PropertyImpl;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 
 import edu.arizona.biosemantics.matrixgeneration.Configuration;
-import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Relation;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
-import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
-import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
 public class RDFWriter implements Writer {
 
@@ -56,7 +48,7 @@ public class RDFWriter implements Writer {
 	}
 	
 	@Override
-	public void write(Matrix matrix) throws Exception {
+	public void write(Matrix matrix) throws IOException {
 		Model taxonModel = ModelFactory.createDefaultModel();
 		OntModel biolModel = ModelFactory.createOntologyModel();
 		OntModel descModel = ModelFactory.createOntologyModel();
@@ -75,10 +67,10 @@ public class RDFWriter implements Writer {
 		com.hp.hpl.jena.rdf.model.RDFWriter writer = taxonModel.getWriter("RDF/XML");
 		writer.setProperty("allowBadURIs", "true");
 		writer.setProperty("xmlbase", xmlBase);
-		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		writer.write(taxonModel, fileOutputStream, "XML/RDF");
-		fileOutputStream.flush();
-		fileOutputStream.close();
+		try(FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+			writer.write(taxonModel, fileOutputStream, "XML/RDF");
+			fileOutputStream.flush();
+		}
 	}
 
 	/**

@@ -2,13 +2,10 @@ package edu.arizona.biosemantics.matrixgeneration.io.raw;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,15 +22,64 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
-import org.tdwg.rs.ubif._2006.*;
+import org.tdwg.rs.ubif._2006.AbstractCharSummaryData;
+import org.tdwg.rs.ubif._2006.AbstractCharacterDefinition;
+import org.tdwg.rs.ubif._2006.AbstractRef;
+import org.tdwg.rs.ubif._2006.CatSummaryData;
+import org.tdwg.rs.ubif._2006.CategoricalCharacter;
+import org.tdwg.rs.ubif._2006.CharTreeAbstractNode;
+import org.tdwg.rs.ubif._2006.CharTreeCharacter;
+import org.tdwg.rs.ubif._2006.CharTreeNode;
+import org.tdwg.rs.ubif._2006.CharTreeNodeRef;
+import org.tdwg.rs.ubif._2006.CharTreeNodeSeq;
+import org.tdwg.rs.ubif._2006.CharacterLocalStateDef;
+import org.tdwg.rs.ubif._2006.CharacterRef;
+import org.tdwg.rs.ubif._2006.CharacterSet;
+import org.tdwg.rs.ubif._2006.CharacterStateSeq;
+import org.tdwg.rs.ubif._2006.CharacterTree;
+import org.tdwg.rs.ubif._2006.CharacterTreeSet;
+import org.tdwg.rs.ubif._2006.CodedDescription;
+import org.tdwg.rs.ubif._2006.CodedDescriptionSet;
+import org.tdwg.rs.ubif._2006.ConceptStateDef;
+import org.tdwg.rs.ubif._2006.ConceptStateRef;
+import org.tdwg.rs.ubif._2006.ConceptStateSeq;
+import org.tdwg.rs.ubif._2006.Dataset;
+import org.tdwg.rs.ubif._2006.Datasets;
+import org.tdwg.rs.ubif._2006.DescriptiveConcept;
+import org.tdwg.rs.ubif._2006.DescriptiveConceptRef;
+import org.tdwg.rs.ubif._2006.DescriptiveConceptSet;
+import org.tdwg.rs.ubif._2006.DetailText;
+import org.tdwg.rs.ubif._2006.DocumentGenerator;
+import org.tdwg.rs.ubif._2006.LabelText;
+import org.tdwg.rs.ubif._2006.ModifierDef;
+import org.tdwg.rs.ubif._2006.ModifierRefWithData;
+import org.tdwg.rs.ubif._2006.ModifierSeq;
+import org.tdwg.rs.ubif._2006.ObjectFactory;
+import org.tdwg.rs.ubif._2006.QuantSummaryData;
+import org.tdwg.rs.ubif._2006.QuantitativeCharMapping;
+import org.tdwg.rs.ubif._2006.QuantitativeCharMappingSet;
+import org.tdwg.rs.ubif._2006.QuantitativeCharacter;
+import org.tdwg.rs.ubif._2006.Representation;
+import org.tdwg.rs.ubif._2006.StateData;
+import org.tdwg.rs.ubif._2006.TaxonHierarchyCore;
+import org.tdwg.rs.ubif._2006.TaxonHierarchyNode;
+import org.tdwg.rs.ubif._2006.TaxonHierarchyNodeRef;
+import org.tdwg.rs.ubif._2006.TaxonHierarchyNodeSeq;
+import org.tdwg.rs.ubif._2006.TaxonHierarchySet;
+import org.tdwg.rs.ubif._2006.TaxonNameCore;
+import org.tdwg.rs.ubif._2006.TaxonNameRef;
+import org.tdwg.rs.ubif._2006.TaxonNameSet;
+import org.tdwg.rs.ubif._2006.TaxonomicRank;
+import org.tdwg.rs.ubif._2006.TaxonomicScopeSet;
+import org.tdwg.rs.ubif._2006.TechnicalMetadata;
+import org.tdwg.rs.ubif._2006.UnivarSimpleStatMeasureData;
+import org.tdwg.rs.ubif._2006.ValueRangeWithClass;
 
 import edu.arizona.biosemantics.matrixgeneration.Configuration;
 import edu.arizona.biosemantics.matrixgeneration.io.ValueTypeDeterminer;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.RankData;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
@@ -1261,12 +1307,12 @@ public class SDDWriter implements Writer {
 	}
 	
 	@Override
-	public void write(RawMatrix rawMatrix) throws Exception {
+	public void write(RawMatrix rawMatrix) throws DatatypeConfigurationException, IOException, JAXBException {
 		Datasets datasets = createDatasets(rawMatrix);
 		marshaller.marshal(datasets, file);			
 	}
 
-	private Datasets createDatasets(RawMatrix rawMatrix) throws Exception {	
+	private Datasets createDatasets(RawMatrix rawMatrix) throws DatatypeConfigurationException, IOException {	
 		Datasets datasets = objectFactory.createDatasets();
 		metdataCreator.create(datasets);
 		datasetHandler.create(rawMatrix);
