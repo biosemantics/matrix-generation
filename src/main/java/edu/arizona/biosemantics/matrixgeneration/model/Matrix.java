@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
 
 public class Matrix {

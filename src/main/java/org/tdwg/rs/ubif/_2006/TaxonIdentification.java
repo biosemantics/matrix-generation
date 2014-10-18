@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlSeeAlso({
     TaxonNameCore.class
 })
-public class TaxonName
+public class TaxonIdentification
     extends VersionedAbstractObject
 {
 

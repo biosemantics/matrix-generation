@@ -10,8 +10,9 @@ import java.util.Set;
 import edu.arizona.biosemantics.matrixgeneration.io.Reader;
 import edu.arizona.biosemantics.matrixgeneration.io.SemanticMarkupReader;
 import edu.arizona.biosemantics.matrixgeneration.io.raw.CSVWriter;
+import edu.arizona.biosemantics.matrixgeneration.io.raw.SerializeWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.raw.Writer;
-import edu.arizona.biosemantics.matrixgeneration.log.LogLevel;
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.InheritanceTransformer;
@@ -113,7 +114,8 @@ public class Main {
 				", Columns: " + rawMatrix.getColumnCount());
 		
 		//System.out.println("raw matrix: " + rawMatrix.getRowCount() + " rows, " + rawMatrix.getColumnCount() + " columns.\n " + rawMatrix.toString());
-		Writer writer = new CSVWriter(new File(outputFile));
+		//Writer writer = new CSVWriter(new File(outputFile));
+		Writer writer = new SerializeWriter(new File(outputFile));
 		//Writer writer = new SDDWriter(new File("matrix.sdd"));
 		//Writer writer = new NexusWriter(new File("matrix.nxs"));
 		writer.write(rawMatrix);

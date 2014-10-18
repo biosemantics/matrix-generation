@@ -90,10 +90,10 @@ public class RDFWriter implements Writer {
 				//the taxonomy is of type purl.org/NET/biol/ns#Taxonomy
 				Resource taxonomy = model.createResource("#taxonomy", biolModel.getResource(biolNS+"#Taxonomy")); 
 				Property name = new PropertyImpl(biolNS+"#name");
-				Property classification = new PropertyImpl(biolNS+"#"+taxon.getTaxonName().getRankData().getLast().getRank().toString().toLowerCase());
+				Property classification = new PropertyImpl(biolNS+"#"+taxon.getTaxonIdentification().getRankData().getLast().getRank().toString().toLowerCase());
 				model.add(fromResource, hasTaxonomy, taxonomy);
-				model.add(taxonomy, name, taxon.getTaxonName().getDisplayName());
-				model.add(taxonomy, classification, taxon.getTaxonName().getDisplayName());
+				model.add(taxonomy, name, taxon.getTaxonIdentification().getDisplayName());
+				model.add(taxonomy, classification, taxon.getTaxonIdentification().getDisplayName());
 			}
 			
 			//TODO relation part_of and structure hierarchies are not implemented yet and would possibly be on the model not on raw

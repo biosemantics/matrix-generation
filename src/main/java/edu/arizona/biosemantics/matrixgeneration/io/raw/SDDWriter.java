@@ -349,7 +349,7 @@ public class SDDWriter implements Writer {
 			rowHeadTaxonNameCoreMap.put(rowHead, taxonNameCore);
 			taxonNameCore.setId(rowHead.getValue());
 			TaxonomicRank taxonomicRank = objectFactory.createTaxonomicRank();
-			String rank = rowHead.getSource().getTaxonName().getRankData().getLast().getRank().toString();
+			String rank = rowHead.getSource().getTaxonIdentification().getRankData().getLast().getRank().toString();
 			taxonomicRank.setLiteral(rank);
 			Representation rep = objectFactory.createRepresentation();
 			LabelText labelText = objectFactory.createLabelText();

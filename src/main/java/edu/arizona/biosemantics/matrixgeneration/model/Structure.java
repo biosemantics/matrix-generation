@@ -3,7 +3,7 @@ package edu.arizona.biosemantics.matrixgeneration.model;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-import edu.arizona.biosemantics.matrixgeneration.log.LogLevel;
+import edu.arizona.biosemantics.common.log.LogLevel;
 
 public class Structure implements Cloneable {
 

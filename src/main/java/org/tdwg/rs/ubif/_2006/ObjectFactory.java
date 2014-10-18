@@ -1028,11 +1028,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link TaxonName }
+     * Create an instance of {@link TaxonIdentification }
      * 
      */
-    public TaxonName createTaxonName() {
-        return new TaxonName();
+    public TaxonIdentification createTaxonName() {
+        return new TaxonIdentification();
     }
 
     /**

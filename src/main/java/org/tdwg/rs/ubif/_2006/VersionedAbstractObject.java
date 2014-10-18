@@ -49,7 +49,7 @@ import javax.xml.bind.annotation.XmlType;
     Publication.class,
     Audience.class,
     StoredKey.class,
-    TaxonName.class,
+    TaxonIdentification.class,
     Specimen.class,
     AbstractCharacterDefinition.class
 })

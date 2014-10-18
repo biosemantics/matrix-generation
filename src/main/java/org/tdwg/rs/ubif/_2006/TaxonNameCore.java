@@ -53,7 +53,7 @@ import javax.xml.namespace.QName;
     "nextVersion"
 })
 public class TaxonNameCore
-    extends TaxonName
+    extends TaxonIdentification
 {
 
     @XmlElement(name = "NomenclaturalCode")

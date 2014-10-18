@@ -1,6 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
 
-import edu.arizona.biosemantics.matrixgeneration.log.LogLevel;
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 

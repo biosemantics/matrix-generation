@@ -1,17 +1,17 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
-import edu.arizona.biosemantics.matrixgeneration.model.RankData;
+import edu.arizona.biosemantics.common.taxonomy.RankData;
+import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.TaxonName;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
 public class TaxonomyRowHeadTransformer implements RowHeadTransformer {
 
 	@Override
 	public RowHead transform(Taxon taxon) {
-		TaxonName taxonName = taxon.getTaxonName();
+		TaxonIdentification taxonIdentification = taxon.getTaxonIdentification();
 		String name = "";
-		for(RankData rankData : taxonName.getRankData()) {
+		for(RankData rankData : taxonIdentification.getRankData()) {
 			name += rankData.getRank()+ "=" + rankData.getName(); 
 			if(rankData.getAuthor() != null && !rankData.getAuthor().isEmpty()) {
 				name += ",authority=" + rankData.getAuthor();
@@ -23,7 +23,7 @@ public class TaxonomyRowHeadTransformer implements RowHeadTransformer {
 		}
 		name = name.substring(0, name.length() - 1);
 		
-		name += ":author=" + taxonName.getAuthor() + ",date=" + taxonName.getDate();
+		name += ":author=" + taxonIdentification.getAuthor() + ",date=" + taxonIdentification.getDate();
 		return new RowHead(name, taxon);
 	}
 

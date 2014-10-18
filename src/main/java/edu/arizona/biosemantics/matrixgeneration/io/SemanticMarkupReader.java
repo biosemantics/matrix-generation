@@ -17,15 +17,15 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
+import edu.arizona.biosemantics.common.taxonomy.Rank;
+import edu.arizona.biosemantics.common.taxonomy.RankData;
+import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.RankData;
 import edu.arizona.biosemantics.matrixgeneration.model.Relation;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon.Rank;
-import edu.arizona.biosemantics.matrixgeneration.model.TaxonName;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 
 public class SemanticMarkupReader implements Reader {
@@ -54,24 +54,24 @@ public class SemanticMarkupReader implements Reader {
 		Map<String, Structure> idStructureMap = new HashMap<String, Structure>();
 		Map<String, Relation> idRelationMap = new HashMap<String, Relation>();
 		
-		List<TaxonName> taxonNames = new LinkedList<TaxonName>();
+		List<TaxonIdentification> taxonIdentifications = new LinkedList<TaxonIdentification>();
 		Map<RankData, Taxon> rankTaxaMap = new HashMap<RankData, Taxon>();
 		
 		Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap = 
 				new HashMap<StructureIdentifier, Map<Taxon, List<Structure>>>();
 		Map<Taxon, File> sourceFilesMap = new HashMap<Taxon, File>();
 		
-		readPlainData(idStructureMap, idRelationMap, characters, taxonNames, rankTaxaMap, structureIdTaxonStructuresMap, sourceFilesMap);
-		List<Taxon> rootTaxa = createTaxaHierarchy(taxonNames, rankTaxaMap);
+		readPlainData(idStructureMap, idRelationMap, characters, taxonIdentifications, rankTaxaMap, structureIdTaxonStructuresMap, sourceFilesMap);
+		List<Taxon> rootTaxa = createTaxaHierarchy(taxonIdentifications, rankTaxaMap);
 		
 		return new Matrix(rootTaxa, characters, structureIdTaxonStructuresMap, sourceFilesMap, rankTaxaMap);
 	}
 
-	private List<Taxon> createTaxaHierarchy(List<TaxonName> taxonNames, 
+	private List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
 			Map<RankData, Taxon> rankTaxaMap) {		
 		List<Taxon> rootTaxa = new LinkedList<Taxon>();
-		for(TaxonName taxonName : taxonNames) {
-			LinkedList<RankData> rankData = taxonName.getRankData();
+		for(TaxonIdentification taxonIdentification : taxonIdentifications) {
+			LinkedList<RankData> rankData = taxonIdentification.getRankData();
 			Taxon taxon = rankTaxaMap.get(rankData.getLast());
 			if(rankData.size() == 1)
 				rootTaxa.add(taxon);
@@ -93,7 +93,7 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Map<Character, Character> characters, 
-			List<TaxonName> taxonNames, Map<RankData, Taxon> rankTaxaMap, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, 
+			List<TaxonIdentification> taxonNames, Map<RankData, Taxon> rankTaxaMap, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, 
 			Map<Taxon, File> sourceFilesMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		for(File file : inputDirectory.listFiles()) {
@@ -104,7 +104,7 @@ public class SemanticMarkupReader implements Reader {
 				String date = sourceElement.getChildText("date");
 				
 				LinkedList<RankData> rankDatas = createRankDatas(document, rankDataInstances);
-				TaxonName taxonName = new TaxonName(rankDatas, author, date);
+				TaxonIdentification taxonName = new TaxonIdentification(rankDatas, author, date);
 				taxonNames.add(taxonName);
 				
 				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName, structureIdTaxonStructuresMap);
@@ -115,10 +115,10 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	private Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
-			Map<String, Relation> idRelationMap, Map<Character, Character> characters, TaxonName taxonName, 
+			Map<String, Relation> idRelationMap, Map<Character, Character> characters, TaxonIdentification taxonIdentification, 
 			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Taxon taxon = new Taxon();
-		taxon.setTaxonName(taxonName);
+		taxon.setTaxonIdentification(taxonIdentification);
 		StringBuilder descriptionBuilder = new StringBuilder();
 		for (Element statement : statementXpath.evaluate(document)) {
 			String text = statement.getChild("text").getText();
@@ -145,7 +145,7 @@ public class SemanticMarkupReader implements Reader {
 			String date = taxonName.getAttributeValue("date");
 			String authority = taxonName.getAttributeValue("authority");
 			String name = taxonName.getText();
-			RankData rankData = new RankData(authority, date, Rank.valueOf(rank.toUpperCase()), name);
+			RankData rankData = new RankData(Rank.valueOf(rank.toUpperCase()), name, authority, date);
 			if(!rankDataInstances.containsKey(rankData))
 				rankDataInstances.put(rankData, rankData);
 			rankDatas.add(rankDataInstances.get(rankData));
