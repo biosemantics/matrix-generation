@@ -1,8 +1,10 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
+import java.io.Serializable;
+
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 
-public class ColumnHead {
+public class ColumnHead implements Serializable {
 
 	private String value;
 	private Character source;

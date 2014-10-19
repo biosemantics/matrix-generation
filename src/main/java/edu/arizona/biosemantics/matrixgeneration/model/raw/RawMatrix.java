@@ -1,5 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 
-public class RawMatrix {
+public class RawMatrix implements Serializable {
 
 	private List<RowHead> rootRowHeads;
 	private List<ColumnHead> columnHeads;

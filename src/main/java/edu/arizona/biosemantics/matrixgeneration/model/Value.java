@@ -1,8 +1,10 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import java.io.Serializable;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-public class Value implements Cloneable {
+public class Value implements Cloneable, Serializable {
 
 	private String value;
 	private String type;

@@ -1,13 +1,14 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
-public class Taxon {
+public class Taxon implements Serializable {
 
 	private String author;
 	private String year;

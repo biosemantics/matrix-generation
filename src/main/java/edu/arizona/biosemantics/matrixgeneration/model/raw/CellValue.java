@@ -1,8 +1,10 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
+import java.io.Serializable;
+
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 
-public class CellValue {
+public class CellValue implements Serializable {
 
 	private Value source;
 	private String value;

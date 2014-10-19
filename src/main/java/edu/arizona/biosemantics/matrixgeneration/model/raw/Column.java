@@ -1,9 +1,10 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Column {
+public class Column implements Serializable {
 
 	private ColumnHead columnHead;
 	private Map<RowHead, CellValue> cellValues = new HashMap<RowHead, CellValue>();

@@ -1,14 +1,18 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 
-public class RowHead {
+public class RowHead implements Serializable {
 
 	private Taxon source;
 	private String value;
 	private LinkedHashSet<RowHead> children = new LinkedHashSet<RowHead>();
+	@JsonIgnore
 	private RowHead parent;
 	
 	public RowHead(String value, Taxon source) {

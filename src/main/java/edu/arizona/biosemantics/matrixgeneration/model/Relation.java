@@ -1,6 +1,8 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
-public class Relation implements Cloneable {
+import java.io.Serializable;
+
+public class Relation implements Cloneable, Serializable {
 
 	private boolean negated;
 	private String name;

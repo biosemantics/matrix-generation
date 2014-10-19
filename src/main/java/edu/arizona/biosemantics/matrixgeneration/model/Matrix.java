@@ -1,6 +1,7 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
 
-public class Matrix {
+public class Matrix implements Serializable {
 
 	/* contains the root taxa */
 	private List<Taxon> rootTaxa;

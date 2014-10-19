@@ -1,11 +1,12 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
 
-public class Structure implements Cloneable {
+public class Structure implements Cloneable, Serializable {
 
 	private String name;
 	private String constraint;

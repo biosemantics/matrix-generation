@@ -1,9 +1,11 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import java.io.Serializable;
 
-public class Character implements Comparable<Character> {
 
-	public static class StructureIdentifier {
+public class Character implements Comparable<Character>, Serializable {
+
+	public static class StructureIdentifier implements Serializable {
 		
 		private String structureName;
 		private String structureConstraint;
