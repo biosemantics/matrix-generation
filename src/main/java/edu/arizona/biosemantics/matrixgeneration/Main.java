@@ -15,6 +15,7 @@ import edu.arizona.biosemantics.matrixgeneration.io.raw.Writer;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
+import edu.arizona.biosemantics.matrixgeneration.transform.matrix.AbsentPresentTranformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.InheritanceTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddColumn;
@@ -35,6 +36,10 @@ public class Main {
 	private Set<String> frequencyModifiers = new HashSet<String>(Arrays.asList(new String[] { "frequently", "rarely", "often" }));
 	private Set<String> negationModifiers = new HashSet<String>(Arrays.asList(new String[] { "not" }));
 	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than" } ));
+	private Set<String> presentRelation = new HashSet<String>(
+			Arrays.asList(new String[] { "with", "attach", "include", "attached", "included" }));
+	private Set<String> absentRelation = new HashSet<String>(
+			Arrays.asList(new String[] { "without", "lack of", "devoid of", "missing", "misses" }));
 	
 	private List<String> prependModifierPatterns;
 	private List<String> appendModifierPatterns;
@@ -85,6 +90,10 @@ public class Main {
 		if(inheritValues) {
 			Transformer inherit = new InheritanceTransformer();
 			inherit.transform(matrix);
+		}
+		if(generateAbsentPresent) {
+			Transformer generateAbsentPresent = new AbsentPresentTranformer(presentRelation, absentRelation);
+			generateAbsentPresent.transform(matrix);
 		}
 		
 		//Transformer switchUnits = new NormalizeUnitsTransformer(Unit.mm);

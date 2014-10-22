@@ -4,77 +4,15 @@ import java.io.Serializable;
 
 
 public class Character implements Comparable<Character>, Serializable {
-
-	public static class StructureIdentifier implements Serializable {
-		
-		private String structureName;
-		private String structureConstraint;
-		
-		public StructureIdentifier(String structureName, String structureConstraint) {
-			this.structureName = structureName;
-			this.structureConstraint = structureConstraint;
-		}
-
-		public String getStructureName() {
-			return structureName;
-		}
-
-		public String getStructureConstraint() {
-			return structureConstraint;
-		}
-		
-		public String getStructureConstraintOrEmpty() {
-			if(getStructureConstraint() == null)
-				return "";
-			return getStructureConstraint();
-		}	
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime
-					* result
-					+ ((structureConstraint == null) ? 0 : structureConstraint
-							.hashCode());
-			result = prime * result
-					+ ((structureName == null) ? 0 : structureName.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			StructureIdentifier other = (StructureIdentifier) obj;
-			if (structureConstraint == null) {
-				if (other.structureConstraint != null)
-					return false;
-			} else if (!structureConstraint.equals(other.structureConstraint))
-				return false;
-			if (structureName == null) {
-				if (other.structureName != null)
-					return false;
-			} else if (!structureName.equals(other.structureName))
-				return false;
-			return true;
-		}
-
-		public String getDisplayName() {
-			return (getStructureConstraintOrEmpty() + " " + getStructureName()).trim();
-		}
-	}
 	
 	private String name;
+	private String connector;
 	private StructureIdentifier structureIdentifier;
 	
-	public Character(String name, String structureName, String structureConstraint) {
+	public Character(String name, String connector, StructureIdentifier structureIdentifier) {
 		this.name = name;
-		this.structureIdentifier = new StructureIdentifier(structureName, structureConstraint);
+		this.connector = connector;
+		this.structureIdentifier = structureIdentifier;
 	}
 
 	public String getName() {
@@ -141,4 +79,10 @@ public class Character implements Comparable<Character>, Serializable {
 		return getStructureName().compareTo(character.getStructureName());
 	}
 	
+	public String getDisplayName() {
+		return name + " " + connector + " " + structureIdentifier.getDisplayName();
+	}
 }
+	
+
+

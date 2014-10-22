@@ -6,7 +6,9 @@ public class Relation implements Cloneable, Serializable {
 
 	private boolean negated;
 	private String name;
+	private String fromId;
 	private Structure from;
+	private String toId;
 	private Structure to;
 	private String alterName;
 	private String geographicalConstraint;
@@ -110,7 +112,18 @@ public class Relation implements Cloneable, Serializable {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+	public String getFromId() {
+		return fromId;
+	}
+	public void setFromId(String fromId) {
+		this.fromId = fromId;
+	}
+	public String getToId() {
+		return toId;
+	}
+	public void setToId(String toId) {
+		this.toId = toId;
+	}
 	public Relation clone() {
 		Relation relation = new Relation();
 		relation.setAlterName(this.alterName);
@@ -128,6 +141,8 @@ public class Relation implements Cloneable, Serializable {
 		relation.setProvenance(this.provenance);
 		relation.setTaxonConstraint(this.taxonConstraint);
 		relation.setTo(this.to);
+		relation.setFromId(this.fromId);
+		relation.setToId(this.toId);
 		return relation;
 	}
 }

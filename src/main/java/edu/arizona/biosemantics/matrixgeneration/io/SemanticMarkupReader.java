@@ -21,7 +21,7 @@ import edu.arizona.biosemantics.common.taxonomy.Rank;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Relation;
 import edu.arizona.biosemantics.matrixgeneration.model.Structure;
@@ -64,7 +64,22 @@ public class SemanticMarkupReader implements Reader {
 		readPlainData(idStructureMap, idRelationMap, characters, taxonIdentifications, rankTaxaMap, structureIdTaxonStructuresMap, sourceFilesMap);
 		List<Taxon> rootTaxa = createTaxaHierarchy(taxonIdentifications, rankTaxaMap);
 		
-		return new Matrix(rootTaxa, characters, structureIdTaxonStructuresMap, sourceFilesMap, rankTaxaMap);
+		Matrix result = new Matrix(rootTaxa, characters, structureIdTaxonStructuresMap, sourceFilesMap, rankTaxaMap);
+		//have to pass through id references becuase maps may not have been complete due to how things are ordered in xml
+		//e.g. there are cases where a relation references a structure mentioned in the subsequent statement 
+		//(probably due to charaparser error but it exists there)
+		ensureIdsReferenced(result, idStructureMap, idRelationMap);
+		return result;
+	}
+
+	private void ensureIdsReferenced(Matrix matrix, Map<String, Structure> idStructureMap,
+			Map<String, Relation> idRelationMap) {
+		for(Taxon taxon : matrix.getTaxa()) {
+			for(Relation relation : taxon.getRelations()) {
+				relation.setFrom(idStructureMap.get(relation.getFromId()));
+				relation.setTo(idStructureMap.get(relation.getToId()));
+			}
+		}
 	}
 
 	private List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
@@ -181,6 +196,7 @@ public class SemanticMarkupReader implements Reader {
 		
 		result.setAlterName(alterName);
 		result.setFrom(fromStructure);
+		result.setFromId(fromId);
 		result.setGeographicalConstraint(geographicalConstraint);
 		result.setId(id);
 		result.setInBrackets(inBrackets);
@@ -194,6 +210,7 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(provenance);
 		result.setTaxonConstraint(taxonConstraint);
 		result.setTo(toStructure);
+		result.setToId(toId);
 		return result;
 	}
 
@@ -218,8 +235,14 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(structure.getAttributeValue("provenance"));
 		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
+		StructureIdentifier structureIdentifier = new StructureIdentifier(result.getName(), result.getConstraint());
+		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
+			structureIdTaxonStructuresMap.put(structureIdentifier, new HashMap<Taxon, List<Structure>>());
+		if(!structureIdTaxonStructuresMap.get(structureIdentifier).containsKey(taxon))
+			structureIdTaxonStructuresMap.get(structureIdentifier).put(taxon, new LinkedList<Structure>());
+		structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon).add(result);
+		
 		for(Element characterElement : structure.getChildren("character")) {
-
 			String v = characterElement.getAttributeValue("value");
 			Value value = new Value(v);
 			value.setCharType(characterElement.getAttributeValue("char_type"));
@@ -247,7 +270,7 @@ public class SemanticMarkupReader implements Reader {
 			value.setNotes(characterElement.getAttributeValue("notes"));	
 						
 			String name = characterElement.getAttributeValue("name");
-			Character character = new Character(name, result.getName(), result.getConstraint());
+			Character character = new Character(name, "of", structureIdentifier);
 			if(!characters.containsKey(character))
 				characters.put(character, character);
 			character = characters.get(character);

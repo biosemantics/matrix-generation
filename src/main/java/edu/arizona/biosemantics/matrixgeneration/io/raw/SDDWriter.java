@@ -78,7 +78,7 @@ import org.tdwg.rs.ubif._2006.ValueRangeWithClass;
 import edu.arizona.biosemantics.matrixgeneration.Configuration;
 import edu.arizona.biosemantics.matrixgeneration.io.ValueTypeDeterminer;
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.Character.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
