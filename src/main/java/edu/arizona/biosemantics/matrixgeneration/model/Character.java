@@ -17,19 +17,11 @@ public class Character implements Comparable<Character>, Serializable {
 
 	public String getName() {
 		return name;
-	}	
-	
-	public String getStructureName() {
-		return structureIdentifier.getStructureName();
 	}
 	
-	public String getStructureConstraint() {
-		return structureIdentifier.getStructureConstraint();
+	public String getConnector() {
+		return connector;
 	}
-	
-	public String getStructureConstraintOrEmpty() {
-		return structureIdentifier.getStructureConstraintOrEmpty();
-	}	
 
 	public StructureIdentifier getStructureIdentifier() {
 		return structureIdentifier;
@@ -71,18 +63,13 @@ public class Character implements Comparable<Character>, Serializable {
 
 	@Override
 	public int compareTo(Character character) {
-		if(getStructureName().equals(character.getStructureName())) {
-			if(this.getStructureConstraintOrEmpty().equals(character.getStructureConstraintOrEmpty()))
-				return name.compareTo(character.getName());
-			return getStructureConstraintOrEmpty().compareTo(character.getStructureConstraintOrEmpty());
-		}
-		return getStructureName().compareTo(character.getStructureName());
+		if(structureIdentifier.equals(character.getStructureIdentifier()))
+			return name.compareTo(character.getName());
+		return structureIdentifier.compareTo(character.getStructureIdentifier());
 	}
 	
 	public String getDisplayName() {
 		return name + " " + connector + " " + structureIdentifier.getDisplayName();
 	}
-}
 	
-
-
+}

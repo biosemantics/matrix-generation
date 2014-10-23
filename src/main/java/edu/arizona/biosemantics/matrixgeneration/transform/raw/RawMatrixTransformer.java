@@ -87,7 +87,7 @@ public class RawMatrixTransformer {
 		cellValues.put(rowHead, taxonsCellValues);
 		for(Character character : characters) {		
 			CellValue cellValue = new CellValue("", null);
-			String structureName = character.getStructureName();
+			String structureName = character.getStructureIdentifier().getStructureName();
 			Structure structure = taxon.getStructure(structureName);
 			if(structure != null) {
 				Value value = structure.getCharacterValue(character);

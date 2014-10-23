@@ -18,7 +18,7 @@ public class SplitRangeValuesTransformer implements Transformer {
 		List<Character> toSplitCharacters = new LinkedList<Character>();
 		for(Character character : matrix.getCharacters()) {
 			for(Taxon taxon : matrix.getTaxa()) {
-				Structure structure = taxon.getStructure(character.getStructureName());
+				Structure structure = taxon.getStructure(character.getStructureIdentifier().getStructureName());
 				if(structure != null) {
 					Value value = structure.getCharacterValue(character);
 					if(value != null) {
@@ -38,7 +38,7 @@ public class SplitRangeValuesTransformer implements Transformer {
 			matrix.addCharacter(minCharacter);
 			
 			for(Taxon taxon : matrix.getTaxa()) {
-				Structure structure = taxon.getStructure(character.getStructureName());
+				Structure structure = taxon.getStructure(character.getStructureIdentifier().getStructureName());
 				if(structure != null) {
 					Value value = structure.getCharacterValue(character);
 					if(value != null) {

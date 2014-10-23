@@ -2,7 +2,7 @@ package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.io.Serializable;
 
-public class StructureIdentifier implements Serializable {
+public class StructureIdentifier implements Serializable, Comparable<StructureIdentifier> {
 	
 	private String structureName;
 	private String structureConstraint;
@@ -63,5 +63,12 @@ public class StructureIdentifier implements Serializable {
 
 	public String getDisplayName() {
 		return (getStructureConstraintOrEmpty() + " " + getStructureName()).trim();
+	}
+
+	public int compareTo(StructureIdentifier structureIdentifier) {
+		if(getStructureName().equals(getStructureName())) {
+			return getStructureConstraintOrEmpty().compareTo(getStructureConstraintOrEmpty());
+		}
+		return getStructureName().compareTo(getStructureName());
 	}
 }

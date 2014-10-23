@@ -1337,7 +1337,7 @@ public class SDDWriter implements Writer {
 		Matrix matrix = rawMatrix.getSource();
 		Character character = columnHead.getSource();
 		StructureIdentifier structureIdentifier = character.getStructureIdentifier();
-		String structName = (character.getStructureConstraintOrEmpty() + " " + character.getStructureName()).trim();
+		String structName = character.getStructureIdentifier().getDisplayName();
 		String charName = structName + "_" + character.getName();
 		
 		//TODO: 
@@ -1346,7 +1346,7 @@ public class SDDWriter implements Writer {
 		// (StructureIdentifier (independent) vs Structure (taxon-specific))
 		StructureIdentifier parentStructureIdentifier = matrix.getParent(structureIdentifier);
 		while(parentStructureIdentifier != null) {
-			structName = (parentStructureIdentifier.getStructureConstraintOrEmpty() + " " + character.getStructureName()).trim();
+			structName = (parentStructureIdentifier.getStructureConstraintOrEmpty() + " " + character.getStructureIdentifier().getStructureName()).trim();
 			if(!structName.equals("whole_organism"))
 				charName = structName + "_" + charName;
 			parentStructureIdentifier = matrix.getParent(parentStructureIdentifier);
