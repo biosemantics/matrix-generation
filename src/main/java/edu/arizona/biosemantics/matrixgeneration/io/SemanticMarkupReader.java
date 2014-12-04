@@ -40,8 +40,8 @@ public class SemanticMarkupReader implements Reader {
 			xpathFactory.compile("/bio:treatment/taxon_identification[@status='ACCEPTED']/taxon_name", Filters.element(), null,
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));
 	private XPathExpression<Element> statementXpath = 
-			xpathFactory.compile("/bio:treatment/description[@type='morphology']/statement", Filters.element(), null, 
-					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));
+			xpathFactory.compile("//description[@type='morphology']/statement", Filters.element(), null, 
+					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));	
 
 	public SemanticMarkupReader(File inputDirectory) {
 		this.inputDirectory = inputDirectory;
@@ -139,9 +139,10 @@ public class SemanticMarkupReader implements Reader {
 			String text = statement.getChild("text").getText();
 			descriptionBuilder.append(text + ". ");
 			
-			List<Element> structures = statement.getChildren("structure");
+			List<Element> structures = statement.getChildren("biological_entity");
 			for(Element structure : structures) {
-				taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
+				if(structure.getAttribute("type") != null && structure.getAttribute("type").equals("structure"))
+					taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
 			}
 			
 			List<Element> relations = statement.getChildren("relation");
