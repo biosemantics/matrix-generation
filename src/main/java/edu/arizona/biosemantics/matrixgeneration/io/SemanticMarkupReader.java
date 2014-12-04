@@ -141,7 +141,7 @@ public class SemanticMarkupReader implements Reader {
 			
 			List<Element> structures = statement.getChildren("biological_entity");
 			for(Element structure : structures) {
-				if(structure.getAttribute("type") != null && structure.getAttribute("type").equals("structure"))
+				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure"))
 					taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
 			}
 			
