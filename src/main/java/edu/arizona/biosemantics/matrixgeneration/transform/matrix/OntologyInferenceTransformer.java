@@ -48,10 +48,12 @@ public class OntologyInferenceTransformer implements Transformer {
 	public void transform(Matrix matrix) {
 		for(Character character : matrix.getCharacters()) {
 			StructureIdentifier structure = character.getStructureIdentifier();
-			Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
+			//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
 			Set<StructureIdentifier> inferedSuperclassStructures = getStructuresWhereSubclass(structure);
 			
-			for(StructureIdentifier inferedBearerStructure : inferedBearerStructures) {
+			/*for(StructureIdentifier inferedBearerStructure : inferedBearerStructures) {
+			 	log(LogLevel.INFO, "Infered character from bearer structure " + inferedBearerStructure.getDisplayName() + " " + 
+						inferedBearerStructure.getStructureOntologyId());
 				Character inferedCharacter = new Character("quantity of " + 
 						structure.getStructureName(), "at", 
 						new StructureIdentifier(inferedBearerStructure.getStructureName(), "", 
@@ -60,12 +62,13 @@ public class OntologyInferenceTransformer implements Transformer {
 				for(Taxon taxon : matrix.getTaxa())
 					if(isPresent(character, taxon, matrix))
 						setPresent(inferedCharacter, taxon, matrix);
-			}
+			}*/
 			
 			for(StructureIdentifier inferedSuperclassStructure : inferedSuperclassStructures) {
+				log(LogLevel.INFO, "Infered character from superclass structure " + inferedSuperclassStructure.getDisplayName() + " " + 
+						inferedSuperclassStructure.getStructureOntologyId());
 				Character inferedCharacter = new Character("quantity", "of", 
-						new StructureIdentifier(inferedSuperclassStructure.getStructureName(), "", 
-								inferedSuperclassStructure.getStructureOntologyId()));
+						new StructureIdentifier(inferedSuperclassStructure.getStructureName(), "", inferedSuperclassStructure.getStructureOntologyId()));
 				matrix.addCharacter(inferedCharacter);
 				for(Taxon taxon : matrix.getTaxa())
 					if(isPresent(character, taxon, matrix))
