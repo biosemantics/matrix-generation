@@ -25,9 +25,8 @@ public class Configuration {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		Properties properties = new Properties();
 		try {
-			properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/config.properties"));
+			properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/static.properties"));
 			projectVersion = properties.getProperty("project.version");
-			ontologyDirectory = properties.getProperty("ontologyDirectory");
 			rdfPrefixStructure = properties.getProperty("rdfPrefixSturcture");
 			rdfPrefixCharacter = properties.getProperty("rdfPrefixCharacter");
 			rdfPrefixProperty = properties.getProperty("rdfPrefixProperty");
@@ -36,6 +35,9 @@ public class Configuration {
 			rdfPrefixDescription = properties.getProperty("rdfPrefixDescription");
 			rdfSyntax = properties.getProperty("rdfSyntax");
 			rdfBiol = properties.getProperty("rdfBiol");
+			
+			properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/config.properties"));
+			ontologyDirectory = properties.getProperty("ontologyDirectory");
 		} catch (IOException e) {
 			logger.error("Couldn't read configuration", e);
 		}
