@@ -20,6 +20,7 @@ import edu.arizona.biosemantics.matrixgeneration.model.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 
 public class OntologyInferenceTransformer implements Transformer {
 
