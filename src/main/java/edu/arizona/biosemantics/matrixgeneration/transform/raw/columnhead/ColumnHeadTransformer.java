@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.transform.raw;
+package edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead;
 
 import edu.arizona.biosemantics.matrixgeneration.model.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;

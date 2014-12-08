@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.transform.raw;
+package edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue;
 
 import java.util.List;
 

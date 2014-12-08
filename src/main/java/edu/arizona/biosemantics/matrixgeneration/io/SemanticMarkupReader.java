@@ -236,7 +236,7 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(structure.getAttributeValue("provenance"));
 		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
-		StructureIdentifier structureIdentifier = new StructureIdentifier(result.getName(), result.getConstraint());
+		StructureIdentifier structureIdentifier = new StructureIdentifier(result.getName(), result.getConstraint(), result.getOntologyId());
 		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
 			structureIdTaxonStructuresMap.put(structureIdentifier, new HashMap<Taxon, List<Structure>>());
 		if(!structureIdTaxonStructuresMap.get(structureIdentifier).containsKey(taxon))

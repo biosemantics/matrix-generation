@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.transform.raw;
+package edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead;
 
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;

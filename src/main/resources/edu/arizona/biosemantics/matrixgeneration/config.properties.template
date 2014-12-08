@@ -1,5 +1,7 @@
 project.version=${project.version}
 
+ontologyDirectory=
+
 rdfPrefixStructure=http://cs.umb.edu/biosemantics/structure
 rdfPrefixCharacter=http://a.b.c/biosemanticsX/character
 rdfPrefixProperty=http://cs.umb.edu/biosemantics/property

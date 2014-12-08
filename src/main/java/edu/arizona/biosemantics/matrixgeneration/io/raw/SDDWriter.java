@@ -295,7 +295,7 @@ public class SDDWriter implements Writer {
 			metadata.setCreated(xMLGregorianCalendar);
 			DocumentGenerator documentGenerator = objectFactory.createDocumentGenerator();
 			documentGenerator.setName("edu.arizona.biosemantics.matrixgeneration");
-			documentGenerator.setVersion(Configuration.getInstance().getProjectVersion());
+			documentGenerator.setVersion(Configuration.projectVersion);
 			
 			metadata.setGenerator(documentGenerator);
 			datasets.setTechnicalMetadata(metadata);

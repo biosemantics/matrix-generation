@@ -47,7 +47,8 @@ public class AbsentPresentTranformer implements Transformer {
 					relation.getTo().getConstraint() + " " + relation.getTo().getName();
 		Character character = new Character("quantity of " + 
 				toStructure, "at", 
-				new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint()));
+				new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
+						relation.getFrom().getOntologyId()));
 		return character;
 	}
 
@@ -57,7 +58,8 @@ public class AbsentPresentTranformer implements Transformer {
 					relation.getTo().getConstraint() + " " + relation.getTo().getName();
 		Character character = new Character("quantity of " + 
 				toStructure, "at",
-				new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint()));
+				new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
+						relation.getFrom().getOntologyId()));
 		return character;
 	}
 

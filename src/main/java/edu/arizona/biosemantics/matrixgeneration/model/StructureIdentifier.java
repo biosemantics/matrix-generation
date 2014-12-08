@@ -6,10 +6,12 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 	
 	private String structureName;
 	private String structureConstraint;
+	private String structureOntologyId;
 	
-	public StructureIdentifier(String structureName, String structureConstraint) {
+	public StructureIdentifier(String structureName, String structureConstraint, String structureOntologyId) {
 		this.structureName = structureName;
 		this.structureConstraint = structureConstraint;
+		this.structureOntologyId = structureOntologyId;
 	}
 
 	public String getStructureName() {
@@ -18,6 +20,14 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 
 	public String getStructureConstraint() {
 		return structureConstraint;
+	}
+	
+	public String getStructureOntologyId() {
+		return structureOntologyId;
+	}
+	
+	public boolean hasStructureOntologyId() {
+		return structureOntologyId != null && !structureOntologyId.isEmpty();
 	}
 	
 	public String getStructureConstraintOrEmpty() {
@@ -36,6 +46,10 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 						.hashCode());
 		result = prime * result
 				+ ((structureName == null) ? 0 : structureName.hashCode());
+		result = prime
+				* result
+				+ ((structureOntologyId == null) ? 0 : structureOntologyId
+						.hashCode());
 		return result;
 	}
 
@@ -57,6 +71,11 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 			if (other.structureName != null)
 				return false;
 		} else if (!structureName.equals(other.structureName))
+			return false;
+		if (structureOntologyId == null) {
+			if (other.structureOntologyId != null)
+				return false;
+		} else if (!structureOntologyId.equals(other.structureOntologyId))
 			return false;
 		return true;
 	}

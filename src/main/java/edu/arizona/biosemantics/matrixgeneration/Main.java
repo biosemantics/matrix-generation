@@ -17,19 +17,20 @@ import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.AbsentPresentTranformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.InheritanceTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.matrix.OntologyInferenceTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.matrix.Transformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddColumn;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddSourceColumn;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.ByChoiceCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.CellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.ColumnHeadTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.CombinedCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.NameOrganColumnHeadTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.RangeValueByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RawMatrixTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.RowHeadTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.SimpleCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.TaxonomyRowHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddColumn;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddSourceColumn;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.ByChoiceCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CombinedCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.RangeValueByChoiceCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.SimpleCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.ColumnHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.NameOrganColumnHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.RowHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.TaxonomyRowHeadTransformer;
 
 public class Main {
 
@@ -47,12 +48,15 @@ public class Main {
 	private String outputFile;
 	private boolean inheritValues;
 	private boolean generateAbsentPresent;
+	private boolean inferCharactersFromOntologies;
 	
-	public Main(String inputDir, String outputFile, boolean inheritValues, boolean generateAbsentPresent) {
+	public Main(String inputDir, String outputFile, boolean inheritValues, boolean generateAbsentPresent, 
+			boolean inferCharactersFromOntologies) {
 		this.inputDir = inputDir;
 		this.outputFile = outputFile;
 		this.inheritValues = inheritValues;
 		this.generateAbsentPresent = generateAbsentPresent;
+		this.inferCharactersFromOntologies = inferCharactersFromOntologies;
 		prependModifierPatterns = createPrependModifierPatterns();
 		appendModifierPatterns = createAppendModifierPatterns();
 	}
@@ -81,7 +85,8 @@ public class Main {
 		log(LogLevel.INFO, "Input dir: " + inputDir);
 		log(LogLevel.INFO, "Output file: " + outputFile);
 		log(LogLevel.INFO, "Inherit values: " + inheritValues);
-		log(LogLevel.INFO, "Genreate Absent Present: " + generateAbsentPresent);
+		log(LogLevel.INFO, "Generate Absent Present: " + generateAbsentPresent);
+		log(LogLevel.INFO, "Infer Characters From Ontologies: " + inferCharactersFromOntologies);
 		
 		Reader reader = new SemanticMarkupReader(new File(inputDir));
 		Matrix matrix = reader.read();
@@ -94,6 +99,11 @@ public class Main {
 		if(generateAbsentPresent) {
 			Transformer generateAbsentPresent = new AbsentPresentTranformer(presentRelation, absentRelation);
 			generateAbsentPresent.transform(matrix);
+		}
+		
+		if(inferCharactersFromOntologies) {
+			Transformer ontologyInferenceTransformer = new OntologyInferenceTransformer();
+			ontologyInferenceTransformer.transform(matrix);
 		}
 		
 		//Transformer switchUnits = new NormalizeUnitsTransformer(Unit.mm);
@@ -132,7 +142,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Main main = new Main(args[0], args[1], Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
+		Main main = new Main(args[0], args[1], Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]), Boolean.parseBoolean(args[4]));
 		main.run();
 	}
 	

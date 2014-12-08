@@ -17,6 +17,10 @@ import edu.arizona.biosemantics.matrixgeneration.model.raw.Column;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddColumn;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.ColumnHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.RowHeadTransformer;
 
 public class RawMatrixTransformer {
 	

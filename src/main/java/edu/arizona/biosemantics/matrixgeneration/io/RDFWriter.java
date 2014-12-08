@@ -25,13 +25,12 @@ import edu.arizona.biosemantics.matrixgeneration.model.Value;
 
 public class RDFWriter implements Writer {
 
-	private Configuration config;
-	private final String propNS = config.getRdfPrefixProperty();
-	private final String biolNS = config.getRdfBiol();
-	private final String structureNS = config.getRdfPrefixStructure();
-	private final String characterNS = config.getRdfPrefixCharacter();
-	private final String modifierNS = config.getRdfPrefixModifier();
-	private final String constraintNS = config.getRdfPrefixConstraint();
+	private final String propNS = Configuration.rdfPrefixProperty;
+	private final String biolNS = Configuration.rdfBiol;
+	private final String structureNS = Configuration.rdfPrefixStructure;
+	private final String characterNS = Configuration.rdfPrefixCharacter;
+	private final String modifierNS = Configuration.rdfPrefixModifier;
+	private final String constraintNS = Configuration.rdfPrefixConstraint;
 		
 	private final Property hasSubstructure = new PropertyImpl(propNS+"#hasSubstructure");
 	private final Property hasCharacter = new PropertyImpl(propNS+"#hasCharacter");
@@ -44,7 +43,6 @@ public class RDFWriter implements Writer {
 	
 	public RDFWriter(File file) throws IOException {
 		this.file = file;
-		this.config = Configuration.getInstance();
 	}
 	
 	@Override

@@ -3,75 +3,41 @@ package edu.arizona.biosemantics.matrixgeneration;
 import java.io.IOException;
 import java.util.Properties;
 
+import edu.arizona.biosemantics.common.log.Logger;
+
 public class Configuration {
 
-	private static Configuration instance;
+	private final static Logger logger = Logger.getLogger(Configuration.class);
 	
-	public static Configuration getInstance() throws IOException {
-		if(instance == null)
-			instance = new Configuration();
-		return instance;
-	}
-
-	private String projectVersion;
-	private String rdfPrefixStructure;
-	private String rdfPrefixCharacter;
-	private String rdfPrefixProperty;
-	private String rdfPrefixModifier;
-	private String rdfPrefixConstraint;
-	private String rdfPrefixDescription;
-	private String rdfSyntax;
-	private String rdfBiol;
+	public static String projectVersion;
+	public static String ontologyDirectory;
 	
-	public Configuration() throws IOException {
+	public static String rdfPrefixStructure;
+	public static String rdfPrefixCharacter;
+	public static String rdfPrefixProperty;
+	public static String rdfPrefixModifier;
+	public static String rdfPrefixConstraint;
+	public static String rdfPrefixDescription;
+	public static String rdfSyntax;
+	public static String rdfBiol;
+	
+	static {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		Properties properties = new Properties();
-		properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/config.properties"));
-		this.projectVersion = properties.getProperty("project.version");
-		this.rdfPrefixStructure = properties.getProperty("rdfPrefixSturcture");
-		this.rdfPrefixCharacter = properties.getProperty("rdfPrefixCharacter");
-		this.rdfPrefixProperty = properties.getProperty("rdfPrefixProperty");
-		this.rdfPrefixModifier = properties.getProperty("rdfPrefixModifier");
-		this.rdfPrefixConstraint = properties.getProperty("rdfPrefixConstraint");
-		this.rdfPrefixDescription = properties.getProperty("rdfPrefixDescription");
-		this.rdfSyntax = properties.getProperty("rdfSyntax");
-		this.rdfBiol = properties.getProperty("rdfBiol");
+		try {
+			properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/config.properties"));
+			projectVersion = properties.getProperty("project.version");
+			ontologyDirectory = properties.getProperty("ontologyDirectory");
+			rdfPrefixStructure = properties.getProperty("rdfPrefixSturcture");
+			rdfPrefixCharacter = properties.getProperty("rdfPrefixCharacter");
+			rdfPrefixProperty = properties.getProperty("rdfPrefixProperty");
+			rdfPrefixModifier = properties.getProperty("rdfPrefixModifier");
+			rdfPrefixConstraint = properties.getProperty("rdfPrefixConstraint");
+			rdfPrefixDescription = properties.getProperty("rdfPrefixDescription");
+			rdfSyntax = properties.getProperty("rdfSyntax");
+			rdfBiol = properties.getProperty("rdfBiol");
+		} catch (IOException e) {
+			logger.error("Couldn't read configuration", e);
+		}
 	}
-
-	public String getProjectVersion() {
-		return projectVersion;
-	}
-
-	public String getRdfPrefixStructure() {
-		return rdfPrefixStructure;
-	}
-
-	public String getRdfPrefixCharacter() {
-		return rdfPrefixCharacter;
-	}
-
-	public String getRdfPrefixProperty() {
-		return rdfPrefixProperty;
-	}
-
-	public String getRdfPrefixModifier() {
-		return rdfPrefixModifier;
-	}
-
-	public String getRdfPrefixConstraint() {
-		return rdfPrefixConstraint;
-	}
-
-	public String getRdfPrefixDescription() {
-		return rdfPrefixDescription;
-	}
-
-	public String getRdfSyntax() {
-		return rdfSyntax;
-	}
-
-	public String getRdfBiol() {
-		return rdfBiol;
-	}
-		
 }
