@@ -92,20 +92,24 @@ public class OntologyInferenceTransformer implements Transformer {
 
 	private Set<StructureIdentifier> getStructuresWherePartOf(StructureIdentifier structure) {
 		Set<StructureIdentifier> result = new HashSet<StructureIdentifier>();
-		OWLClass part = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
-		Set<OWLClass> bearers = ontologyAccess.getBearers(part);
-		for(OWLClass bearer : bearers) {
-			result.add(new StructureIdentifier(ontologyAccess.getLabel(bearer), "", bearer.getIRI().toString()));
+		if(structure.hasStructureOntologyId()) {
+			OWLClass part = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
+			Set<OWLClass> bearers = ontologyAccess.getBearers(part);
+			for(OWLClass bearer : bearers) {
+				result.add(new StructureIdentifier(ontologyAccess.getLabel(bearer), "", bearer.getIRI().toString()));
+			}
 		}
 		return result;
 	}
 	
 	private Set<StructureIdentifier> getStructuresWhereSubclass(StructureIdentifier structure) {
 		Set<StructureIdentifier> result = new HashSet<StructureIdentifier>();
-		OWLClass subclass = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
-		Set<OWLClass> ancestors = ontologyAccess.getAncestors(subclass);
-		for(OWLClass ancestor : ancestors) {
-			result.add(new StructureIdentifier(ontologyAccess.getLabel(ancestor), "", ancestor.getIRI().toString()));
+		if(structure.hasStructureOntologyId()) {
+			OWLClass subclass = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
+			Set<OWLClass> ancestors = ontologyAccess.getAncestors(subclass);
+			for(OWLClass ancestor : ancestors) {
+				result.add(new StructureIdentifier(ontologyAccess.getLabel(ancestor), "", ancestor.getIRI().toString()));
+			}
 		}
 		return result;
 	}
