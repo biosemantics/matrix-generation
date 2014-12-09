@@ -27,15 +27,19 @@ public class AbsentPresentTranformer implements Transformer {
 			for(Relation relation : taxon.getRelations()) {
 				if(isPresentRelation(relation)) {
 					Character character = createPresentCharacter(relation);
-					matrix.addCharacter(character);
-					Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
-					structure.setCharacterValue(character, new Value("present"));
+					if(character != null) {
+						matrix.addCharacter(character);
+						Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
+						structure.setCharacterValue(character, new Value("present"));
+					}
 				}
 				if(isAbsentRelation(relation)) {
 					Character character = createAbsentCharacter(relation);
-					matrix.addCharacter(character);
-					Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
-					structure.setCharacterValue(character, new Value("absent"));
+					if(character != null) {
+						matrix.addCharacter(character);
+						Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
+						structure.setCharacterValue(character, new Value("absent"));
+					}
 				}
 			}
 		}
