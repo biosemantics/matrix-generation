@@ -46,7 +46,7 @@ public class AbsentPresentTranformer implements Transformer {
 	}
 
 	private Character createAbsentCharacter(Relation relation) {
-		if(relation.getTo() != null) {
+		if(relation.getTo() != null && relation.getFrom() != null) {
 			String toStructure = (relation.getTo().getConstraint() == null || 
 					relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
 						relation.getTo().getConstraint() + " " + relation.getTo().getName();
@@ -60,7 +60,7 @@ public class AbsentPresentTranformer implements Transformer {
 	}
 
 	private Character createPresentCharacter(Relation relation) {
-		if(relation.getTo() != null) {
+		if(relation.getTo() != null && relation.getFrom() != null) {
 			String toStructure = (relation.getTo().getConstraint() == null || 
 					relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
 						relation.getTo().getConstraint() + " " + relation.getTo().getName();
