@@ -47,7 +47,9 @@ public class OntologyInferenceTransformer implements Transformer {
 	
 	@Override
 	public void transform(Matrix matrix) {
-		for(Character character : matrix.getCharacters()) {
+		Set<Character> iteratable = new HashSet<Character>(matrix.getCharacters());
+		for(Character character : iteratable) {
+		//for(Character character : matrix.getCharacters()) {
 			StructureIdentifier structure = character.getStructureIdentifier();
 			//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
 			Set<StructureIdentifier> inferedSuperclassStructures = getStructuresWhereSubclass(structure);
