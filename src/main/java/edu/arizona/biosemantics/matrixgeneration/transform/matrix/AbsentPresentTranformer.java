@@ -42,25 +42,31 @@ public class AbsentPresentTranformer implements Transformer {
 	}
 
 	private Character createAbsentCharacter(Relation relation) {
-		String toStructure = (relation.getTo().getConstraint() == null || 
-				relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
-					relation.getTo().getConstraint() + " " + relation.getTo().getName();
-		Character character = new Character("quantity of " + 
-				toStructure, "at", 
-				new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
-						relation.getFrom().getOntologyId()));
-		return character;
+		if(relation.getTo() != null) {
+			String toStructure = (relation.getTo().getConstraint() == null || 
+					relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
+						relation.getTo().getConstraint() + " " + relation.getTo().getName();
+			Character character = new Character("quantity of " + 
+					toStructure, "at", 
+					new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
+							relation.getFrom().getOntologyId()));
+			return character;
+		}
+		return null;
 	}
 
 	private Character createPresentCharacter(Relation relation) {
-		String toStructure = (relation.getTo().getConstraint() == null || 
-				relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
-					relation.getTo().getConstraint() + " " + relation.getTo().getName();
-		Character character = new Character("quantity of " + 
-				toStructure, "at",
-				new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
-						relation.getFrom().getOntologyId()));
-		return character;
+		if(relation.getTo() != null) {
+			String toStructure = (relation.getTo().getConstraint() == null || 
+					relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
+						relation.getTo().getConstraint() + " " + relation.getTo().getName();
+			Character character = new Character("quantity of " + 
+					toStructure, "at",
+					new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
+							relation.getFrom().getOntologyId()));
+			return character;
+		}
+		return null;
 	}
 
 	private boolean isAbsentRelation(Relation relation) {
