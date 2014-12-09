@@ -72,8 +72,12 @@ public class OntologyInferenceTransformer implements Transformer {
 						new StructureIdentifier(inferedSuperclassStructure.getStructureName(), "", inferedSuperclassStructure.getStructureOntologyId()));
 				matrix.addCharacter(inferedCharacter);
 				for(Taxon taxon : matrix.getTaxa())
+					try {
 					if(isPresent(character, taxon, matrix))
 						setPresent(inferedCharacter, taxon, matrix);
+					} catch(Throwable t) {
+						log(LogLevel.ERROR, "Something needs to be fixed here", t);
+					}
 			}
 		}
 	}
