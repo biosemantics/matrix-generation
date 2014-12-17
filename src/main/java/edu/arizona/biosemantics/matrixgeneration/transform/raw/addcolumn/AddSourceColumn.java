@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Column;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;

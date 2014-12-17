@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
+package edu.arizona.biosemantics.matrixgeneration.transform.matrix.complete;
 
 import java.io.File;
 import java.util.HashSet;
@@ -13,14 +13,14 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
-import edu.arizona.biosemantics.matrixgeneration.Configuration;
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.Structure;
-import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
+import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class OntologyInferenceTransformer implements Transformer {
 

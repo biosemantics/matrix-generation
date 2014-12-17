@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.model;
+package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.io.Serializable;
 

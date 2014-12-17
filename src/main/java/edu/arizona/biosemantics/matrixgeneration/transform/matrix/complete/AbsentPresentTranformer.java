@@ -1,14 +1,14 @@
-package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
+package edu.arizona.biosemantics.matrixgeneration.transform.matrix.complete;
 
 import java.util.Set;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Relation;
-import edu.arizona.biosemantics.matrixgeneration.model.Structure;
-import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Relation;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class AbsentPresentTranformer implements Transformer {
 

@@ -2,7 +2,7 @@ package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
 import java.io.Serializable;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class CellValue implements Serializable {
 

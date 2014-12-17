@@ -2,7 +2,10 @@ package edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue;
 
 import java.util.List;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 
 public class SimpleCellValueTransformer implements CellValueTransformer {
@@ -10,9 +13,10 @@ public class SimpleCellValueTransformer implements CellValueTransformer {
 	private List<String> prependModifierPatterns;
 	private List<String> appendModifierPatterns;
 
+	@Inject
 	public SimpleCellValueTransformer(
-			List<String> prependModifierPatterns,
-			List<String> appendModifierPatterns) {
+			@Named("PrependModifierPatterns") List<String> prependModifierPatterns,
+			@Named("AppendModifierPatterns") List<String> appendModifierPatterns) {
 		this.prependModifierPatterns = prependModifierPatterns;
 		this.appendModifierPatterns = appendModifierPatterns;
 	}

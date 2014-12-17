@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
 
 public class RowHead implements Serializable {
 

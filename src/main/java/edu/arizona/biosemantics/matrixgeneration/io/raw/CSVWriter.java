@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
@@ -14,10 +17,11 @@ import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
 public class CSVWriter implements Writer {
 
-	private File file;
+	private String outputFile;
 
-	public CSVWriter(File file) {
-		this.file = file;
+	@Inject
+	public CSVWriter(@Named("OutputFile") String outputFile) {
+		this.outputFile = outputFile;
 	}
 	
 	@Override
@@ -28,7 +32,7 @@ public class CSVWriter implements Writer {
 		int columns = columnHeads.size() + 1;
 		int rows = rowHeads.size() + 1;
 		
-		try (au.com.bytecode.opencsv.CSVWriter csvWriter = new au.com.bytecode.opencsv.CSVWriter(new FileWriter(file))) {
+		try (au.com.bytecode.opencsv.CSVWriter csvWriter = new au.com.bytecode.opencsv.CSVWriter(new FileWriter(new File(outputFile)))) {
 			List<String[]> lines = new ArrayList<String[]>(rows);
 			String[] line = new String[columns];
 			int column=0;

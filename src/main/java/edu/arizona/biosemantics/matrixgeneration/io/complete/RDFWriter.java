@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.io;
+package edu.arizona.biosemantics.matrixgeneration.io.complete;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,13 +15,13 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.impl.PropertyImpl;
 import com.hp.hpl.jena.rdf.model.impl.StatementImpl;
 
-import edu.arizona.biosemantics.matrixgeneration.Configuration;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Relation;
-import edu.arizona.biosemantics.matrixgeneration.model.Structure;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Relation;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class RDFWriter implements Writer {
 

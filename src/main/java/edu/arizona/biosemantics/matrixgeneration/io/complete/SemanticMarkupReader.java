@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration.io;
+package edu.arizona.biosemantics.matrixgeneration.io.complete;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,20 +17,23 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import edu.arizona.biosemantics.common.taxonomy.Rank;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Relation;
-import edu.arizona.biosemantics.matrixgeneration.model.Structure;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Relation;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class SemanticMarkupReader implements Reader {
 	
-	private File inputDirectory;
+	private String inputDirectory;
 	private SAXBuilder saxBuilder = new SAXBuilder();
 	private XPathFactory xpathFactory = XPathFactory.instance();
 	private XPathExpression<Element> sourceXpath = 
@@ -43,7 +46,8 @@ public class SemanticMarkupReader implements Reader {
 			xpathFactory.compile("//description[@type='morphology']/statement", Filters.element(), null, 
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));	
 
-	public SemanticMarkupReader(File inputDirectory) {
+	@Inject
+	public SemanticMarkupReader(@Named("InputDirectory") String inputDirectory) {
 		this.inputDirectory = inputDirectory;
 	}
 
@@ -111,7 +115,8 @@ public class SemanticMarkupReader implements Reader {
 			List<TaxonIdentification> taxonNames, Map<RankData, Taxon> rankTaxaMap, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, 
 			Map<Taxon, File> sourceFilesMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
-		for(File file : inputDirectory.listFiles()) {
+		File input = new File(inputDirectory);
+		for(File file : input.listFiles()) {
 			if(file.isFile()) {
 				Document document = saxBuilder.build(file);
 				Element sourceElement = sourceXpath.evaluateFirst(document);

@@ -2,7 +2,7 @@ package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
 import java.io.Serializable;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 
 public class ColumnHead implements Serializable {
 

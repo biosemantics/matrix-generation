@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 
 public class SerializeWriter implements Writer {

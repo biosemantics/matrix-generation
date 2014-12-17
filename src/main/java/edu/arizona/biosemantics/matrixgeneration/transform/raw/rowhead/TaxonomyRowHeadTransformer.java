@@ -2,7 +2,7 @@ package edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead;
 
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
 public class TaxonomyRowHeadTransformer implements RowHeadTransformer {

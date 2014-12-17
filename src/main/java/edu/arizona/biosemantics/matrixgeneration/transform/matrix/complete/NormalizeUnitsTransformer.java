@@ -1,8 +1,8 @@
-package edu.arizona.biosemantics.matrixgeneration.transform.matrix;
+package edu.arizona.biosemantics.matrixgeneration.transform.matrix.complete;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 /**
  * 4. allow the user to set the unit (m or mm etc.) to be used.

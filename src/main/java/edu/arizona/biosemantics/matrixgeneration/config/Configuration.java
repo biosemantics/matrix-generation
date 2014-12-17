@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.matrixgeneration;
+package edu.arizona.biosemantics.matrixgeneration.config;
 
 import java.io.IOException;
 import java.util.Properties;

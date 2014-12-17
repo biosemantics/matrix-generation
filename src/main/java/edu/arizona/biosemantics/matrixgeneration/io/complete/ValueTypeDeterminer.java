@@ -1,6 +1,6 @@
-package edu.arizona.biosemantics.matrixgeneration.io;
+package edu.arizona.biosemantics.matrixgeneration.io.complete;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 /** StateFactory code before **/
 public class ValueTypeDeterminer {

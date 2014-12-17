@@ -1,42 +1,59 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Structure;
-import edu.arizona.biosemantics.matrixgeneration.model.Taxon;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Column;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddColumn;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddSourceColumn;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.ByChoiceCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CombinedCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.RangeValueByChoiceCellValueTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.SimpleCellValueTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.ColumnHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.NameOrganColumnHeadTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.RowHeadTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.TaxonomyRowHeadTransformer;
 
-public class RawMatrixTransformer {
-	
+public class SomeRawTransformStrategy implements RawTransformStrategy {
+		
 	private ColumnHeadTransformer columnHeadTransformer;
 	private RowHeadTransformer rowHeadTransformer;
 	private CellValueTransformer cellValueTransformer;
-	private List<AddColumn> addColumns;
-
-	public RawMatrixTransformer(ColumnHeadTransformer columnHeadTransformer, RowHeadTransformer rowHeadTransformer,
-			CellValueTransformer cellValueTransformer, List<AddColumn> addColumns) {
+	private List<AddColumn> addColumns = new LinkedList<AddColumn>();
+	
+	@Inject
+	public SomeRawTransformStrategy(ColumnHeadTransformer columnHeadTransformer,
+			RowHeadTransformer rowHeadTransformer,
+			CellValueTransformer cellValueTransformer,
+			List<AddColumn> addColumns) {
 		this.columnHeadTransformer = columnHeadTransformer;
 		this.rowHeadTransformer = rowHeadTransformer;
 		this.cellValueTransformer = cellValueTransformer;
 		this.addColumns = addColumns;
 	}
-
+	
+	@Override
 	public RawMatrix transform(Matrix matrix) {
 		List<RowHead> rootRowHeads = new LinkedList<RowHead>();
 		List<ColumnHead> columnHeads = new LinkedList<ColumnHead>();

@@ -2,7 +2,10 @@ package edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue;
 
 import java.util.List;
 
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 
 /**
@@ -14,8 +17,9 @@ public class CombinedCellValueTransformer implements CellValueTransformer {
 	private List<ByChoiceCellValueTransformer> transformers;
 	private CellValueTransformer defaultTransformer;
 	
+	@Inject
 	public CombinedCellValueTransformer(List<ByChoiceCellValueTransformer> transformers, 
-			CellValueTransformer defaultTransformer) {
+			@Named("DefaultCellValueTransformer") CellValueTransformer defaultTransformer) {
 		this.transformers = transformers;
 		this.defaultTransformer = defaultTransformer;
 	}

@@ -75,12 +75,12 @@ import org.tdwg.rs.ubif._2006.TechnicalMetadata;
 import org.tdwg.rs.ubif._2006.UnivarSimpleStatMeasureData;
 import org.tdwg.rs.ubif._2006.ValueRangeWithClass;
 
-import edu.arizona.biosemantics.matrixgeneration.Configuration;
-import edu.arizona.biosemantics.matrixgeneration.io.ValueTypeDeterminer;
-import edu.arizona.biosemantics.matrixgeneration.model.Character;
-import edu.arizona.biosemantics.matrixgeneration.model.StructureIdentifier;
-import edu.arizona.biosemantics.matrixgeneration.model.Matrix;
-import edu.arizona.biosemantics.matrixgeneration.model.Value;
+import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.ValueTypeDeterminer;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RawMatrix;
