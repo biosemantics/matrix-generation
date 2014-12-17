@@ -38,6 +38,7 @@ public class Main {
 		log(LogLevel.INFO, "Output file: " + outputFile);
 		log(LogLevel.INFO, "Inherit values: " + inheritValues);
 		log(LogLevel.INFO, "Generate Absent Present: " + generateAbsentPresent);
+		inferCharactersFromOntologies = false;
 		log(LogLevel.INFO, "Infer Characters From Ontologies: " + inferCharactersFromOntologies);
 		
 		Reader reader = new SemanticMarkupReader(new File(inputDir));
