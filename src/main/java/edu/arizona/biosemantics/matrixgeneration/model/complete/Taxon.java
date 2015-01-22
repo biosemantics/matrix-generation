@@ -3,8 +3,11 @@ package edu.arizona.biosemantics.matrixgeneration.model.complete;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
@@ -16,14 +19,21 @@ public class Taxon implements Serializable {
 	private TaxonIdentification taxonIdentification;
 	private LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
-	private LinkedHashMap<String, Structure> structures = new LinkedHashMap<String, Structure>();
+	private Structure wholeOrganism = new Structure("whole_organism");
+	private LinkedHashMap<String, Set<Structure>> structures = new LinkedHashMap<String, Set<Structure>>();
 	private LinkedHashMap<Relation, Relation> relations = new LinkedHashMap<Relation, Relation>();
 	
 	private String description;
 	private File sourceFile;
+	private Taxon parent;
+	
+	public Taxon() {
+		this.structures.put(wholeOrganism.getName(), new HashSet<Structure>());
+		this.structures.get(wholeOrganism.getName()).add(wholeOrganism);
+	}
 	
 	public LinkedHashSet<Taxon> getChildren() {
-		return children;
+		return new LinkedHashSet<Taxon>(children);
 	}
 
 	public String getDescription() {
@@ -39,24 +49,29 @@ public class Taxon implements Serializable {
 	}
 
 	public void addStructure(Structure structure) {
-		if(structures.containsKey(structure.getName())) {
-			Structure targetStructure = structures.get(structure.getName());
-			for(Character character : structure.getCharacters()) 
-				targetStructure.setCharacterValue(character, structure.getCharacterValue(character));
-		} else
-			structures.put(structure.getName(), structure);
+		if(!structures.containsKey(structure.getName()))
+			structures.put(structure.getName(), new HashSet<Structure>());
+		structures.get(structure.getName()).add(structure);
 	}
 
 	public Collection<Structure> getStructures() {
-		return structures.values();
+		Collection<Structure> result = new LinkedList<Structure>();
+		for(Set<Structure> nameStructures : structures.values()) 
+			result.addAll(nameStructures);
+		return result;
 	}
 
-	public Structure getStructure(String name) {
+	public Set<Structure> getStructures(String name) {
 		return structures.get(name);
 	}
 
 	public void addChild(Taxon taxon) {
 		children.add(taxon);
+		taxon.setParent(this);
+	}
+
+	private void setParent(Taxon parent) {
+		this.parent = parent;
 	}
 
 	public void addRelation(Relation relation) {
@@ -81,6 +96,22 @@ public class Taxon implements Serializable {
 	
 	public void setTaxonIdentification(TaxonIdentification taxonIdentification) {
 		this.taxonIdentification = taxonIdentification;
+	}
+
+	public Structure getWholeOrganism() {
+		return wholeOrganism;
+	}
+	
+	public Collection<Structure> getStructuresWithoutWholeOrganism() {
+		Collection<Structure> result = new LinkedList<Structure>();
+		for(String name : structures.keySet()) 
+			if(!name.equals(wholeOrganism.getName()))
+				result.addAll(structures.get(name));
+		return result;
+	}
+
+	public Taxon getParent() {
+		return parent;
 	}
 
 }

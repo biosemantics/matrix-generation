@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class Matrix implements Serializable {
 		}
 
 	public Set<Character> getCharacters() {
-		return Collections.unmodifiableSet(characters.keySet());
+		return new HashSet<Character>(characters.keySet());
 	}
 
 	@JsonIgnore
@@ -62,7 +63,7 @@ public class Matrix implements Serializable {
 		for(Taxon taxon : getTaxa()) {
 			for(Structure structure : taxon.getStructures()) {
 				for(Character character : structure.getCharacters()) {
-					values.add(structure.getCharacterValue(character));
+					values.addAll(structure.getCharacterValues(character));
 				}
 			}
 		}
@@ -157,5 +158,23 @@ public class Matrix implements Serializable {
 	public List<StructureIdentifier> getChildren(StructureIdentifier StructureIdentifier) {
 		return new LinkedList<StructureIdentifier>();
 	}
-		
+
+	public List<Taxon> getLeafTaxa() {
+		List<Taxon> leafTaxa = new LinkedList<Taxon>();
+		for(Taxon rootTaxon : rootTaxa) {
+			leafTaxa.addAll(getLeafTaxa(rootTaxon));
+		}
+		return leafTaxa;
+	}
+	
+	public List<Taxon> getLeafTaxa(Taxon parent) {
+		List<Taxon> result = new LinkedList<Taxon>();
+		if(parent.getChildren().isEmpty()) {
+			result.add(parent);
+		} else {
+			for(Taxon child : parent.getChildren())
+				result.addAll(getLeafTaxa(child));
+		}
+		return result;
+	}
 }

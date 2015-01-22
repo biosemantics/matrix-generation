@@ -1,8 +1,8 @@
 package edu.arizona.biosemantics.matrixgeneration.config;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,33 +12,38 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
-import edu.arizona.biosemantics.matrixgeneration.io.complete.Reader;
-import edu.arizona.biosemantics.matrixgeneration.io.complete.SemanticMarkupReader;
-import edu.arizona.biosemantics.matrixgeneration.io.raw.CSVWriter;
-import edu.arizona.biosemantics.matrixgeneration.io.raw.Writer;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.Reader;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.SemanticMarkupReader;
+import edu.arizona.biosemantics.matrixgeneration.io.raw.out.CSVWriter;
+import edu.arizona.biosemantics.matrixgeneration.io.raw.out.Writer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.cellvalue.CellValueRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.cellvalue.AggregatedCellValueRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.cellvalue.RangeValueCellValueRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.cellvalue.SimpleCellValueRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.columnhead.ColumnHeadRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.columnhead.NameOrganColumnHeadRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.rowhead.RowHeadRawenizer;
+import edu.arizona.biosemantics.matrixgeneration.rawen.rowhead.TaxonomyRowHeadRawenizer;
 import edu.arizona.biosemantics.matrixgeneration.run.IRun;
 import edu.arizona.biosemantics.matrixgeneration.run.MatrixGenerationRun;
-import edu.arizona.biosemantics.matrixgeneration.transform.matrix.complete.SomeTransformStrategy;
-import edu.arizona.biosemantics.matrixgeneration.transform.matrix.complete.TransformStrategy;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.RawTransformStrategy;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.SomeRawTransformStrategy;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddColumn;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.addcolumn.AddSourceColumn;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.ByChoiceCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.CombinedCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.RangeValueByChoiceCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.cellvalue.SimpleCellValueTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.ColumnHeadTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.columnhead.NameOrganColumnHeadTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.RowHeadTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.raw.rowhead.TaxonomyRowHeadTransformer;
 
 public class RunConfig extends BaseConfig {
 
 	public RunConfig() throws IOException {
 		super();
 	}
+	
+	// Keywords
+	private Set<String> presentRelation = new HashSet<String>(
+			Arrays.asList(new String[] { "with", "attach", "include", "attached", "included", "part_of", "part of"}));
+	private Set<String> absentRelation = new HashSet<String>(
+			Arrays.asList(new String[] { "without", "lack of", "devoid of", "missing", "misses" }));
+	private Set<String> frequencyModifiers = new HashSet<String>(Arrays.asList(new String[] { "frequently", "rarely", "often" }));
+	private Set<String> negationModifiers = new HashSet<String>(Arrays.asList(new String[] { "not" }));
+	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than" } ));
+	private Collection<String> frequencyModifierPatterns = createFrequencyModifierPatterns();
+	private Collection<String> negationModifierPatterns = createNegationModifierPatterns();
+	private Collection<String> comparisonModifierPatterns = createComparisonModifierPatterns();
 
 	// IO
 	private String inputDirectory = "in";
@@ -47,30 +52,17 @@ public class RunConfig extends BaseConfig {
 	private Class<? extends Writer> writer = CSVWriter.class;
 	
 	// Processing
-	private Class<? extends TransformStrategy> transformStrategy = SomeTransformStrategy.class;
-	private Class<? extends RawTransformStrategy> rawTransformStrategy = SomeRawTransformStrategy.class;
-	private boolean inheritValues = false;
-	private boolean generateAbsentPresent = false;
-	private boolean inferCharactersFromOntologies = false;
+	private List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer> completeTransformers = 
+			new LinkedList<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer>();
+	private List<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer> rawTransformers = 
+			new LinkedList<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer>();
 	
 	// Processing: Complete -> Raw
-	private Class<? extends ColumnHeadTransformer> columnHeadTransformer = NameOrganColumnHeadTransformer.class;
-	private Class<? extends RowHeadTransformer> rowHeadTransformer = TaxonomyRowHeadTransformer.class;
-	private Class<? extends CellValueTransformer> cellValueTransformer = CombinedCellValueTransformer.class;
-	private Class<? extends CellValueTransformer> defaultCellValueTransformer = SimpleCellValueTransformer.class;
-	private List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = createByChoiceCellValueTransformers();
-	private List<AddColumn> addColumns = createAddColumns();
-	
-	// Keywords
-	private Set<String> presentRelation = new HashSet<String>(
-			Arrays.asList(new String[] { "with", "attach", "include", "attached", "included" }));
-	private Set<String> absentRelation = new HashSet<String>(
-			Arrays.asList(new String[] { "without", "lack of", "devoid of", "missing", "misses" }));
-	private Set<String> frequencyModifiers = new HashSet<String>(Arrays.asList(new String[] { "frequently", "rarely", "often" }));
-	private Set<String> negationModifiers = new HashSet<String>(Arrays.asList(new String[] { "not" }));
-	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than" } ));
-	private List<String> prependModifierPatterns = createPrependModifierPatterns();
-	private List<String> appendModifierPatterns = createAppendModifierPatterns();
+	private Class<? extends ColumnHeadRawenizer> columnHeadRawenizer = NameOrganColumnHeadRawenizer.class;
+	private Class<? extends RowHeadRawenizer> rowHeadRawenizer = TaxonomyRowHeadRawenizer.class;
+	private Class<? extends CellValueRawenizer> cellValueRawenizer = AggregatedCellValueRawenizer.class;
+	private Class<? extends CellValueRawenizer> defaultCellValueRawenizer = SimpleCellValueRawenizer.class;
+	private List<CellValueRawenizer> cellValueRawenizers = createCellValueRawenizers();
 
 	@Override
 	protected void configure() {
@@ -86,25 +78,25 @@ public class RunConfig extends BaseConfig {
 			bind(Writer.class).to(writer).in(Singleton.class);
 			
 			// Processing
-			bind(TransformStrategy.class).to(transformStrategy).in(Singleton.class);
-			bind(RawTransformStrategy.class).to(rawTransformStrategy).in(Singleton.class);
-			bind(Boolean.class).annotatedWith(Names.named("InheritValues")).toInstance(inheritValues);
-			bind(Boolean.class).annotatedWith(Names.named("GenerateAbsentPresent")).toInstance(generateAbsentPresent);
-			bind(Boolean.class).annotatedWith(Names.named("InferCharactersFromOntologies")).toInstance(inferCharactersFromOntologies);
+			bind(new TypeLiteral<List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer>>() {}).toInstance(
+					completeTransformers );
+			bind(new TypeLiteral<List<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer>>() {}).toInstance(
+					rawTransformers );
 			
-			// Processing: Complete -> Raw
-			bind(ColumnHeadTransformer.class).to(columnHeadTransformer);
-			bind(RowHeadTransformer.class).to(rowHeadTransformer);
-			bind(CellValueTransformer.class).to(cellValueTransformer);
-			bind(new TypeLiteral<List<ByChoiceCellValueTransformer>>() {}).toInstance(byChoiceCellValueTransformers );
-			bind(CellValueTransformer.class).annotatedWith(Names.named("DefaultCellValueTransformer")).to(defaultCellValueTransformer);			
-			bind(new TypeLiteral<List<AddColumn>>() {}).toInstance(addColumns);
+			// Rawenize
+			bind(ColumnHeadRawenizer.class).to(columnHeadRawenizer);
+			bind(RowHeadRawenizer.class).to(rowHeadRawenizer);
+			bind(CellValueRawenizer.class).to(cellValueRawenizer);
+			bind(new TypeLiteral<List<CellValueRawenizer>>() {}).toInstance(cellValueRawenizers);
+			bind(CellValueRawenizer.class).annotatedWith(Names.named("DefaultCellValueRawenizer")).to(defaultCellValueRawenizer);			
 			
 			// Keywords
-			bind(new TypeLiteral<List<String>>() {}).annotatedWith(Names.named("PrependModifierPatterns")).toInstance(
-					prependModifierPatterns );
-			bind(new TypeLiteral<List<String>>() {}).annotatedWith(Names.named("AppendModifierPatterns")).toInstance(
-					appendModifierPatterns );
+			bind(new TypeLiteral<Collection<String>>() {}).annotatedWith(Names.named("FrequencyModifierPatterns")).toInstance(
+					frequencyModifierPatterns );
+			bind(new TypeLiteral<Collection<String>>() {}).annotatedWith(Names.named("NegationModifierPatterns")).toInstance(
+					negationModifierPatterns );
+			bind(new TypeLiteral<Collection<String>>() {}).annotatedWith(Names.named("ComparisonModifierPatterns")).toInstance(
+					comparisonModifierPatterns );
 			bind(new TypeLiteral<Set<String>>() {}).annotatedWith(Names.named("PresentRelation")).toInstance(
 					presentRelation );
 			bind(new TypeLiteral<Set<String>>() {}).annotatedWith(Names.named("AbsentRelation")).toInstance(
@@ -116,18 +108,37 @@ public class RunConfig extends BaseConfig {
 		//}
 	}
 
-	private List<AddColumn> createAddColumns() {
-		List<AddColumn> addColumns = new LinkedList<AddColumn>();
-		addColumns.add(new AddSourceColumn());
-		return addColumns;
+	private List<CellValueRawenizer> createCellValueRawenizers() {
+		List<CellValueRawenizer> cellValueRawenizers = new LinkedList<CellValueRawenizer>();
+		cellValueRawenizers.add(new RangeValueCellValueRawenizer(frequencyModifierPatterns, comparisonModifierPatterns));
+		return cellValueRawenizers;
+	}
+	
+	private Collection<String> createFrequencyModifierPatterns() {
+		Set<String> result = new HashSet<String>();
+		for(String frequencyModifier : frequencyModifiers) {
+			result.add("^" + frequencyModifier + "$");
+		}
+		return result;
+	}
+	
+	private Collection<String> createNegationModifierPatterns() {
+		Set<String> result = new HashSet<String>();
+		for(String negationModifier : negationModifiers) {
+			result.add("^" + negationModifier + "$");
+		}
+		return result;
+	}
+	
+	private Collection<String> createComparisonModifierPatterns() {
+		Set<String> result = new HashSet<String>();
+		for(String comparisonModifier : comparisonModifiers) {
+			result.add("^" + comparisonModifier + "$");
+		}
+		return result;
 	}
 
-	private List<ByChoiceCellValueTransformer> createByChoiceCellValueTransformers() {
-		List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers = new LinkedList<ByChoiceCellValueTransformer>();
-		byChoiceCellValueTransformers.add(new RangeValueByChoiceCellValueTransformer(prependModifierPatterns, appendModifierPatterns));
-		return byChoiceCellValueTransformers;
-	}
-
+	
 	public void setInputDirectory(String inputDirectory) {
 		this.inputDirectory = inputDirectory;
 	}
@@ -135,95 +146,30 @@ public class RunConfig extends BaseConfig {
 	public void setOutputFile(String outputFile) {
 		this.outputFile = outputFile;
 	}
-
-	public void setInheritValues(boolean inheritValues) {
-		this.inheritValues = inheritValues;
-	}
-
-	public void setGenerateAbsentPresent(boolean generateAbsentPresent) {
-		this.generateAbsentPresent = generateAbsentPresent;
-	}
-
-	public void setInferCharactersFromOntologies(
-			boolean inferCharactersFromOntologies) {
-		this.inferCharactersFromOntologies = inferCharactersFromOntologies;
-	}
-
-	public void setPresentRelation(Set<String> presentRelation) {
-		this.presentRelation = presentRelation;
-	}
-
-	public void setAbsentRelation(Set<String> absentRelation) {
-		this.absentRelation = absentRelation;
-	}
 	
-	private List<String> createAppendModifierPatterns() {
-		List<String> result = new LinkedList<String>();
-		for(String comparisonModifier : comparisonModifiers) {
-			result.add("^" + comparisonModifier + " .*$");
-		}
-		return result;
+	public void setReader(Class<? extends Reader> reader) {
+		this.reader = reader;
 	}
 
-	private List<String> createPrependModifierPatterns() {
-		List<String> result = new LinkedList<String>();
-		for(String frequencyModifier : frequencyModifiers) {
-			result.add("^" + frequencyModifier + "$");
-		}
-		for(String negationModifier : negationModifiers) {
-			result.add("^" + negationModifier + "$");
-		}
-		return result;
+	public void setWriter(Class<? extends Writer> writer) {
+		this.writer = writer;
 	}
 
-	public void setFrequencyModifiers(Set<String> frequencyModifiers) {
-		this.frequencyModifiers = frequencyModifiers;
+	public List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer> getCompleteTransformers() {
+		return completeTransformers;
 	}
 
-	public void setNegationModifiers(Set<String> negationModifiers) {
-		this.negationModifiers = negationModifiers;
+	public void setCompleteTransformers(
+			List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer> completeTransformers) {
+		this.completeTransformers = completeTransformers;
 	}
 
-	public void setComparisonModifiers(Set<String> comparisonModifiers) {
-		this.comparisonModifiers = comparisonModifiers;
+	public List<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer> getRawTransformers() {
+		return rawTransformers;
 	}
 
-	public void setColumnHeadTransformer(
-			Class<? extends ColumnHeadTransformer> columnHeadTransformer) {
-		this.columnHeadTransformer = columnHeadTransformer;
+	public void setRawTransformers(
+			List<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer> rawTransformers) {
+		this.rawTransformers = rawTransformers;
 	}
-
-	public void setRowHeadTransformer(
-			Class<? extends RowHeadTransformer> rowHeadTransformer) {
-		this.rowHeadTransformer = rowHeadTransformer;
-	}
-
-	public void setCellValueTransformer(
-			Class<? extends CellValueTransformer> cellValueTransformer) {
-		this.cellValueTransformer = cellValueTransformer;
-	}
-
-	public void setDefaultCellValueTransformer(
-			Class<? extends CellValueTransformer> defaultCellValueTransformer) {
-		this.defaultCellValueTransformer = defaultCellValueTransformer;
-	}
-
-	public void setByChoiceCellValueTransformers(
-			List<ByChoiceCellValueTransformer> byChoiceCellValueTransformers) {
-		this.byChoiceCellValueTransformers = byChoiceCellValueTransformers;
-	}
-
-	public void setPrependModifierPatterns(List<String> prependModifierPatterns) {
-		this.prependModifierPatterns = prependModifierPatterns;
-	}
-
-	public void setAppendModifierPatterns(List<String> appendModifierPatterns) {
-		this.appendModifierPatterns = appendModifierPatterns;
-	}
-
-	public void setAddColumns(List<AddColumn> addColumns) {
-		this.addColumns = addColumns;
-	}	
-		
-	
 }

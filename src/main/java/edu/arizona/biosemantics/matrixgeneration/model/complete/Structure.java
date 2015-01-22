@@ -23,24 +23,36 @@ public class Structure implements Cloneable, Serializable {
 	private String notes;
 	private String nameOriginal;
 	
-	private LinkedHashMap<Character, Value> values = new LinkedHashMap<Character, Value>();
+	private LinkedHashMap<Character, Values> values = new LinkedHashMap<Character, Values>();
 
+	public Structure() { }
+	
+	public Structure(String name) {
+		this.name = name;
+	}
+	
 	public boolean containsCharacter(Character character) {
 		return values.containsKey(character);
 	}
 
-	public Value getCharacterValue(Character character) {
+	public Values getCharacterValues(Character character) {
 		return values.get(character);
 	}
-
-	public Value setCharacterValue(Character character, Value value) {
+	
+	public void addCharacterValue(Character character, Value value) {
 		if(values.containsKey(character))
 			log(LogLevel.WARN, "Structure " + this.getName() + " already contains a value for character " + character.getName() + 
 					". Tried to set:\n" + value.toString() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
-		return values.put(character, value);
+		if(!values.containsKey(character))
+			values.put(character, new Values());
+		values.get(character).add(value);
 	}
 
-	public Value removeCharacterValue(Character character) {
+	public void setCharacterValues(Character character, Values values) {
+		this.values.put(character, values);
+	}
+
+	public Values removeCharacterValues(Character character) {
 		return values.remove(character);
 	}
 
@@ -164,7 +176,7 @@ public class Structure implements Cloneable, Serializable {
 		return values.containsKey(character);
 	}
 	
-	public LinkedHashMap<Character, Value> getValues() {
+	public LinkedHashMap<Character, Values> getValues() {
 		return values;
 	}
 
@@ -187,7 +199,7 @@ public class Structure implements Cloneable, Serializable {
 		structure.setProvenance(this.provenance);
 		structure.setTaxonConstraint(this.taxonConstraint);
 		for(Character character : values.keySet()) {
-			structure.setCharacterValue(character, this.getCharacterValue(character).clone());
+			structure.setCharacterValues(character, this.getCharacterValues(character).clone());
 		}
 		return structure;
 	}

@@ -8,6 +8,12 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 	private String structureConstraint;
 	private String structureOntologyId;
 	
+	public StructureIdentifier(Structure structure) {
+		this.structureName = structure.getName();
+		this.structureConstraint = structure.getConstraint();
+		this.structureOntologyId = structure.getOntologyId();
+	}
+	
 	public StructureIdentifier(String structureName, String structureConstraint, String structureOntologyId) {
 		this.structureName = structureName;
 		this.structureConstraint = structureConstraint;
@@ -85,9 +91,7 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 	}
 
 	public int compareTo(StructureIdentifier structureIdentifier) {
-		if(getStructureName().equals(getStructureName())) {
-			return getStructureConstraintOrEmpty().compareTo(getStructureConstraintOrEmpty());
-		}
-		return getStructureName().compareTo(getStructureName());
+		return (this.getStructureName() + this.getStructureConstraintOrEmpty() + this.structureOntologyId).compareTo(
+						structureIdentifier.getStructureName() + structureIdentifier.getStructureConstraintOrEmpty() + structureIdentifier.structureOntologyId);
 	}
 }
