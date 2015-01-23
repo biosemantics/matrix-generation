@@ -31,12 +31,22 @@ public class Structure implements Cloneable, Serializable {
 		this.name = name;
 	}
 	
+	public Structure(String name, String constraint, String ontologyid) {
+		this.name = name;
+		this.constraint = constraint;
+		this.ontologyId = ontologyid;
+	}
+
 	public boolean containsCharacter(Character character) {
 		return values.containsKey(character);
 	}
 
 	public Values getCharacterValues(Character character) {
 		return values.get(character);
+	}
+	
+	public int getSetCharactersValuesCount() {
+		return values.size();
 	}
 	
 	public void addCharacterValue(Character character, Value value) {
@@ -211,6 +221,10 @@ public class Structure implements Cloneable, Serializable {
 		if(name != null)
 			result += name;
 		return result.trim();
+	}
+	
+	public String toString() {
+		return new StructureIdentifier(this).toString();
 	}
 
 }

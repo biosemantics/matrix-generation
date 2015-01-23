@@ -20,7 +20,7 @@ public class SplitRangeValuesTransformer implements Transformer {
 		List<Character> toSplitCharacters = new LinkedList<Character>();
 		for(Character character : matrix.getCharacters()) {
 			for(Taxon taxon : matrix.getTaxa()) {
-				Set<Structure> structures = taxon.getStructures(character.getStructureIdentifier().getStructureName());
+				Set<Structure> structures = taxon.getStructures(character.getBearerStructureIdentifier().getStructureName());
 				for(Structure structure : structures) {
 					if(structure != null) {
 						Values values = structure.getCharacterValues(character);
@@ -38,13 +38,13 @@ public class SplitRangeValuesTransformer implements Transformer {
 		}
 		
 		for(Character character : toSplitCharacters) {
-			Character maxCharacter = new Character(character.getName() + "_max", "of", character.getStructureIdentifier());
-			Character minCharacter = new Character(character.getName() + "_min", "of", character.getStructureIdentifier());
+			Character maxCharacter = new Character(character.getName() + "_max", "of", character.getBearerStructureIdentifier());
+			Character minCharacter = new Character(character.getName() + "_min", "of", character.getBearerStructureIdentifier());
 			matrix.addCharacter(maxCharacter);
 			matrix.addCharacter(minCharacter);
 			
 			for(Taxon taxon : matrix.getTaxa()) {
-				Set<Structure> structures = taxon.getStructures(character.getStructureIdentifier().getStructureName());
+				Set<Structure> structures = taxon.getStructures(character.getBearerStructureIdentifier().getStructureName());
 				for(Structure structure : structures) {
 					if(structure != null) {
 						Values values = structure.getCharacterValues(character);

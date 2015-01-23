@@ -7,7 +7,7 @@ public aspect StringifyInjection extends AbstractStringifyInjection {
 
 	declare parents : edu.arizona.biosemantics.matrixgeneration.* implements IPrintable;
 	declare parents : edu.arizona.biosemantics.matrixgeneration.io..* implements IPrintable;
-	declare parents : edu.arizona.biosemantics.matrixgeneration.model..* implements IPrintable;
+	//declare parents : edu.arizona.biosemantics.matrixgeneration.model..* implements IPrintable;
 	declare parents : edu.arizona.biosemantics.matrixgeneration.transform..* implements IPrintable;
 
 }

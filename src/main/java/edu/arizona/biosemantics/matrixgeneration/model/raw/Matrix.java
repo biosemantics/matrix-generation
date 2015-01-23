@@ -134,5 +134,17 @@ public class Matrix implements Serializable {
 			cellValues.get(rowHead).remove(columnId);
 		}
 	}
+
+	public int getApplicableCellValues() {
+		int result = 0;
+		for(RowHead rowHead : this.getRowHeads()) {
+			for(CellValue cellValue : cellValues.get(rowHead)) {
+				if(!(cellValue instanceof NotApplicableCellValue)) {
+					result++;
+				}
+			}
+		}
+		return result;
+	}
 	
 }

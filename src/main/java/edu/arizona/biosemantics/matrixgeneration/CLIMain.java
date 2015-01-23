@@ -26,15 +26,15 @@ import edu.arizona.biosemantics.matrixgeneration.io.raw.out.SerializeWriter;
 import edu.arizona.biosemantics.matrixgeneration.run.IRun;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.AbsentPresentFromBiologicalEntitiesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.AbsentPresentFromRelationsTranformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.complete.AttributeCharacterRemoverTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.complete.RemoveAttributeCharactersTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUnitsTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUnitsTransformer.Unit;
-import edu.arizona.biosemantics.matrixgeneration.transform.complete.OntologySubclassInheritanceTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.OntologySuperclassInheritanceTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.complete.OntologySubclassInheritanceTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.SplitRangeValuesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.TaxonomyDescendantInheritanceTransformer;
-import edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddSourceColumnTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.RemoveNotApplicableValuesOnlyColumnsTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RemoveSingleValueColumnsTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.TaxonomyAncestorInheritanceTransformer;
 
@@ -83,7 +83,7 @@ public class CLIMain {
 				"inherit characters from parent to child");
 		options.addOption("presence_relation", "generate absent/present from relations", false, 
 				"generate absent present characters from structure relationships");
-		options.addOption("precence_entity", "generate absent/present from biological entity presence", false, 
+		options.addOption("presence_entity", "generate absent/present from biological entity presence", false, 
 				"generate absent/present from biological entity presence");
 		options.addOption("up_ontology_inheritance", "infer characters from ontology superclasses", false, 
 				"infer characters from ontology using superclass relationships");
@@ -133,14 +133,14 @@ public class CLIMain {
 		    if(commandLine.hasOption("presence_relation")) {
 			    completeTransformers.add(injector.getInstance(AbsentPresentFromRelationsTranformer.class));
 		    }
-		    if(commandLine.hasOption("precence_entity")) {
+		    if(commandLine.hasOption("presence_entity")) {
 		    	completeTransformers.add(injector.getInstance(AbsentPresentFromBiologicalEntitiesTransformer.class));
 		    }
 		    if(commandLine.hasOption("up_ontology_inheritance")) {
-				completeTransformers.add(injector.getInstance(OntologySuperclassInheritanceTransformer.class));
+				completeTransformers.add(injector.getInstance(OntologySubclassInheritanceTransformer.class));
 		    }
 		    if(commandLine.hasOption("down_ontology_inheritance")) {
-				completeTransformers.add(injector.getInstance(OntologySubclassInheritanceTransformer.class));
+				completeTransformers.add(injector.getInstance(OntologySuperclassInheritanceTransformer.class));
 		    }
 		    if(commandLine.hasOption("up_taxonomy_inheritance")) {
 		    	rawTransformers.add(injector.getInstance(TaxonomyAncestorInheritanceTransformer.class));
@@ -164,7 +164,7 @@ public class CLIMain {
 		    	completeTransformers.add(injector.getInstance(SplitRangeValuesTransformer.class));
 		    }
 			if(commandLine.hasOption("remove_attributes")) {
-				completeTransformers.add(injector.getInstance(AttributeCharacterRemoverTransformer.class));
+				completeTransformers.add(injector.getInstance(RemoveAttributeCharactersTransformer.class));
 			} 
 			if(commandLine.hasOption("remove_single_states")) {
 				rawTransformers.add(injector.getInstance(RemoveSingleValueColumnsTransformer.class));
@@ -172,6 +172,7 @@ public class CLIMain {
 			if(commandLine.hasOption("add_source")) {
 				rawTransformers.add(injector.getInstance(AddSourceColumnTransformer.class));
 			}
+			//rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
 			
 		    config.setCompleteTransformers(completeTransformers);
 		    config.setRawTransformers(rawTransformers);
@@ -181,6 +182,7 @@ public class CLIMain {
 		    
 		} catch(ParseException e) {
 			log(LogLevel.ERROR, "Problem parsing parameters", e);
+			throw new IllegalArgumentException(e);
 		}
 	}
 	

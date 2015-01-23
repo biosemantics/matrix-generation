@@ -5,6 +5,7 @@ import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
@@ -39,16 +40,20 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 			if(isPresentRelation(relation)) {
 				Character character = createPresentCharacter(relation);
 				if(character != null) {
+					log(LogLevel.DEBUG, "Create from presence of relation character: " + character.toString());
 					matrix.addCharacter(character);
-					Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
+					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+					log(LogLevel.DEBUG, "Set present for: " + taxon.toString());
 					structure.addCharacterValue(character, new Value("present"));
 				}
 			}
 			if(isAbsentRelation(relation)) {
 				Character character = createAbsentCharacter(relation);
 				if(character != null) {
+					log(LogLevel.DEBUG, "Create from presence of relation character: " + character.toString());
 					matrix.addCharacter(character);
-					Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
+					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+					log(LogLevel.DEBUG, "Set absent for: " + taxon.toString());
 					structure.addCharacterValue(character, new Value("absent"));
 				}
 			}
@@ -57,13 +62,8 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 
 	private Character createAbsentCharacter(Relation relation) {
 		if(relation.getTo() != null && relation.getFrom() != null) {
-			String toStructure = (relation.getTo().getConstraint() == null || 
-					relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
-						relation.getTo().getConstraint() + " " + relation.getTo().getName();
-			Character character = new Character("quantity of " + 
-					toStructure, "at", 
-					new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
-							relation.getFrom().getOntologyId()));
+			Character character = new AbsentPresentCharacter(new StructureIdentifier(relation.getTo()), 
+					new StructureIdentifier(relation.getFrom()));
 			return character;
 		}
 		return null;
@@ -71,13 +71,8 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 
 	private Character createPresentCharacter(Relation relation) {
 		if(relation.getTo() != null && relation.getFrom() != null) {
-			String toStructure = (relation.getTo().getConstraint() == null || 
-					relation.getTo().getConstraint().isEmpty()) ? relation.getTo().getName() : 
-						relation.getTo().getConstraint() + " " + relation.getTo().getName();
-			Character character = new Character("quantity of " + 
-					toStructure, "at",
-					new StructureIdentifier(relation.getFrom().getName(), relation.getFrom().getConstraint(), 
-							relation.getFrom().getOntologyId()));
+			Character character = new AbsentPresentCharacter(new StructureIdentifier(relation.getTo()), 
+					new StructureIdentifier(relation.getFrom()));
 			return character;
 		}
 		return null;

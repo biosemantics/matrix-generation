@@ -1,5 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.complete;
 
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
@@ -21,15 +22,17 @@ public class AbsentPresentFromBiologicalEntitiesTransformer implements Transform
 		for(Structure structure : taxon.getStructuresWithoutWholeOrganism()) {
 			Character character = createPresentCharacter(taxon, structure);
 			if(character != null) {
+				log(LogLevel.DEBUG, "Create from presence of entity character: " + character.toString());
 				matrix.addCharacter(character);
-				structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
+				structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+				log(LogLevel.DEBUG, "Set present for: " + taxon.toString());
 				structure.addCharacterValue(character, new Value("present"));
 			}
 		}
 	}
 	
 	private Character createPresentCharacter(Taxon taxon, Structure structure) {
-		Character character = new AbsentPresentCharacter("quantity of " + structure.getName(), "at", 
+		Character character = new AbsentPresentCharacter(new StructureIdentifier(structure), 
 				new StructureIdentifier(taxon.getWholeOrganism()));
 		return character;
 	}

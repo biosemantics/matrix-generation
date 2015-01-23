@@ -26,4 +26,13 @@ public class Values extends HashSet<Value> implements Cloneable {
 		return this.iterator().next();
 	}
 
+	public String getCombinedText() {
+		StringBuilder result = new StringBuilder();
+		for(Value value : this) {
+			result.append(value.getValue() + " | ");
+		}
+		String r = result.toString();
+		return r.substring(0, r.length() - 3);
+	}
+
 }

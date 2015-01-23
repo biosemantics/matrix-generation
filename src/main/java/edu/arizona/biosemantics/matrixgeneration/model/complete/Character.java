@@ -7,12 +7,12 @@ public class Character implements Comparable<Character>, Serializable {
 	
 	private String name;
 	private String connector;
-	private StructureIdentifier structureIdentifier;
+	private StructureIdentifier bearerStructure;
 	
-	public Character(String name, String connector, StructureIdentifier structureIdentifier) {
+	public Character(String name, String connector, StructureIdentifier bearerStructure) {
 		this.name = name;
 		this.connector = connector;
-		this.structureIdentifier = structureIdentifier;
+		this.bearerStructure = bearerStructure;
 	}
 
 	public String getName() {
@@ -23,8 +23,8 @@ public class Character implements Comparable<Character>, Serializable {
 		return connector;
 	}
 
-	public StructureIdentifier getStructureIdentifier() {
-		return structureIdentifier;
+	public StructureIdentifier getBearerStructureIdentifier() {
+		return bearerStructure;
 	}
 	
 	@Override
@@ -34,7 +34,7 @@ public class Character implements Comparable<Character>, Serializable {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime
 				* result
-				+ ((structureIdentifier == null) ? 0 : structureIdentifier
+				+ ((bearerStructure == null) ? 0 : bearerStructure
 						.hashCode());
 		return result;
 	}
@@ -53,23 +53,27 @@ public class Character implements Comparable<Character>, Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (structureIdentifier == null) {
-			if (other.structureIdentifier != null)
+		if (bearerStructure == null) {
+			if (other.bearerStructure != null)
 				return false;
-		} else if (!structureIdentifier.equals(other.structureIdentifier))
+		} else if (!bearerStructure.equals(other.bearerStructure))
 			return false;
 		return true;
 	}
 
 	@Override
 	public int compareTo(Character character) {
-		if(structureIdentifier.equals(character.getStructureIdentifier()))
+		if(bearerStructure.equals(character.getBearerStructureIdentifier()))
 			return name.compareTo(character.getName());
-		return structureIdentifier.compareTo(character.getStructureIdentifier());
+		return bearerStructure.compareTo(character.getBearerStructureIdentifier());
 	}
 	
 	public String getDisplayName() {
-		return name + " " + connector + " " + structureIdentifier.getDisplayName();
+		return name + " " + connector + " " + bearerStructure.getDisplayName();
+	}
+	
+	public String toString() {
+		return this.name + " [" + connector + "] " + this.getBearerStructureIdentifier().toString();
 	}
 	
 }

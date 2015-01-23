@@ -50,7 +50,8 @@ public class MatrixGenerationRun extends AbstractRun {
 		log(LogLevel.INFO, "Raw Transformers: " + rawTransformers);
 		
 		Matrix matrix = reader.read();
-		log(LogLevel.INFO, "Read matrix. Taxa: " + matrix.getTaxaCount() + ", Characters: " + matrix.getCharactersCount());
+		log(LogLevel.INFO, "Read matrix:\n Taxa: " + matrix.getTaxaCount() + "\n Characters: " + matrix.getCharactersCount() + 
+				"\n Values: " + matrix.getSetCharacterValues());
 		
 		edu.arizona.biosemantics.matrixgeneration.transform.complete.TransformerStrategy completeTransformStrategy = 
 				new edu.arizona.biosemantics.matrixgeneration.transform.complete.TransformerStrategy(completeTransformers);
@@ -58,16 +59,17 @@ public class MatrixGenerationRun extends AbstractRun {
 				new edu.arizona.biosemantics.matrixgeneration.transform.raw.TransformerStrategy(rawTransformers);
 		
 		completeTransformStrategy.transform(matrix);
-		log(LogLevel.INFO, "Matrix successfully transformed. Taxa: " + matrix.getTaxaCount() + 
-				", Characters: " + matrix.getCharactersCount());
+		log(LogLevel.INFO, "Matrix successfully transformed.\n Taxa: " + matrix.getTaxaCount() + 
+				"\n Characters: " + matrix.getCharactersCount() + "\n Values: " + matrix.getSetCharacterValues());
 		
 		edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix rawMatrix = matrixRawenizer.convert(matrix);
-		log(LogLevel.INFO, "Matrix rawenized. Rows: " + rawMatrix.getRowCount() + ", Columns: " + rawMatrix.getColumnCount());
+		log(LogLevel.INFO, "Matrix rawenized.\n Rows: " + rawMatrix.getRowCount() + "\n Columns: " + rawMatrix.getColumnCount() + 
+				"\n Applicable cell values " + rawMatrix.getApplicableCellValues());
 		
 		
 		rawTransformStrategy.transform(rawMatrix);
-		log(LogLevel.INFO, "Raw matrix successfully transformed. Rows: " + rawMatrix.getRowCount() + 
-				", Columns: " + rawMatrix.getColumnCount());
+		log(LogLevel.INFO, "Raw matrix successfully transformed.\n Rows: " + rawMatrix.getRowCount() + 
+				"\n Columns: " + rawMatrix.getColumnCount() + "\n Applicable cell values " + rawMatrix.getApplicableCellValues());
 		
 		writer.write(rawMatrix);
 		log(LogLevel.INFO, "Matrix successfully writen");

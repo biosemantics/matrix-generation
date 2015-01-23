@@ -441,7 +441,7 @@ public class SDDWriter implements Writer {
 			Set<StructureIdentifier> createdStructures = new HashSet<StructureIdentifier>();
 			for(ColumnHead columnHead : columnHeads) {
 				if(columnHead.hasCharacterSource()) {
-					StructureIdentifier structureIdentifier = columnHead.getSource().getStructureIdentifier();
+					StructureIdentifier structureIdentifier = columnHead.getSource().getBearerStructureIdentifier();
 					if(!createdStructures.contains(structureIdentifier)) {
 						createdStructures.add(structureIdentifier);
 						DescriptiveConcept dc = objectFactory.createDescriptiveConcept();
@@ -709,7 +709,7 @@ public class SDDWriter implements Writer {
 							new HashMap<TaxonCharacterStateTriple, CellValue>();
 					possibleModifier.put(triple, cellValue);
 					modifierHandler.processPossibleModifier(possibleModifier);
-					characterTreeHandler.processTaxonCharacterStructureTripe(new TaxonCharacterStructureTriple(rowHead, character, columnHead.getSource().getStructureIdentifier()));
+					characterTreeHandler.processTaxonCharacterStructureTripe(new TaxonCharacterStructureTriple(rowHead, character, columnHead.getSource().getBearerStructureIdentifier()));
 				}
 			}
 		}
@@ -1336,8 +1336,8 @@ public class SDDWriter implements Writer {
 	public String resolveFullCharacterName(ColumnHead columnHead, Matrix matrix) {
 		edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix completeMatrix = matrix.getSource();
 		Character character = columnHead.getSource();
-		StructureIdentifier structureIdentifier = character.getStructureIdentifier();
-		String structName = character.getStructureIdentifier().getDisplayName();
+		StructureIdentifier structureIdentifier = character.getBearerStructureIdentifier();
+		String structName = character.getBearerStructureIdentifier().getDisplayName();
 		String charName = structName + "_" + character.getName();
 		
 		//TODO: 
@@ -1346,7 +1346,7 @@ public class SDDWriter implements Writer {
 		// (StructureIdentifier (independent) vs Structure (taxon-specific))
 		StructureIdentifier parentStructureIdentifier = completeMatrix.getParent(structureIdentifier);
 		while(parentStructureIdentifier != null) {
-			structName = (parentStructureIdentifier.getStructureConstraintOrEmpty() + " " + character.getStructureIdentifier().getStructureName()).trim();
+			structName = (parentStructureIdentifier.getStructureConstraintOrEmpty() + " " + character.getBearerStructureIdentifier().getStructureName()).trim();
 			if(!structName.equals("whole_organism"))
 				charName = structName + "_" + charName;
 			parentStructureIdentifier = completeMatrix.getParent(parentStructureIdentifier);

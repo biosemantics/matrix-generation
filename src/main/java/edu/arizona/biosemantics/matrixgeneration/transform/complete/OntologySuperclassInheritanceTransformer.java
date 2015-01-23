@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
@@ -50,67 +51,70 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 	public void transform(Matrix matrix) {
 		Set<Character> iteratable = new HashSet<Character>(matrix.getCharacters());
 		for(Character character : iteratable) {
-		//for(Character character : matrix.getCharacters()) {
-			StructureIdentifier structure = character.getStructureIdentifier();
-			//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
-			Set<StructureIdentifier> inferedSubclassStructures = getStructuresWhereSubclass(structure);
-			
-			/*for(StructureIdentifier inferedBearerStructure : inferedBearerStructures) {
-			 	log(LogLevel.INFO, "Infered character from bearer structure " + inferedBearerStructure.getDisplayName() + " " + 
-						inferedBearerStructure.getStructureOntologyId());
-				Character inferedCharacter = new Character("quantity of " + 
-						structure.getStructureName(), "at", 
-						new StructureIdentifier(inferedBearerStructure.getStructureName(), "", 
-								inferedBearerStructure.getStructureOntologyId()));
-				matrix.addCharacter(inferedCharacter);
-				for(Taxon taxon : matrix.getTaxa())
-					if(isPresent(character, taxon, matrix))
-						setPresent(inferedCharacter, taxon, matrix);
-			}*/
-			
-			for(StructureIdentifier inferedSubclassStructure : inferedSubclassStructures) {
-				log(LogLevel.INFO, "Infered character from subclass structure " + inferedSubclassStructure.getDisplayName() + " " + 
-						inferedSubclassStructure.getStructureOntologyId());
-				Character inferedCharacter = new Character("quantity", "of", 
-						new StructureIdentifier(inferedSubclassStructure.getStructureName(), "", inferedSubclassStructure.getStructureOntologyId()));
-				matrix.addCharacter(inferedCharacter);
-				for(Taxon taxon : matrix.getTaxa())
-					try {
-						if(isAbsent(character, taxon, matrix))
-							setAbsent(inferedCharacter, taxon, matrix);
-					} catch(Throwable t) {
-						log(LogLevel.ERROR, "Something needs to be fixed here", t);
-					}
+			if(character instanceof AbsentPresentCharacter) {
+				StructureIdentifier bearerIdentifier = character.getBearerStructureIdentifier();
+				StructureIdentifier structureIdentifier = ((AbsentPresentCharacter)character).getQuantifiedStructure();
+				//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
+				Set<Structure> inferedSuperclassStructures = getSuperclassStructures(structureIdentifier);
+				
+				for(Structure inferredSuperclassStructure : inferedSuperclassStructures) {
+					log(LogLevel.INFO, "Infered character from subclass structure " + inferredSuperclassStructure.getDisplayName() + " " + 
+							inferredSuperclassStructure.getOntologyId());
+					
+					for(Taxon taxon : matrix.getTaxa())
+						if(matrix.getStructure(structureIdentifier, taxon) != null) 
+							matrix.addStructure(inferredSuperclassStructure, taxon);
+					
+					Character inferedCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferredSuperclassStructure), 
+							bearerIdentifier);
+					log(LogLevel.DEBUG, "Create from infered subclass character: " + character.toString());
+					matrix.addCharacter(inferedCharacter);
+					
+					for(Taxon taxon : matrix.getTaxa()) 
+						if(isPresent(character, taxon, matrix)) {
+							log(LogLevel.DEBUG, "Set present for taxon: " + taxon.toString());
+							setPresent(inferedCharacter, taxon, matrix);
+						}
+				}
 			}
 		}
 	}
 
-	private void setAbsent(Character inferedCharacter, Taxon taxon, Matrix matrix) {
-		Structure inferedStructure = matrix.getStructure(inferedCharacter.getStructureIdentifier(), taxon);
-		inferedStructure.addCharacterValue(inferedCharacter, new Value("absent"));
+	private void setPresent(Character inferedCharacter, Taxon taxon, Matrix matrix) {
+		Structure inferedStructure = matrix.getStructure(inferedCharacter.getBearerStructureIdentifier(), taxon);
+		inferedStructure.addCharacterValue(inferedCharacter, new Value("present"));
 	}
 
-	private boolean isAbsent(Character character, Taxon taxon, Matrix matrix) {
-		Structure structure = matrix.getStructure(character.getStructureIdentifier(), taxon);
-		Values values = structure.getCharacterValues(character);
-		for(Value value : values) 
-			if(value.getValue().trim().equals("absent"))
-				return true;
+	private boolean isPresent(Character character, Taxon taxon, Matrix matrix) {
+		if(matrix.hasStructure(character.getBearerStructureIdentifier(), taxon)) {
+			Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+			Values values = structure.getCharacterValues(character);
+			for(Value value : values) 
+				if(value.getValue().trim().equals("present"))
+					return true;
+		}
 		return false;
 	}
+
+	private Set<Structure> getStructuresWherePartOf(StructureIdentifier structure) {
+		Set<Structure> result = new HashSet<Structure>();
+		if(structure.hasStructureOntologyId()) {
+			OWLClass part = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
+			Set<OWLClass> bearers = ontologyAccess.getBearers(part);
+			for(OWLClass bearer : bearers) {
+				result.add(new Structure(ontologyAccess.getLabel(bearer), "", bearer.getIRI().toString()));
+			}
+		}
+		return result;
+	}
 	
-	/*public static void main(String[] args) throws OWLOntologyCreationException {
-		OntologyInferenceTransformer tf = new OntologyInferenceTransformer();
-		tf.getStructuresWherePartOf(new StructureIdentifier("", "", "http://purl.obolibrary.org/obo/PO_0005708"));
-	}*/
-	
-	private Set<StructureIdentifier> getStructuresWhereSubclass(StructureIdentifier structure) {
-		Set<StructureIdentifier> result = new HashSet<StructureIdentifier>();
+	private Set<Structure> getSuperclassStructures(StructureIdentifier structure) {
+		Set<Structure> result = new HashSet<Structure>();
 		if(structure.hasStructureOntologyId()) {
 			OWLClass subclass = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
-			Set<OWLClass> ancestors = ontologyAccess.getAncestors(subclass);
-			for(OWLClass ancestor : ancestors) {
-				result.add(new StructureIdentifier(ontologyAccess.getLabel(ancestor), "", ancestor.getIRI().toString()));
+			Set<OWLClass> descendants = ontologyAccess.getDescendants(subclass);
+			for(OWLClass descendant : descendants) {
+				result.add(new Structure(ontologyAccess.getLabel(descendant), "", descendant.getIRI().toString()));
 			}
 		}
 		return result;

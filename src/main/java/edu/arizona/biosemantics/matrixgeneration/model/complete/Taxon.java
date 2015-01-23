@@ -113,5 +113,11 @@ public class Taxon implements Serializable {
 	public Taxon getParent() {
 		return parent;
 	}
+	
+	public String toString() {
+		return this.taxonIdentification.getRankData().getLast().getRank().name() + ": " + 
+				this.taxonIdentification.getRankData().getLast().getName();
+	}
+
 
 }

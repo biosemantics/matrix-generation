@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,14 +70,41 @@ public class Matrix implements Serializable {
 		}
 		return values;
 	}
+	
+	public int getSetCharacterValues() {
+		int result = 0;
+		for(Taxon taxon : getTaxa()) {
+			for(Structure structure : taxon.getStructures()) {
+				result += structure.getSetCharactersValuesCount();
+			}
+		}
+		return result;
+	}
 
 	public void removeCharacter(Character character) {
 		characters.remove(character);
+		
+		StructureIdentifier structureIdentifier = character.getBearerStructureIdentifier();
+		boolean structureInUse = false;
+		for(Taxon taxon : this.getTaxa()) {
+			if(this.hasStructure(structureIdentifier, taxon)) {
+				Structure structure = this.getStructure(structureIdentifier, taxon);
+				structure.getCharacters().remove(character);
+				if(structure.getSetCharactersValuesCount() == 0) {
+					structureIdTaxonStructuresMap.get(structureIdentifier).remove(taxon);
+				} else {
+					structureInUse = true;
+				}
+			}
+		}
+		if(!structureInUse)
+			structureIdTaxonStructuresMap.remove(structureIdentifier);
 	}
 	
 	public Character addCharacter(Character character) {
-		if(!characters.containsKey(character))
+		if(!characters.containsKey(character)) {
 			characters.put(character, character);
+		}
 		character = characters.get(character);
 		return character;
 	}
@@ -115,6 +143,26 @@ public class Matrix implements Serializable {
 				if(!structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon).isEmpty())
 					return structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon).get(0);
 		return null;
+	}
+	
+	public boolean hasStructure(StructureIdentifier structureIdentifier, Taxon taxon) {
+		return this.getStructure(structureIdentifier, taxon) != null;
+	}
+	
+	public void addStructure(Structure structure, Taxon taxon) {
+		StructureIdentifier structureIdentifier = new StructureIdentifier(structure);
+		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier)) {
+			Map<Taxon, List<Structure>> taxonStructureMap = new HashMap<Taxon, List<Structure>>();
+			structureIdTaxonStructuresMap.put(structureIdentifier, taxonStructureMap);
+			if(!taxonStructureMap.containsKey(taxon))
+				taxonStructureMap.put(taxon, new LinkedList<Structure>());
+			taxonStructureMap.get(taxon).add(structure);
+		} else {
+			Map<Taxon, List<Structure>> taxonStructureMap = structureIdTaxonStructuresMap.get(structureIdentifier);
+			if(!taxonStructureMap.containsKey(taxon))
+				taxonStructureMap.put(taxon, new LinkedList<Structure>());
+			taxonStructureMap.get(taxon).add(structure);
+		}
 	}
 	
 	public File getSourceFile(Taxon taxon) {

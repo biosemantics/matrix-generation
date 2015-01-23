@@ -23,6 +23,7 @@ import com.google.inject.name.Named;
 import edu.arizona.biosemantics.common.taxonomy.Rank;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AttributeCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
@@ -255,7 +256,7 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(structure.getAttributeValue("provenance"));
 		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
-		StructureIdentifier structureIdentifier = new StructureIdentifier(result.getName(), result.getConstraint(), result.getOntologyId());
+		StructureIdentifier structureIdentifier = new StructureIdentifier(result);
 		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
 			structureIdTaxonStructuresMap.put(structureIdentifier, new HashMap<Taxon, List<Structure>>());
 		if(!structureIdTaxonStructuresMap.get(structureIdentifier).containsKey(taxon))
@@ -290,21 +291,29 @@ public class SemanticMarkupReader implements Reader {
 			value.setNotes(characterElement.getAttributeValue("notes"));	
 						
 			String name = characterElement.getAttributeValue("name");
-			Character character = new AttributeCharacter(name, "of", structureIdentifier);
+			
+			
+			Character character = createCharacter(taxon, structureIdentifier, name, value);
 			if(!characters.containsKey(character))
 				characters.put(character, character);
 			character = characters.get(character);
 			
 			result.addCharacterValue(character, value);
 			
-			if(!structureIdTaxonStructuresMap.containsKey(character.getStructureIdentifier()))
-				structureIdTaxonStructuresMap.put(character.getStructureIdentifier(), new HashMap<Taxon, List<Structure>>());
-			if(!structureIdTaxonStructuresMap.get(character.getStructureIdentifier()).containsKey(taxon))
-				structureIdTaxonStructuresMap.get(character.getStructureIdentifier()).put(taxon, new LinkedList<Structure>());
-			structureIdTaxonStructuresMap.get(character.getStructureIdentifier()).get(taxon).add(result);
+			if(!structureIdTaxonStructuresMap.containsKey(character.getBearerStructureIdentifier()))
+				structureIdTaxonStructuresMap.put(character.getBearerStructureIdentifier(), new HashMap<Taxon, List<Structure>>());
+			if(!structureIdTaxonStructuresMap.get(character.getBearerStructureIdentifier()).containsKey(taxon))
+				structureIdTaxonStructuresMap.get(character.getBearerStructureIdentifier()).put(taxon, new LinkedList<Structure>());
+			structureIdTaxonStructuresMap.get(character.getBearerStructureIdentifier()).get(taxon).add(result);
 		}
 		
 		return result;
+	}
+
+	private Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name, Value value) {
+		if(name.equals("quantity") && value.getValue().equals("present") || value.getValue().equals("absent"))
+			return new AbsentPresentCharacter(structureIdentifier, new StructureIdentifier(taxon.getWholeOrganism()));
+		return new AttributeCharacter(name, "of", structureIdentifier);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix;
@@ -23,17 +24,15 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		RowHead parent = rowHead.getParent();
 		if(parent != null) {
 			for(int i=0; i<matrix.getColumnCount(); i++) { 
-				CellValue value = matrix.getCellValue(rowHead, i);
-				if(value instanceof NotApplicableCellValue) {
-					CellValue newCellValue = determineParentCellValue(matrix, parent, i);
-					matrix.setCellValue(parent, i, newCellValue);
-				}
+				CellValue newCellValue = determineParentCellValue(matrix, parent, i);
+				log(LogLevel.DEBUG, "Propagate to ancestor: " + rowHead.getValue() + ", new value: " + newCellValue.getText() + ", old value: " + 
+						matrix.getCellValue(rowHead, i).getText());
+				matrix.setCellValue(parent, i, newCellValue);
 			}
 
+			//recursively inherit character values
+			propagateToAncestors(matrix, rowHead.getParent());
 		}
-
-		//recursively inherit character values
-		propagateToAncestors(matrix, rowHead.getParent());
 	}
 
 	private CellValue determineParentCellValue(Matrix matrix, RowHead rowHead, int columnId) {

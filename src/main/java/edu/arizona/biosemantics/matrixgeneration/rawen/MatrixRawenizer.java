@@ -88,7 +88,7 @@ public class MatrixRawenizer {
 		for(Character character : characters) {
 			List<CellValue> characterValues = new LinkedList<CellValue>();
 			
-			String structureName = character.getStructureIdentifier().getStructureName();
+			String structureName = character.getBearerStructureIdentifier().getStructureName();
 			Set<Structure> structures = taxon.getStructures(structureName);
 			if(structures != null) {
 				Values values = null;
@@ -108,10 +108,10 @@ public class MatrixRawenizer {
 					}
 			}
 			
-			if(characterValues.isEmpty())
-				characterValues.add(new NotApplicableCellValue());
-			
-			taxonsCellValues.add(combineCellValues(characterValues));
+			if(characterValues.isEmpty()) 
+				taxonsCellValues.add(new NotApplicableCellValue());
+			else
+				taxonsCellValues.add(combineCellValues(characterValues));
 		}
 		
 		for(RowHead child : rowHead.getChildren()) {
