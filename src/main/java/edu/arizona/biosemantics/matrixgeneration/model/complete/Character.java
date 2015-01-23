@@ -26,16 +26,16 @@ public class Character implements Comparable<Character>, Serializable {
 	public StructureIdentifier getBearerStructureIdentifier() {
 		return bearerStructure;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((bearerStructure == null) ? 0 : bearerStructure.hashCode());
+		result = prime * result
+				+ ((connector == null) ? 0 : connector.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime
-				* result
-				+ ((bearerStructure == null) ? 0 : bearerStructure
-						.hashCode());
 		return result;
 	}
 
@@ -48,15 +48,20 @@ public class Character implements Comparable<Character>, Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Character other = (Character) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		if (bearerStructure == null) {
 			if (other.bearerStructure != null)
 				return false;
 		} else if (!bearerStructure.equals(other.bearerStructure))
+			return false;
+		if (connector == null) {
+			if (other.connector != null)
+				return false;
+		} else if (!connector.equals(other.connector))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}

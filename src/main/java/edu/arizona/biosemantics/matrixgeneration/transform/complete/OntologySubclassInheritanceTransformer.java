@@ -55,6 +55,7 @@ public class OntologySubclassInheritanceTransformer implements Transformer {
 				StructureIdentifier bearerIdentifier = character.getBearerStructureIdentifier();
 				StructureIdentifier structureIdentifier = ((AbsentPresentCharacter)character).getQuantifiedStructure();
 				//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
+				log(LogLevel.INFO, "Infer from base character " + character.toString());
 				log(LogLevel.INFO, "Infer from base structure " + structureIdentifier.toString());
 				Set<Structure> inferedSubclassStructures = getSubclassStructures(structureIdentifier);
 				

@@ -36,6 +36,11 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 		return getStructureConstraint();
 	}	
 
+	/*
+	 * Don't use ontologyid for hashing, as there may be duplicate characters created where one may know ontologyid and other not
+	 * it is not necessary for duplicates to share having ontoogyid value or not. ontologyid is found anyway only by data name + constraint.
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -46,10 +51,6 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 						.hashCode());
 		result = prime * result
 				+ ((structureName == null) ? 0 : structureName.hashCode());
-		result = prime
-				* result
-				+ ((structureOntologyId == null) ? 0 : structureOntologyId
-						.hashCode());
 		return result;
 	}
 
@@ -71,11 +72,6 @@ public class StructureIdentifier implements Serializable, Comparable<StructureId
 			if (other.structureName != null)
 				return false;
 		} else if (!structureName.equals(other.structureName))
-			return false;
-		if (structureOntologyId == null) {
-			if (other.structureOntologyId != null)
-				return false;
-		} else if (!structureOntologyId.equals(other.structureOntologyId))
 			return false;
 		return true;
 	}

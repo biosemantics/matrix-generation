@@ -19,7 +19,7 @@ public class Taxon implements Serializable {
 	private TaxonIdentification taxonIdentification;
 	private LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
-	private Structure wholeOrganism = new Structure("whole_organism");
+	private Structure wholeOrganism;
 	private LinkedHashMap<String, Set<Structure>> structures = new LinkedHashMap<String, Set<Structure>>();
 	private LinkedHashMap<Relation, Relation> relations = new LinkedHashMap<Relation, Relation>();
 	
@@ -27,10 +27,7 @@ public class Taxon implements Serializable {
 	private File sourceFile;
 	private Taxon parent;
 	
-	public Taxon() {
-		this.structures.put(wholeOrganism.getName(), new HashSet<Structure>());
-		this.structures.get(wholeOrganism.getName()).add(wholeOrganism);
-	}
+	public Taxon() { }
 	
 	public LinkedHashSet<Taxon> getChildren() {
 		return new LinkedHashSet<Taxon>(children);
@@ -117,6 +114,12 @@ public class Taxon implements Serializable {
 	public String toString() {
 		return this.taxonIdentification.getRankData().getLast().getRank().name() + ": " + 
 				this.taxonIdentification.getRankData().getLast().getName();
+	}
+
+	public void setWholeOrganism(Structure wholeOrganism) {
+		this.wholeOrganism = wholeOrganism;
+		this.structures.put(wholeOrganism.getName(), new HashSet<Structure>());
+		this.structures.get(wholeOrganism.getName()).add(wholeOrganism);
 	}
 
 

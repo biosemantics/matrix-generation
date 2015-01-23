@@ -172,7 +172,7 @@ public class CLIMain {
 			if(commandLine.hasOption("add_source")) {
 				rawTransformers.add(injector.getInstance(AddSourceColumnTransformer.class));
 			}
-			//rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
+			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
 			
 		    config.setCompleteTransformers(completeTransformers);
 		    config.setRawTransformers(rawTransformers);

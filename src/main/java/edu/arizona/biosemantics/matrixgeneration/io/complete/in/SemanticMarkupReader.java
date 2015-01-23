@@ -118,6 +118,9 @@ public class SemanticMarkupReader implements Reader {
 			Map<Taxon, File> sourceFilesMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		File input = new File(inputDirectory);
+		
+		String wholeOrganismOntologyId = readWholeOrganismId(input);
+		
 		for(File file : input.listFiles()) {
 			if(file.isFile()) {
 				Document document = saxBuilder.build(file);
@@ -129,16 +132,39 @@ public class SemanticMarkupReader implements Reader {
 				TaxonIdentification taxonName = new TaxonIdentification(rankDatas, author, date);
 				taxonNames.add(taxonName);
 				
-				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName, structureIdTaxonStructuresMap);
+				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName, structureIdTaxonStructuresMap, 
+						wholeOrganismOntologyId);
 				sourceFilesMap.put(taxon, file);
  				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
 			}
 		}
 	}
 	
-	private void createWholeOrganism(
-			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, Taxon taxon) {
-		Structure wholeOrganism = taxon.getWholeOrganism();
+	private String readWholeOrganismId(File input) throws JDOMException, IOException {
+		String result = null;
+		for(File file : input.listFiles()) {
+			if(file.isFile()) {
+				Document document = saxBuilder.build(file);
+				for (Element statement : statementXpath.evaluate(document)) {
+					List<Element> structures = statement.getChildren("biological_entity");
+					for(Element structure : structures) {
+						String name = structure.getAttributeValue("name");
+						String constraint = structure.getAttributeValue("constraint");
+						String ontologyId = structure.getAttributeValue("ontologyid");
+						if(name != null && name.equals("whole_organism") && (constraint == null || constraint.trim().isEmpty())) {
+							result = ontologyId;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	private void createWholeOrganism(String wholeOrganismOntologyId, Taxon taxon, 
+			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
+		Structure wholeOrganism = new Structure("whole_organism", "", wholeOrganismOntologyId);
+		taxon.setWholeOrganism(wholeOrganism);
 		StructureIdentifier structureIdentifier = new StructureIdentifier(wholeOrganism);
 		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
 			structureIdTaxonStructuresMap.put(structureIdentifier, new HashMap<Taxon, List<Structure>>());
@@ -149,12 +175,12 @@ public class SemanticMarkupReader implements Reader {
 
 	private Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
 			Map<String, Relation> idRelationMap, Map<Character, Character> characters, TaxonIdentification taxonIdentification, 
-			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
+			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, String wholeOrganismOntologyId) {
 		Taxon taxon = new Taxon();
 		taxon.setTaxonIdentification(taxonIdentification);
 		StringBuilder descriptionBuilder = new StringBuilder();
 		
-		createWholeOrganism(structureIdTaxonStructuresMap, taxon);
+		createWholeOrganism(wholeOrganismOntologyId, taxon, structureIdTaxonStructuresMap);
 		for (Element statement : statementXpath.evaluate(document)) {
 			String text = statement.getChild("text").getText();
 			descriptionBuilder.append(text + ". ");

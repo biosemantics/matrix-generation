@@ -1,10 +1,13 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
+import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.NotApplicableCellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
@@ -13,17 +16,18 @@ public class RemoveNotApplicableValuesOnlyColumnsTransformer implements Transfor
 
 	@Override
 	public void transform(Matrix rawMatrix) {
-		for(int columnId = 0; columnId < rawMatrix.getColumnCount(); columnId++) {
-			if(isRemoveColumn(columnId, rawMatrix)) {
-				log(LogLevel.DEBUG, "Remove not applicable values column: " + rawMatrix.getColumnHeads().get(columnId).getValue());
-				rawMatrix.removeColumn(columnId);
+		List<ColumnHead> iteratable = new ArrayList<ColumnHead>(rawMatrix.getColumnHeads());
+		for(ColumnHead columnHead : iteratable) {
+			if(isRemoveColumn(columnHead, rawMatrix)) {
+				log(LogLevel.DEBUG, "Remove not applicable values column: " + columnHead.getValue());
+				rawMatrix.removeColumn(columnHead);
 			}
 		}	
 	}
 
-	private boolean isRemoveColumn(int columnId, Matrix rawMatrix) {
+	private boolean isRemoveColumn(ColumnHead columnHead, Matrix rawMatrix) {
 		for(RowHead rowHead : rawMatrix.getRowHeads()) {
-			CellValue cellValue = rawMatrix.getCellValue(rowHead, columnId);
+			CellValue cellValue = rawMatrix.getCellValue(rowHead, columnHead);
 			if(!(cellValue instanceof NotApplicableCellValue)) 
 				return false;
 		}

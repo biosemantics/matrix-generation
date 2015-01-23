@@ -122,6 +122,11 @@ public class Matrix implements Serializable {
 			cellValues.get(rowHead).set(i, cellValue);
 		}
 	}
+	
+	public void setCellValue(RowHead rowHead, ColumnHead columnHead, CellValue cellValue) {
+		int columnId = columnHeads.indexOf(columnHead);
+		setCellValue(rowHead, columnId, cellValue);
+	}
 
 	public void removeColumn(ColumnHead columnHead) {
 		int i = columnHeads.indexOf(columnHead);

@@ -7,6 +7,7 @@ import java.util.Set;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
+import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.NotApplicableCellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
@@ -23,11 +24,11 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 	private void propagateToAncestors(Matrix matrix, RowHead rowHead) {
 		RowHead parent = rowHead.getParent();
 		if(parent != null) {
-			for(int i=0; i<matrix.getColumnCount(); i++) { 
-				CellValue newCellValue = determineParentCellValue(matrix, parent, i);
+			for(ColumnHead columnHead : matrix.getColumnHeads()) { 
+				CellValue newCellValue = determineParentCellValue(matrix, parent, columnHead);
 				log(LogLevel.DEBUG, "Propagate to ancestor: " + rowHead.getValue() + ", new value: " + newCellValue.getText() + ", old value: " + 
-						matrix.getCellValue(rowHead, i).getText());
-				matrix.setCellValue(parent, i, newCellValue);
+						matrix.getCellValue(rowHead, columnHead).getText());
+				matrix.setCellValue(parent, columnHead, newCellValue);
 			}
 
 			//recursively inherit character values
@@ -35,10 +36,10 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		}
 	}
 
-	private CellValue determineParentCellValue(Matrix matrix, RowHead rowHead, int columnId) {
+	private CellValue determineParentCellValue(Matrix matrix, RowHead rowHead, ColumnHead columnHead) {
 		Set<String> allValues = new HashSet<String>();
 		for(RowHead child : rowHead.getChildren()) {
-			CellValue value = matrix.getCellValue(rowHead, columnId);
+			CellValue value = matrix.getCellValue(rowHead, columnHead);
 			if(value instanceof NotApplicableCellValue)
 				return new NotApplicableCellValue();
 			allValues.add(value.getText());
