@@ -88,10 +88,12 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 	private boolean isPresent(Character character, Taxon taxon, Matrix matrix) {
 		if(matrix.hasStructure(character.getBearerStructureIdentifier(), taxon)) {
 			Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
-			Values values = structure.getCharacterValues(character);
-			for(Value value : values) 
-				if(value.getValue().trim().equals("present"))
-					return true;
+			if(structure.containsCharacterValue(character)) {
+				Values values = structure.getCharacterValues(character);
+				for(Value value : values) 
+					if(value.getValue().trim().equals("present"))
+						return true;
+			}
 		}
 		return false;
 	}

@@ -68,9 +68,8 @@ public class Character implements Comparable<Character>, Serializable {
 
 	@Override
 	public int compareTo(Character character) {
-		if(bearerStructure.equals(character.getBearerStructureIdentifier()))
-			return name.compareTo(character.getName());
-		return bearerStructure.compareTo(character.getBearerStructureIdentifier());
+		return (this.bearerStructure.toString() + " " + this.name + " " + this.connector).compareTo(
+				character.bearerStructure.toString() + " " + character.name + " " + character.connector);
 	}
 	
 	public String getDisplayName() {
