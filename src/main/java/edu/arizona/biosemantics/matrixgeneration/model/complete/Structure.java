@@ -28,13 +28,18 @@ public class Structure implements Cloneable, Serializable {
 	public Structure() { }
 	
 	public Structure(String name) {
-		this.name = name;
+		this.name = name == null ? null : name.trim().isEmpty() ? null : name.trim();
+	}
+	
+	public Structure(String name, String ontologyId) {
+		this.name = name == null ? null : name.trim().isEmpty() ? null : name.trim();
+		this.ontologyId = ontologyId == null ? null : ontologyId.trim().isEmpty() ? null : ontologyId.trim();
 	}
 	
 	public Structure(String name, String constraint, String ontologyid) {
-		this.name = name;
-		this.constraint = constraint;
-		this.ontologyId = ontologyid;
+		this.name = name == null ? null : name.trim().isEmpty() ? null : name.trim();
+		this.constraint = constraint == null ? null : constraint.trim().isEmpty() ? null : constraint.trim();
+		this.ontologyId = ontologyId == null ? null : ontologyId.trim().isEmpty() ? null : ontologyId.trim();
 	}
 
 	public boolean containsCharacter(Character character) {
@@ -75,7 +80,7 @@ public class Structure implements Cloneable, Serializable {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name == null ? null : name.trim().isEmpty() ? null : name.trim();
 	}
 
 	public String getConstraint() {
@@ -83,7 +88,7 @@ public class Structure implements Cloneable, Serializable {
 	}
 
 	public void setConstraint(String constraint) {
-		this.constraint = constraint;
+		this.constraint = constraint == null ? null : constraint.trim().isEmpty() ? null : constraint.trim();
 	}
 
 	public String getAlterName() {
@@ -155,7 +160,7 @@ public class Structure implements Cloneable, Serializable {
 	}
 
 	public void setOntologyId(String ontologyId) {
-		this.ontologyId = ontologyId;
+		this.ontologyId = ontologyId == null ? null : ontologyId.trim().isEmpty() ? null : ontologyId.trim();
 	}
 
 	public String getProvenance() {

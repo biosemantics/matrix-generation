@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 
 public class Matrix implements Serializable {
@@ -102,6 +103,8 @@ public class Matrix implements Serializable {
 	}
 	
 	public Character addCharacter(Character character) {
+		if(character.getName().equals("quantity of triaene"))
+			log(LogLevel.DEBUG, "Triaene: " + character.toString());
 		if(!characters.containsKey(character)) {
 			characters.put(character, character);
 		}

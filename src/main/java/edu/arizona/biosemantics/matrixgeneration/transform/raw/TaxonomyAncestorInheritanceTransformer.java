@@ -27,8 +27,6 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		if(parent != null) {
 			log(LogLevel.DEBUG, "Propagate to ancestor: " + parent.getValue());
 			for(ColumnHead columnHead : matrix.getColumnHeads()) { 
-				if(columnHead.getValue().equals("quantity of triaene")) 
-					System.out.println();
 				CellValue newCellValue = determineParentCellValue(matrix, parent, columnHead);
 				log(LogLevel.DEBUG, "Propagate for column: " + columnHead.getValue() + ",\t new value: " + newCellValue.getText() + ",\t old value: " + 
 						matrix.getCellValue(rowHead, columnHead).getText());

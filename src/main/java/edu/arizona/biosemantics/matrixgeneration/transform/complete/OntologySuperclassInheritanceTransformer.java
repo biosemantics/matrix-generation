@@ -104,7 +104,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 			OWLClass part = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
 			Set<OWLClass> bearers = ontologyAccess.getBearers(part);
 			for(OWLClass bearer : bearers) {
-				result.add(new Structure(ontologyAccess.getLabel(bearer), "", bearer.getIRI().toString()));
+				result.add(new Structure(ontologyAccess.getLabel(bearer), null, bearer.getIRI().toString()));
 			}
 		}
 		return result;
@@ -116,7 +116,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 			OWLClass subclass = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
 			Set<OWLClass> descendants = ontologyAccess.getDescendants(subclass);
 			for(OWLClass descendant : descendants) {
-				result.add(new Structure(ontologyAccess.getLabel(descendant), "", descendant.getIRI().toString()));
+				result.add(new Structure(ontologyAccess.getLabel(descendant), null, descendant.getIRI().toString()));
 			}
 		}
 		return result;

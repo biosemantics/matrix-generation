@@ -163,7 +163,7 @@ public class SemanticMarkupReader implements Reader {
 
 	private void createWholeOrganism(String wholeOrganismOntologyId, Taxon taxon, 
 			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
-		Structure wholeOrganism = new Structure("whole_organism", "", wholeOrganismOntologyId);
+		Structure wholeOrganism = new Structure("whole_organism", null, wholeOrganismOntologyId);
 		taxon.setWholeOrganism(wholeOrganism);
 		StructureIdentifier structureIdentifier = new StructureIdentifier(wholeOrganism);
 		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
