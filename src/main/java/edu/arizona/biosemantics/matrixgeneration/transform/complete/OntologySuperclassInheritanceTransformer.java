@@ -67,7 +67,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 					
 					Character inferedCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferredSuperclassStructure), 
 							bearerIdentifier);
-					log(LogLevel.DEBUG, "Create from infered subclass character: " + character.toString());
+					log(LogLevel.DEBUG, "Create from infered subclass character: " + inferedCharacter.toString());
 					matrix.addCharacter(inferedCharacter);
 					
 					for(Taxon taxon : matrix.getTaxa()) 
