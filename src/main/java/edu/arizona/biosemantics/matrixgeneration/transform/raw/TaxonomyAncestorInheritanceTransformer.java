@@ -17,6 +17,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 	@Override
 	public void transform(Matrix matrix) {
 		for(RowHead rowHead : matrix.getLeafRowHeads()) {
+			log(LogLevel.DEBUG, "Start from leaf " + rowHead.getValue());
 			propagateToAncestors(matrix, rowHead);
 		}
 	}
@@ -24,9 +25,12 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 	private void propagateToAncestors(Matrix matrix, RowHead rowHead) {
 		RowHead parent = rowHead.getParent();
 		if(parent != null) {
+			log(LogLevel.DEBUG, "Propagate to ancestor: " + parent.getValue());
 			for(ColumnHead columnHead : matrix.getColumnHeads()) { 
+				if(columnHead.getValue().equals("quantity of triaene")) 
+					System.out.println();
 				CellValue newCellValue = determineParentCellValue(matrix, parent, columnHead);
-				log(LogLevel.DEBUG, "Propagate to ancestor: " + rowHead.getValue() + ", new value: " + newCellValue.getText() + ", old value: " + 
+				log(LogLevel.DEBUG, "Propagate for column: " + columnHead.getValue() + ",\t new value: " + newCellValue.getText() + ",\t old value: " + 
 						matrix.getCellValue(rowHead, columnHead).getText());
 				matrix.setCellValue(parent, columnHead, newCellValue);
 			}
@@ -39,7 +43,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 	private CellValue determineParentCellValue(Matrix matrix, RowHead rowHead, ColumnHead columnHead) {
 		Set<String> allValues = new HashSet<String>();
 		for(RowHead child : rowHead.getChildren()) {
-			CellValue value = matrix.getCellValue(rowHead, columnHead);
+			CellValue value = matrix.getCellValue(child, columnHead);
 			if(value instanceof NotApplicableCellValue)
 				return new NotApplicableCellValue();
 			allValues.add(value.getText());

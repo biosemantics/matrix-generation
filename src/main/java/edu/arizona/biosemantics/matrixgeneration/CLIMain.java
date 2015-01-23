@@ -142,12 +142,12 @@ public class CLIMain {
 		    if(commandLine.hasOption("down_ontology_inheritance")) {
 				completeTransformers.add(injector.getInstance(OntologySuperclassInheritanceTransformer.class));
 		    }
+		    if(commandLine.hasOption("down_taxonomy_inheritance")) {
+		    	completeTransformers.add(injector.getInstance(TaxonomyDescendantInheritanceTransformer.class));
+		    }
 		    if(commandLine.hasOption("up_taxonomy_inheritance")) {
 		    	rawTransformers.add(injector.getInstance(TaxonomyAncestorInheritanceTransformer.class));
 		    }
-		    if(commandLine.hasOption("down_taxonomy_inheritance")) {
-		    	completeTransformers.add(injector.getInstance(TaxonomyDescendantInheritanceTransformer.class));
-		    }		    
 		    if(commandLine.hasOption("normalize_units")) {
 		    	String unitString = commandLine.getOptionValue("normalize_units");
 		    	try { 
