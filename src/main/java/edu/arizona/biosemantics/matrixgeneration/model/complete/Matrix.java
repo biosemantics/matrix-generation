@@ -103,8 +103,6 @@ public class Matrix implements Serializable {
 	}
 	
 	public Character addCharacter(Character character) {
-		if(character.getName().equals("quantity of triaene"))
-			log(LogLevel.DEBUG, "Triaene: " + character.toString());
 		if(!characters.containsKey(character)) {
 			characters.put(character, character);
 		}

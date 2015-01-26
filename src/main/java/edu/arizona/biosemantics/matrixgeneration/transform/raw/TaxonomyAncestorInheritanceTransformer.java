@@ -1,8 +1,13 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.raw;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
@@ -14,6 +19,13 @@ import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
 public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 
+	private String cellValueSeparator;
+	
+	@Inject
+	public TaxonomyAncestorInheritanceTransformer(@Named("CellValueSeparator") String cellValueSeparator) {
+		this.cellValueSeparator = cellValueSeparator;
+	}
+	
 	@Override
 	public void transform(Matrix matrix) {
 		for(RowHead rowHead : matrix.getLeafRowHeads()) {
@@ -44,15 +56,17 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 			CellValue value = matrix.getCellValue(child, columnHead);
 			if(value instanceof NotApplicableCellValue)
 				return new NotApplicableCellValue();
-			allValues.add(value.getText());
+			if(value.getText().equals("present | absent"))
+				System.out.println();
+			allValues.addAll(Arrays.asList(value.getText().split(Pattern.quote(cellValueSeparator))));
 		}
 		StringBuilder valueBuilder = new StringBuilder();
 		for(String value : allValues) {
-			valueBuilder.append(value + ",");
+			valueBuilder.append(value + cellValueSeparator);
 		}
 		String newValue = valueBuilder.toString();
 		
-		return new CellValue(newValue.substring(0, newValue.length() - 1), (Value)null);
+		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null);
 	}
 
 	//if all children of parent contain the structure and have the character set the same

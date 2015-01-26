@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
@@ -32,14 +33,17 @@ public class MatrixRawenizer {
 	private ColumnHeadRawenizer columnHeadRawenizer;
 	private RowHeadRawenizer rowHeadRawenizer;
 	private CellValueRawenizer cellValueRawenizer;
+	private String cellValueSeparator;
 
 	@Inject
 	public MatrixRawenizer(ColumnHeadRawenizer columnHeadRawenizer,
 			RowHeadRawenizer rowHeadRawenizer,
-			CellValueRawenizer cellValueRawenizer) {
+			CellValueRawenizer cellValueRawenizer, 
+			@Named("CellValueSeparator")String cellValueSeparator) {
 		this.columnHeadRawenizer = columnHeadRawenizer;
 		this.rowHeadRawenizer = rowHeadRawenizer;
 		this.cellValueRawenizer = cellValueRawenizer;
+		this.cellValueSeparator = cellValueSeparator;
 	}
 	
 	public edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix convert(edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix matrix) {
@@ -63,21 +67,6 @@ public class MatrixRawenizer {
 		}
 		
 		return new edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix(rootRowHeads, columnHeads, cellValues, matrix);
-	}
-	
-	private List<RowHead> getRowHeads(List<RowHead> rootRowHeads) {
-		List<RowHead> result = new LinkedList<RowHead>();
-		for(RowHead rowHead : rootRowHeads) {
-			addRowHeadAndDescendants(rowHead, result);
-		}
-		return result;
-	}
-
-	private void addRowHeadAndDescendants(RowHead rowHead, List<RowHead> result) {
-		result.add(rowHead);
-		for(RowHead child : rowHead.getChildren()) {
-			addRowHeadAndDescendants(child, result);
-		}
 	}
 
 	private void addRowsAndDescendantsCellValues(RowHead rowHead, List<Character> characters, Map<RowHead, List<CellValue>> cellValues) {
@@ -126,13 +115,13 @@ public class MatrixRawenizer {
 		Set<String> containedValues = new HashSet<String>();
 		for(CellValue cellValue : cellValues) {
 			if(!containedValues.contains(cellValue.getText())) {
-				result += cellValue.getText() + " | ";
+				result += cellValue.getText() + cellValueSeparator;
 				sources.addAll(cellValue.getSource());
 				containedValues.addAll(cellValue.getContainedValues());
 			}
 		}
 		
-		return new CellValue(result.substring(0, result.length() - 3).trim(), containedValues, sources);
+		return new CellValue(result.substring(0, result.length() - cellValueSeparator.length()).trim(), containedValues, sources);
 	}
 
 	private Values combineValues(Values values, Values newValues) {

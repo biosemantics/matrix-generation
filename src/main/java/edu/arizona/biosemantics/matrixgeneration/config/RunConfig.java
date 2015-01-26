@@ -50,6 +50,7 @@ public class RunConfig extends BaseConfig {
 	private String outputFile = "out.csv";
 	private Class<? extends Reader> reader = SemanticMarkupReader.class;
 	private Class<? extends Writer> writer = CSVWriter.class;
+	private String cellValueSeparator = " | ";
 	
 	// Processing
 	private List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer> completeTransformers = 
@@ -76,6 +77,7 @@ public class RunConfig extends BaseConfig {
 			bind(String.class).annotatedWith(Names.named("OutputFile")).toInstance(outputFile);
 			bind(Reader.class).to(reader).in(Singleton.class);
 			bind(Writer.class).to(writer).in(Singleton.class);
+			bind(String.class).annotatedWith(Names.named("CellValueSeparator")).toInstance(cellValueSeparator);
 			
 			// Processing
 			bind(new TypeLiteral<List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer>>() {}).toInstance(
