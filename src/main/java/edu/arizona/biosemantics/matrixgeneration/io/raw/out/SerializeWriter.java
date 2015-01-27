@@ -6,19 +6,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix;
 
 public class SerializeWriter implements Writer {
 
-	private File file;
+	private String outputFile;
 
-	public SerializeWriter(File file) {
-		this.file = file;
+	@Inject
+	public SerializeWriter(@Named("OutputFile") String outputFile) {
+		this.outputFile = outputFile;
 	}
 	
 	@Override
 	public void write(Matrix rawMatrix) throws FileNotFoundException, IOException {
-         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(outputFile)))) {
         	 out.writeObject(rawMatrix);
         	 out.flush();
          }
