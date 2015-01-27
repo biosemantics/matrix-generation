@@ -122,5 +122,13 @@ public class Taxon implements Serializable {
 		this.structures.get(wholeOrganism.getName()).add(wholeOrganism);
 	}
 
+	public File getSourceFile() {
+		return sourceFile;
+	}
+	
+	public void setSourceFile(File sourceFile) {
+		this.sourceFile = sourceFile;
+	}
+
 
 }

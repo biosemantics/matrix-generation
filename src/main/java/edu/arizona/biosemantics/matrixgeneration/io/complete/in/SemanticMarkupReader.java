@@ -134,6 +134,7 @@ public class SemanticMarkupReader implements Reader {
 				
 				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName, structureIdTaxonStructuresMap, 
 						wholeOrganismOntologyId);
+				taxon.setSourceFile(file);
 				sourceFilesMap.put(taxon, file);
  				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
 			}
