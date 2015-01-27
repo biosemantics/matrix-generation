@@ -110,7 +110,9 @@ public class OntologySubclassInheritanceTransformer implements Transformer {
 			OWLClass subclass = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
 			Set<OWLClass> ancestors = ontologyAccess.getAncestors(subclass);
 			for(OWLClass ancestor : ancestors) {
-				result.add(new Structure(ontologyAccess.getLabel(ancestor), null, ancestor.getIRI().toString()));
+				String name = ontologyAccess.getLabel(ancestor);
+				if(name != null)
+					result.add(new Structure(name, null, ancestor.getIRI().toString()));
 			}
 		}
 		return result;
