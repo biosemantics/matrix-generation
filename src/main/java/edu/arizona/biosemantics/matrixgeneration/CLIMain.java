@@ -77,6 +77,7 @@ public class CLIMain {
 		Options options = new Options();
 		options.addOption("input", "input", true, "input directory");
 		options.addOption("output", "output", true, "output file");
+		options.addOption("output_format", "output format", true, "select output format");
 		options.addOption("up_taxonomy_inheritance", "inherit characters to taxonomy parents", false, 
 				"inherit characters from child to parent");
 		options.addOption("down_taxonomy_inheritance", "inherit characters to taxonomy children", false, 
@@ -177,8 +178,19 @@ public class CLIMain {
 		    config.setCompleteTransformers(completeTransformers);
 		    config.setRawTransformers(rawTransformers);
 		    config.setReader(SemanticMarkupReader.class);
-		    config.setWriter(CSVWriter.class);
-		   // config.setWriter(SerializeWriter.class);
+		    if(commandLine.hasOption("output_format")) {
+		    	switch(commandLine.getOptionValue("output_format")) {
+		    	case "csv":
+		    		config.setWriter(CSVWriter.class);
+		    		break;
+		    	case "serialize":
+		    		config.setWriter(SerializeWriter.class);
+		    		break;
+		    	default:
+		    		throw new IllegalArgumentException("output format not supported");
+		    	}
+		    } else 
+		    	config.setWriter(CSVWriter.class);
 		    
 		} catch(ParseException e) {
 			log(LogLevel.ERROR, "Problem parsing parameters", e);

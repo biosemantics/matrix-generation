@@ -337,7 +337,7 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	private Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name, Value value) {
-		if(name.equals("quantity") && value.getValue().equals("present") || value.getValue().equals("absent"))
+		if(name.equals("presence"))
 			return new AbsentPresentCharacter(structureIdentifier, new StructureIdentifier(taxon.getWholeOrganism()));
 		return new AttributeCharacter(name, "of", structureIdentifier);
 	}

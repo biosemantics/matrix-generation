@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Test {
 
 	public static void main(String[] args) throws Throwable {
-		String[] startArgs = { "-input", "mc", "-output", "Matrix.csv"
+		String[] startArgs = { "-input", "C:/Users/rodenhausen/etcsite/users/1068/3_output_by_TC_task_rr", "-output", "Matrix.csv"
 				, "-up_taxonomy_inheritance"
 				, "-down_taxonomy_inheritance"
 				, "-presence_relation"
@@ -15,6 +15,7 @@ public class Test {
 				, "-down_ontology_inheritance"
 				//, "-remove_attributes"
 				, "-remove_single_states"
+				, "-output_format", "csv"
 				};
 		CLIMain.main(startArgs);
 	}
