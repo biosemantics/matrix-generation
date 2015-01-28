@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 
-public class ColumnHead implements Serializable {
+public class ColumnHead implements Serializable, Comparable<ColumnHead> {
 
 	private String value;
 	private Character source;
@@ -24,6 +24,11 @@ public class ColumnHead implements Serializable {
 	
 	public boolean hasCharacterSource() {
 		return source != null;
+	}
+
+	@Override
+	public int compareTo(ColumnHead c) {
+		return value.compareTo(c.value);
 	}
 	
 

@@ -36,6 +36,7 @@ import edu.arizona.biosemantics.matrixgeneration.transform.complete.TaxonomyDesc
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.AddSourceColumnTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RemoveNotApplicableValuesOnlyColumnsTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.RemoveSingleValueColumnsTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.raw.SortTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.raw.TaxonomyAncestorInheritanceTransformer;
 
 public class CLIMain {
@@ -174,6 +175,7 @@ public class CLIMain {
 				rawTransformers.add(injector.getInstance(AddSourceColumnTransformer.class));
 			}
 			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
+			rawTransformers.add(injector.getInstance(SortTransformer.class));
 			
 		    config.setCompleteTransformers(completeTransformers);
 		    config.setRawTransformers(rawTransformers);

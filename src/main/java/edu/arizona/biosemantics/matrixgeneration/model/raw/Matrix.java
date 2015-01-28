@@ -1,7 +1,10 @@
 package edu.arizona.biosemantics.matrixgeneration.model.raw;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -151,5 +154,54 @@ public class Matrix implements Serializable {
 		}
 		return result;
 	}
+
+	public void sortAlphabetically() {
+		//TODO: Sort taxa on each level..
+		
+		List<ColumnCellValues> columnCellValuesList = new ArrayList<ColumnCellValues>(columnHeads.size());
+		for(int i=0; i<columnHeads.size(); i++) {
+			ColumnHead columnHead = columnHeads.get(i);
+			Map<RowHead, CellValue> rowHeadValues = new HashMap<RowHead, CellValue>();
+			for(RowHead rowHead : this.cellValues.keySet()) 
+				rowHeadValues.put(rowHead, this.cellValues.get(rowHead).get(i));
+			columnCellValuesList.add(new ColumnCellValues(columnHead, rowHeadValues));
+		}
+		
+		Collections.sort(columnCellValuesList);
+		
+		columnHeads.clear();
+		this.cellValues.clear();
+		for(int i=0; i<columnCellValuesList.size(); i++){
+			ColumnCellValues columnCellValues = columnCellValuesList.get(i);
+			columnHeads.add(columnCellValues.getColumnHead());
+			
+			for(RowHead rowHead : columnCellValues.getRowHeadValues().keySet()) {
+				if(!cellValues.containsKey(rowHead))
+					cellValues.put(rowHead, new ArrayList<CellValue>(columnCellValuesList.size()));
+				cellValues.get(rowHead).add(columnCellValues.getRowHeadValues().get(rowHead));
+			}
+		}
+		
+	}
 	
+	private class ColumnCellValues implements Comparable<ColumnCellValues> {
+		private ColumnHead columnHead;
+		private Map<RowHead, CellValue> rowHeadValues = new HashMap<RowHead, CellValue>();
+		public ColumnCellValues(ColumnHead columnHead,
+				Map<RowHead, CellValue> rowHeadValues) {
+			super();
+			this.columnHead = columnHead;
+			this.rowHeadValues = rowHeadValues;
+		}
+		public ColumnHead getColumnHead() {
+			return columnHead;
+		}
+		public Map<RowHead, CellValue> getRowHeadValues() {
+			return rowHeadValues;
+		}
+		@Override
+		public int compareTo(ColumnCellValues o) {
+			return columnHead.getValue().compareTo(o.columnHead.getValue());
+		}
+	}
 }
