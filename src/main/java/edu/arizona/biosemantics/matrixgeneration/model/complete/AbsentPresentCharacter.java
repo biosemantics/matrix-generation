@@ -4,9 +4,9 @@ public class AbsentPresentCharacter extends Character {
 	
 	private StructureIdentifier quantifiedStructure;
 	
-	public AbsentPresentCharacter(StructureIdentifier quantifiedStructure, StructureIdentifier bearerStructure) {
-		super("quantity of " + quantifiedStructure.getDisplayName(), "at", bearerStructure);
-		this.quantifiedStructure = quantifiedStructure;
+	public AbsentPresentCharacter(StructureIdentifier bearedStructure, StructureIdentifier bearerStructure) {
+		super("presence of " + bearedStructure.getDisplayName(), "at", bearerStructure);
+		this.quantifiedStructure = bearedStructure;
 	}
 
 	public StructureIdentifier getQuantifiedStructure() {
