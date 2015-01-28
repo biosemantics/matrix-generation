@@ -1,18 +1,23 @@
 package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class Character implements Comparable<Character>, Serializable {
 	
+	private List<String> generationProvenance = new LinkedList<String>();
 	private String name;
 	private String connector;
 	private StructureIdentifier bearerStructure;
 	
-	public Character(String name, String connector, StructureIdentifier bearerStructure) {
+	public Character(String name, String connector, StructureIdentifier bearerStructure, 
+			Object generationProvenance) {
 		this.name = name;
 		this.connector = connector;
 		this.bearerStructure = bearerStructure;
+		this.addGenerationProvenance(generationProvenance);
 	}
 
 	public String getName() {
@@ -25,6 +30,17 @@ public class Character implements Comparable<Character>, Serializable {
 
 	public StructureIdentifier getBearerStructureIdentifier() {
 		return bearerStructure;
+	}
+	
+	public void addGenerationProvenance(Object generationProvenance) {
+		if(generationProvenance instanceof String)
+			this.generationProvenance.add((String)generationProvenance);
+		else
+			this.generationProvenance.add(generationProvenance.getClass().getSimpleName());
+	}
+	
+	public List<String> getGenerationProvenance() {
+		return generationProvenance;
 	}
 
 	@Override
@@ -79,5 +95,7 @@ public class Character implements Comparable<Character>, Serializable {
 	public String toString() {
 		return this.name + " [" + connector + "] " + this.getBearerStructureIdentifier().toString();
 	}
+
+
 	
 }

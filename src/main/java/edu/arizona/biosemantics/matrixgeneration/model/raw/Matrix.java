@@ -158,33 +158,33 @@ public class Matrix implements Serializable {
 	public void sortAlphabetically() {
 		//TODO: Sort taxa on each level..
 		
-		List<ColumnCellValues> columnCellValuesList = new ArrayList<ColumnCellValues>(columnHeads.size());
+		List<Column> columnList = new ArrayList<Column>(columnHeads.size());
 		for(int i=0; i<columnHeads.size(); i++) {
 			ColumnHead columnHead = columnHeads.get(i);
 			Map<RowHead, CellValue> rowHeadValues = new HashMap<RowHead, CellValue>();
 			for(RowHead rowHead : this.cellValues.keySet()) 
 				rowHeadValues.put(rowHead, this.cellValues.get(rowHead).get(i));
-			columnCellValuesList.add(new ColumnCellValues(columnHead, rowHeadValues));
+			columnList.add(new Column(columnHead, rowHeadValues));
 		}
 		
-		Collections.sort(columnCellValuesList);
+		Collections.sort(columnList);
 		
 		columnHeads.clear();
 		this.cellValues.clear();
-		for(int i=0; i<columnCellValuesList.size(); i++){
-			ColumnCellValues columnCellValues = columnCellValuesList.get(i);
-			columnHeads.add(columnCellValues.getColumnHead());
+		for(int i=0; i<columnList.size(); i++){
+			Column column = columnList.get(i);
+			columnHeads.add(column.getColumnHead());
 			
-			for(RowHead rowHead : columnCellValues.getRowHeadValues().keySet()) {
+			for(RowHead rowHead : column.getCellValues().keySet()) {
 				if(!cellValues.containsKey(rowHead))
-					cellValues.put(rowHead, new ArrayList<CellValue>(columnCellValuesList.size()));
-				cellValues.get(rowHead).add(columnCellValues.getRowHeadValues().get(rowHead));
+					cellValues.put(rowHead, new ArrayList<CellValue>(columnList.size()));
+				cellValues.get(rowHead).add(column.getCellValues().get(rowHead));
 			}
 		}
 		
 	}
 	
-	private class ColumnCellValues implements Comparable<ColumnCellValues> {
+	/*private class ColumnCellValues implements Comparable<ColumnCellValues> {
 		private ColumnHead columnHead;
 		private Map<RowHead, CellValue> rowHeadValues = new HashMap<RowHead, CellValue>();
 		public ColumnCellValues(ColumnHead columnHead,
@@ -203,5 +203,5 @@ public class Matrix implements Serializable {
 		public int compareTo(ColumnCellValues o) {
 			return columnHead.getValue().compareTo(o.columnHead.getValue());
 		}
-	}
+	}*/
 }

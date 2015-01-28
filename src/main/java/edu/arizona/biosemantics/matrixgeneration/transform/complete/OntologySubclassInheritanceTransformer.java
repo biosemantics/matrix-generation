@@ -67,7 +67,7 @@ public class OntologySubclassInheritanceTransformer implements Transformer {
 							matrix.addStructure(inferedSubclassStructure, taxon);
 					
 					Character inferedCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferedSubclassStructure), 
-							bearerIdentifier);
+							bearerIdentifier, this);
 					log(LogLevel.DEBUG, "Create from infered subclass character: " + inferedCharacter.toString());
 					matrix.addCharacter(inferedCharacter);
 					
@@ -83,7 +83,7 @@ public class OntologySubclassInheritanceTransformer implements Transformer {
 
 	private void setAbsent(Character inferedCharacter, Taxon taxon, Matrix matrix) {
 		Structure inferedStructure = matrix.getStructure(inferedCharacter.getBearerStructureIdentifier(), taxon);
-		inferedStructure.addCharacterValue(inferedCharacter, new Value("absent"));
+		inferedStructure.addCharacterValue(inferedCharacter, new Value("absent", this));
 	}
 
 	private boolean isAbsent(Character character, Taxon taxon, Matrix matrix) {

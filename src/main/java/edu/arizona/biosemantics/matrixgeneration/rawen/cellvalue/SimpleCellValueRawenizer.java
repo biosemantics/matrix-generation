@@ -58,7 +58,7 @@ public class SimpleCellValueRawenizer implements CellValueRawenizer {
 			
 		}
 		
-		return new CellValue(result.trim(), value);
+		return new CellValue(result.trim(), value, this);
 	}
 
 	@Override

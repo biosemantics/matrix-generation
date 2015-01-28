@@ -1,6 +1,9 @@
 package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -29,9 +32,12 @@ public class Value implements Cloneable, Serializable {
 	private String ontologyId;
 	private String provenance;
 	private String notes;
+
+	private List<String> generationProvenance = new LinkedList<String>();
 	
-	public Value(String value) {
+	public Value(String value, Object generationProvenance) {
 		this.value = value;
+		this.addGenerationProvenance(generationProvenance);
 	}
 	
 	public String getValue() {
@@ -230,7 +236,7 @@ public class Value implements Cloneable, Serializable {
 
 	@Override
 	public Value clone() {
-		Value value = new Value(this.value);
+		Value value = new Value(this.value, new ArrayList<String>(this.generationProvenance));
 		value.setCharType(this.charType);
 		value.setConstraint(this.constraint);
 		value.setConstraintId(this.constraintId);
@@ -431,5 +437,21 @@ public class Value implements Cloneable, Serializable {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+	
+	
+	public void addGenerationProvenance(Object generationProvenance) {
+		if(generationProvenance instanceof String)
+			this.generationProvenance.add((String)generationProvenance);
+		else
+			this.generationProvenance.add(generationProvenance.getClass().getSimpleName());
+	}
+	
+	public void addGenerationProvenance(List<String> generationProvenance) {
+		this.generationProvenance.addAll(generationProvenance);
+	}
+	
+	public List<String> getGenerationProvenance() {
+		return generationProvenance;
 	}
 }

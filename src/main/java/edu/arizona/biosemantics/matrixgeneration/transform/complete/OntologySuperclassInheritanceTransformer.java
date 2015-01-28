@@ -66,7 +66,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 							matrix.addStructure(inferredSuperclassStructure, taxon);
 					
 					Character inferedCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferredSuperclassStructure), 
-							bearerIdentifier);
+							bearerIdentifier, this);
 					log(LogLevel.DEBUG, "Create from infered superclass character: " + inferedCharacter.toString());
 					matrix.addCharacter(inferedCharacter);
 					
@@ -82,7 +82,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 
 	private void setPresent(Character inferedCharacter, Taxon taxon, Matrix matrix) {
 		Structure inferedStructure = matrix.getStructure(inferedCharacter.getBearerStructureIdentifier(), taxon);
-		inferedStructure.addCharacterValue(inferedCharacter, new Value("present"));
+		inferedStructure.addCharacterValue(inferedCharacter, new Value("present", this));
 	}
 
 	private boolean isPresent(Character character, Taxon taxon, Matrix matrix) {

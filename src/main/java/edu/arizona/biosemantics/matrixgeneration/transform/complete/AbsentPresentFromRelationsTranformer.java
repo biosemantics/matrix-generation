@@ -44,7 +44,7 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 					matrix.addCharacter(character);
 					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
 					log(LogLevel.DEBUG, "Set present for: " + taxon.toString());
-					structure.addCharacterValue(character, new Value("present"));
+					structure.addCharacterValue(character, new Value("present", this));
 				}
 			}
 			if(isAbsentRelation(relation)) {
@@ -54,7 +54,7 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 					matrix.addCharacter(character);
 					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
 					log(LogLevel.DEBUG, "Set absent for: " + taxon.toString());
-					structure.addCharacterValue(character, new Value("absent"));
+					structure.addCharacterValue(character, new Value("absent", this));
 				}
 			}
 		}
@@ -63,7 +63,7 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 	private Character createAbsentCharacter(Relation relation) {
 		if(relation.getTo() != null && relation.getFrom() != null) {
 			Character character = new AbsentPresentCharacter(new StructureIdentifier(relation.getTo()), 
-					new StructureIdentifier(relation.getFrom()));
+					new StructureIdentifier(relation.getFrom()), this);
 			return character;
 		}
 		return null;
@@ -72,7 +72,7 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 	private Character createPresentCharacter(Relation relation) {
 		if(relation.getTo() != null && relation.getFrom() != null) {
 			Character character = new AbsentPresentCharacter(new StructureIdentifier(relation.getTo()), 
-					new StructureIdentifier(relation.getFrom()));
+					new StructureIdentifier(relation.getFrom()), this);
 			return character;
 		}
 		return null;

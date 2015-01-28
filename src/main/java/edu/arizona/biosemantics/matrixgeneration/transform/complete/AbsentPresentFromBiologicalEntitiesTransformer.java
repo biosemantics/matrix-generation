@@ -26,14 +26,14 @@ public class AbsentPresentFromBiologicalEntitiesTransformer implements Transform
 				matrix.addCharacter(character);
 				structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
 				log(LogLevel.DEBUG, "Set present for: " + taxon.toString());
-				structure.addCharacterValue(character, new Value("present"));
+				structure.addCharacterValue(character, new Value("present", this));
 			}
 		}
 	}
 	
 	private Character createPresentCharacter(Taxon taxon, Structure structure) {
 		Character character = new AbsentPresentCharacter(new StructureIdentifier(structure), 
-				new StructureIdentifier(taxon.getWholeOrganism()));
+				new StructureIdentifier(taxon.getWholeOrganism()), this);
 		return character;
 	}
 

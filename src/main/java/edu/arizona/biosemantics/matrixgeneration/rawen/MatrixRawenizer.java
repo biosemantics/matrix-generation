@@ -98,7 +98,7 @@ public class MatrixRawenizer {
 			}
 			
 			if(characterValues.isEmpty()) 
-				taxonsCellValues.add(new NotApplicableCellValue());
+				taxonsCellValues.add(new NotApplicableCellValue(this));
 			else
 				taxonsCellValues.add(combineCellValues(characterValues));
 		}
@@ -121,7 +121,7 @@ public class MatrixRawenizer {
 			}
 		}
 		
-		return new CellValue(result.substring(0, result.length() - cellValueSeparator.length()).trim(), containedValues, sources);
+		return new CellValue(result.substring(0, result.length() - cellValueSeparator.length()).trim(), containedValues, sources, this);
 	}
 
 	private Values combineValues(Values values, Values newValues) {

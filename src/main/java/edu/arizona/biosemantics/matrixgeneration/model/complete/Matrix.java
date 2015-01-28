@@ -65,7 +65,7 @@ public class Matrix implements Serializable {
 		for(Taxon taxon : getTaxa()) {
 			for(Structure structure : taxon.getStructures()) {
 				for(Character character : structure.getCharacters()) {
-					values.addAll(structure.getCharacterValues(character));
+					values.addAll(structure.getCharacterValues(character).getAll());
 				}
 			}
 		}

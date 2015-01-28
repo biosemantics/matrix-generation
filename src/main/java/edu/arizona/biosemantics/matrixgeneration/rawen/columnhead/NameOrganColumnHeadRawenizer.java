@@ -7,10 +7,10 @@ public class NameOrganColumnHeadRawenizer implements ColumnHeadRawenizer {
 
 	@Override
 	public ColumnHead transform(Character character) {
+		String name = character.getName();
 		if(!character.getBearerStructureIdentifier().getStructureName().equals("whole_organism")) 
-			return new ColumnHead(
-					character.getName() + " " + character.getConnector() + " " + character.getBearerStructureIdentifier().getDisplayName(), character);
-		return new ColumnHead(character.getName(), character);
+			name = character.getName() + " " + character.getConnector() + " " + character.getBearerStructureIdentifier().getDisplayName();
+		return new ColumnHead(name, character, this);
 	}
 
 }

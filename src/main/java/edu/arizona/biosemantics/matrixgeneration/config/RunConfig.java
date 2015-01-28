@@ -48,6 +48,7 @@ public class RunConfig extends BaseConfig {
 	// IO
 	private String inputDirectory = "in";
 	private String outputFile = "out.csv";
+	private boolean outputProvenance = true;
 	private Class<? extends Reader> reader = SemanticMarkupReader.class;
 	private Class<? extends Writer> writer = CSVWriter.class;
 	private String cellValueSeparator = " | ";
@@ -75,6 +76,7 @@ public class RunConfig extends BaseConfig {
 			// IO
 			bind(String.class).annotatedWith(Names.named("InputDirectory")).toInstance(inputDirectory);
 			bind(String.class).annotatedWith(Names.named("OutputFile")).toInstance(outputFile);
+			bind(Boolean.class).annotatedWith(Names.named("Output_Provenance")).toInstance(outputProvenance);
 			bind(Reader.class).to(reader).in(Singleton.class);
 			bind(Writer.class).to(writer).in(Singleton.class);
 			bind(String.class).annotatedWith(Names.named("CellValueSeparator")).toInstance(cellValueSeparator);

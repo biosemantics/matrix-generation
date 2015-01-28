@@ -50,7 +50,7 @@ public class RangeValueCellValueRawenizer implements CellValueRawenizer {
 			}
 		}*/
 		
-		return new CellValue(result.trim(), Arrays.asList(new String[]{ from, to }), value);
+		return new CellValue(result.trim(), Arrays.asList(new String[]{ from, to }), value, this);
 	}
 
 	@Override

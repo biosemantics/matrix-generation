@@ -292,7 +292,7 @@ public class SemanticMarkupReader implements Reader {
 		
 		for(Element characterElement : structure.getChildren("character")) {
 			String v = characterElement.getAttributeValue("value");
-			Value value = new Value(v);
+			Value value = new Value(v, this);
 			value.setCharType(characterElement.getAttributeValue("char_type"));
 			value.setConstraint(characterElement.getAttributeValue("constraint"));
 			value.setConstraintId(characterElement.getAttributeValue("constraintid"));
@@ -339,8 +339,8 @@ public class SemanticMarkupReader implements Reader {
 
 	private Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name, Value value) {
 		if(name.equals("presence"))
-			return new AbsentPresentCharacter(structureIdentifier, new StructureIdentifier(taxon.getWholeOrganism()));
-		return new AttributeCharacter(name, "of", structureIdentifier);
+			return new AbsentPresentCharacter(structureIdentifier, new StructureIdentifier(taxon.getWholeOrganism()), this);
+		return new AttributeCharacter(name, "of", structureIdentifier, this);
 	}
 
 }

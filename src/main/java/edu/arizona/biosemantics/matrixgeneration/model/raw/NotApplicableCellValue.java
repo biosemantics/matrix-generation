@@ -4,8 +4,8 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class NotApplicableCellValue extends CellValue {
 
-	public NotApplicableCellValue() {
-		super("", (Value)null);
+	public NotApplicableCellValue(Object generationProvenance) {
+		super("", (Value)null, generationProvenance);
 	}
 
 }

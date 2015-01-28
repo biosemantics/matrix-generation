@@ -55,7 +55,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		for(RowHead child : rowHead.getChildren()) {
 			CellValue value = matrix.getCellValue(child, columnHead);
 			if(value instanceof NotApplicableCellValue)
-				return new NotApplicableCellValue();
+				return new NotApplicableCellValue(this);
 			if(value.getText().equals("present | absent"))
 				System.out.println();
 			allValues.addAll(Arrays.asList(value.getText().split(Pattern.quote(cellValueSeparator))));
@@ -66,7 +66,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		}
 		String newValue = valueBuilder.toString();
 		
-		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null);
+		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null, this);
 	}
 
 	//if all children of parent contain the structure and have the character set the same

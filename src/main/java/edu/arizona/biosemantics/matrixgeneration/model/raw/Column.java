@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Column implements Serializable {
+public class Column implements Serializable, Comparable<Column> {
 
 	private ColumnHead columnHead;
 	private Map<RowHead, CellValue> cellValues = new HashMap<RowHead, CellValue>();
@@ -26,8 +26,9 @@ public class Column implements Serializable {
 	public void setCellValues(Map<RowHead, CellValue> cellValues) {
 		this.cellValues = cellValues;
 	}
-	
-	
-	
+	@Override
+	public int compareTo(Column o) {
+		return columnHead.getValue().compareTo(o.columnHead.getValue());
+	}
 
 }
