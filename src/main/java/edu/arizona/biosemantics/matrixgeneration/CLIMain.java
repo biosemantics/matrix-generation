@@ -194,6 +194,8 @@ public class CLIMain {
 		    } else 
 		    	config.setWriter(CSVWriter.class);
 		    
+		    config.setOutputProvenance(false);
+		    
 		} catch(ParseException e) {
 			log(LogLevel.ERROR, "Problem parsing parameters", e);
 			throw new IllegalArgumentException(e);

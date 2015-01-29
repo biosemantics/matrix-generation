@@ -176,4 +176,8 @@ public class RunConfig extends BaseConfig {
 			List<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer> rawTransformers) {
 		this.rawTransformers = rawTransformers;
 	}
+
+	public void setOutputProvenance(boolean value) {
+		this.outputProvenance = value;
+	}
 }

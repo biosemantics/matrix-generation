@@ -37,10 +37,11 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 	private void propagateToAncestors(Matrix matrix, RowHead rowHead) {
 		RowHead parent = rowHead.getParent();
 		if(parent != null) {
-			log(LogLevel.DEBUG, "Propagate to ancestor: " + parent.getValue());
+			log(LogLevel.DEBUG, "Propagate from " + rowHead.getValue() + " to ancestor: " + parent.getValue());
 			for(ColumnHead columnHead : matrix.getColumnHeads()) { 
 				CellValue newCellValue = determineParentCellValue(matrix, parent, columnHead);
-				log(LogLevel.DEBUG, "Propagate for column: " + columnHead.getValue() + ",\t new value: " + newCellValue.getText() + ",\t old value: " + 
+				log(LogLevel.DEBUG, "Propagate from " + rowHead.getValue() + " to ancestor: " + parent.getValue() + ": "
+						+ "Propagate for column: " + columnHead.getValue() + ",\t new value: " + newCellValue.getText() + ",\t old value: " + 
 						matrix.getCellValue(rowHead, columnHead).getText());
 				matrix.setCellValue(parent, columnHead, newCellValue);
 			}
@@ -56,8 +57,6 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 			CellValue value = matrix.getCellValue(child, columnHead);
 			if(value instanceof NotApplicableCellValue)
 				return new NotApplicableCellValue(this);
-			if(value.getText().equals("present | absent"))
-				System.out.println();
 			allValues.addAll(Arrays.asList(value.getText().split(Pattern.quote(cellValueSeparator))));
 		}
 		StringBuilder valueBuilder = new StringBuilder();

@@ -24,6 +24,16 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
 
+/**
+ * OntologySuperclassInheritanceTransformer looks at AbsentPresentCharacters.
+ * For each AbsentPresentCharacter look at ontology superclasses of the beared structures A.
+ * Add a AbsentPresentCharacter with found superclasses as beared structures B.
+ * If a beared structure A is present in a taxon set the AbsentPresentCharacter of beared structures B
+ * also to present.
+ * 
+ * Reasoning: If petal is present, flower must be present too.
+ * @author Thomas
+ */
 public class OntologySuperclassInheritanceTransformer implements Transformer {
 
 	private OntologyAccess ontologyAccess;
@@ -52,44 +62,44 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 		Set<Character> iteratable = new HashSet<Character>(matrix.getCharacters());
 		for(Character character : iteratable) {
 			if(character instanceof AbsentPresentCharacter) {
-				StructureIdentifier bearerIdentifier = character.getBearerStructureIdentifier();
-				StructureIdentifier structureIdentifier = ((AbsentPresentCharacter)character).getQuantifiedStructure();
-				//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
-				Set<Structure> inferedSuperclassStructures = getSuperclassStructures(structureIdentifier);
+				StructureIdentifier bearerStructure = character.getBearerStructureIdentifier();
+				StructureIdentifier bearedStructure = ((AbsentPresentCharacter)character).getBearedStructure();
+				log(LogLevel.INFO, "Infer from base character " + character.toString());
+				log(LogLevel.INFO, "Infer from beared structure " + bearedStructure.toString());
+				Set<Structure> inferredSuperclassStructures = getSuperclassStructures(bearedStructure);
 				
-				for(Structure inferredSuperclassStructure : inferedSuperclassStructures) {
-					log(LogLevel.INFO, "Infered character from subclass structure " + inferredSuperclassStructure.getDisplayName() + " " + 
-							inferredSuperclassStructure.getOntologyId());
+				for(Structure inferredSuperclassStructure : inferredSuperclassStructures) {
+					log(LogLevel.INFO, "Inferred superclass " + inferredSuperclassStructure.toString());
 					
 					for(Taxon taxon : matrix.getTaxa())
-						if(matrix.getStructure(structureIdentifier, taxon) != null) 
+						if(matrix.getStructure(bearedStructure, taxon) != null) 
 							matrix.addStructure(inferredSuperclassStructure, taxon);
 					
-					Character inferedCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferredSuperclassStructure), 
-							bearerIdentifier, this);
-					log(LogLevel.DEBUG, "Create from infered superclass character: " + inferedCharacter.toString());
-					matrix.addCharacter(inferedCharacter);
+					Character inferredCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferredSuperclassStructure), 
+							bearerStructure, this);
+					log(LogLevel.DEBUG, "Create from inferred superclass character: " + inferredCharacter.toString());
+					matrix.addCharacter(inferredCharacter);
 					
 					for(Taxon taxon : matrix.getTaxa()) 
 						if(isPresent(character, taxon, matrix)) {
 							log(LogLevel.DEBUG, "Set present for taxon: " + taxon.toString());
-							setPresent(inferedCharacter, taxon, matrix);
+							setPresent(inferredCharacter, taxon, matrix);
 						}
 				}
 			}
 		}
 	}
 
-	private void setPresent(Character inferedCharacter, Taxon taxon, Matrix matrix) {
-		Structure inferedStructure = matrix.getStructure(inferedCharacter.getBearerStructureIdentifier(), taxon);
-		inferedStructure.addCharacterValue(inferedCharacter, new Value("present", this));
+	private void setPresent(Character inferredCharacter, Taxon taxon, Matrix matrix) {
+		Structure bearerStructure = matrix.getStructure(inferredCharacter.getBearerStructureIdentifier(), taxon);
+		bearerStructure.addCharacterValue(inferredCharacter, new Value("present", this));
 	}
 
 	private boolean isPresent(Character character, Taxon taxon, Matrix matrix) {
 		if(matrix.hasStructure(character.getBearerStructureIdentifier(), taxon)) {
-			Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
-			if(structure.containsCharacterValue(character)) {
-				Values values = structure.getCharacterValues(character);
+			Structure bearerStructure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+			if(bearerStructure.containsCharacterValue(character)) {
+				Values values = bearerStructure.getCharacterValues(character);
 				for(Value value : values) 
 					if(value.getValue().trim().equals("present"))
 						return true;

@@ -24,6 +24,16 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
 
+/**
+ * OntologySubclassInheritanceTransformer looks at AbsentPresentCharacters.
+ * For each AbsentPresentCharacter look at ontology subclasses of the beared structures A.
+ * Add a AbsentPresentCharacter with found subclasses as beared structures B.
+ * If a beared structure A is absent in a taxon set the AbsentPresentCharacter of beared structures B
+ * also to absent.
+ * 
+ * Reasoning: If flower is absent, petal must be absent too.
+ * @author Thomas
+ */
 public class OntologySubclassInheritanceTransformer implements Transformer {
 
 	private OntologyAccess ontologyAccess;
@@ -52,45 +62,44 @@ public class OntologySubclassInheritanceTransformer implements Transformer {
 		Set<Character> iteratable = new HashSet<Character>(matrix.getCharacters());
 		for(Character character : iteratable) {
 			if(character instanceof AbsentPresentCharacter) {
-				StructureIdentifier bearerIdentifier = character.getBearerStructureIdentifier();
-				StructureIdentifier structureIdentifier = ((AbsentPresentCharacter)character).getQuantifiedStructure();
-				//Set<StructureIdentifier> inferedBearerStructures = getStructuresWherePartOf(structure);
+				StructureIdentifier bearerStructure = character.getBearerStructureIdentifier();
+				StructureIdentifier bearedStructure = ((AbsentPresentCharacter)character).getBearedStructure();
 				log(LogLevel.INFO, "Infer from base character " + character.toString());
-				log(LogLevel.INFO, "Infer from base structure " + structureIdentifier.toString());
-				Set<Structure> inferedSubclassStructures = getSubclassStructures(structureIdentifier);
+				log(LogLevel.INFO, "Infer from beared structure " + bearedStructure.toString());
+				Set<Structure> inferredSubclassStructures = getSubclassStructures(bearedStructure);
 				
-				for(Structure inferedSubclassStructure : inferedSubclassStructures) {
-					log(LogLevel.INFO, "Infered subclass " + inferedSubclassStructure.toString());
+				for(Structure inferredSubclassStructure : inferredSubclassStructures) {
+					log(LogLevel.INFO, "Inferred subclass " + inferredSubclassStructure.toString());
 					
 					for(Taxon taxon : matrix.getTaxa())
-						if(matrix.getStructure(structureIdentifier, taxon) != null) 
-							matrix.addStructure(inferedSubclassStructure, taxon);
+						if(matrix.getStructure(bearedStructure, taxon) != null) 
+							matrix.addStructure(inferredSubclassStructure, taxon);
 					
-					Character inferedCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferedSubclassStructure), 
-							bearerIdentifier, this);
-					log(LogLevel.DEBUG, "Create from infered subclass character: " + inferedCharacter.toString());
-					matrix.addCharacter(inferedCharacter);
+					Character inferredCharacter = new AbsentPresentCharacter(new StructureIdentifier(inferredSubclassStructure), 
+							bearerStructure, this);
+					log(LogLevel.DEBUG, "Create from inferred subclass character: " + inferredCharacter.toString());
+					matrix.addCharacter(inferredCharacter);
 					
 					for(Taxon taxon : matrix.getTaxa()) 
 						if(isAbsent(character, taxon, matrix)) {
-							setAbsent(inferedCharacter, taxon, matrix);	
 							log(LogLevel.DEBUG, "Set absent for taxon: " + taxon.toString());
+							setAbsent(inferredCharacter, taxon, matrix);	
 						}
 				}
 			}
 		}
 	}
 
-	private void setAbsent(Character inferedCharacter, Taxon taxon, Matrix matrix) {
-		Structure inferedStructure = matrix.getStructure(inferedCharacter.getBearerStructureIdentifier(), taxon);
-		inferedStructure.addCharacterValue(inferedCharacter, new Value("absent", this));
+	private void setAbsent(Character inferredCharacter, Taxon taxon, Matrix matrix) {
+		Structure bearerStructure = matrix.getStructure(inferredCharacter.getBearerStructureIdentifier(), taxon);
+		bearerStructure.addCharacterValue(inferredCharacter, new Value("absent", this));
 	}
 
 	private boolean isAbsent(Character character, Taxon taxon, Matrix matrix) {
 		if(matrix.hasStructure(character.getBearerStructureIdentifier(), taxon)) {
-			Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
-			if(structure.containsCharacter(character)) {
-				Values values = structure.getCharacterValues(character);
+			Structure bearerStructure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+			if(bearerStructure.containsCharacter(character)) {
+				Values values = bearerStructure.getCharacterValues(character);
 				for(Value value : values) 
 					if(value.getValue().trim().equals("absent"))
 						return true;

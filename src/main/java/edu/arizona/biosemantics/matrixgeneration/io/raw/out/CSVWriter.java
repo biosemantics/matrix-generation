@@ -46,7 +46,7 @@ public class CSVWriter implements Writer {
 			for(ColumnHead columnHead : columnHeads) {
 				String value = columnHead.getValue();
 				if(outputProvenance)
-					value += " [" + StringUtils.join(columnHead.getGenerationProvenance(), ", ") + " / " + 
+					value += " [" + //not interesting at this time: StringUtils.join(columnHead.getGenerationProvenance(), ", ") + " / " + 
 									StringUtils.join(columnHead.getSource().getGenerationProvenance(), ", ") + "]";
 				line[column++] = value;
 			}

@@ -40,6 +40,11 @@ public class Value implements Cloneable, Serializable {
 		this.addGenerationProvenance(generationProvenance);
 	}
 	
+	public Value(String value, List<String> generationProvenance) {
+		this.value = value;
+		this.addGenerationProvenance(generationProvenance);
+	}
+	
 	public String getValue() {
 		return value;
 	}
