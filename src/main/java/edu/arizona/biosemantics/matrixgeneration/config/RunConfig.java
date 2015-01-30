@@ -1,5 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.config;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,10 +9,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
+import edu.arizona.biosemantics.common.log.LogLevel;
+import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.io.complete.in.Reader;
 import edu.arizona.biosemantics.matrixgeneration.io.complete.in.SemanticMarkupReader;
 import edu.arizona.biosemantics.matrixgeneration.io.raw.out.CSVWriter;
@@ -65,6 +76,9 @@ public class RunConfig extends BaseConfig {
 	private Class<? extends CellValueRawenizer> cellValueRawenizer = AggregatedCellValueRawenizer.class;
 	private Class<? extends CellValueRawenizer> defaultCellValueRawenizer = SimpleCellValueRawenizer.class;
 	private List<CellValueRawenizer> cellValueRawenizers = createCellValueRawenizers();
+	
+	// Transformer specific
+	private Set<OWLClass> upperBounds = createUpperBounds();
 
 	@Override
 	protected void configure() {
@@ -106,10 +120,49 @@ public class RunConfig extends BaseConfig {
 			bind(new TypeLiteral<Set<String>>() {}).annotatedWith(Names.named("AbsentRelation")).toInstance(
 					absentRelation );
 			
+			// Transformers
+			bind(new TypeLiteral<Set<OWLClass>>() {} ).annotatedWith(
+					Names.named("OntologySuperclassInheritanceTransformer_UpperBounds")).toInstance(upperBounds);
+			
 		//} catch(IOException e) {
 		//	log(LogLevel.ERROR, "Exception loading configuration", e);
 		//	throw new IllegalArgumentException();
 		//}
+	}
+
+	private Set<OWLClass> createUpperBounds() {
+		String[] upperBounds = new String[] { 
+				"http://purl.obolibrary.org/obo/CARO_0000003", //anatomical structure
+				"http://purl.obolibrary.org/obo/PORO_0000923", //cell component
+				"http://purl.obolibrary.org/obo/PORO_0000908", //anatomical axis
+				"http://purl.obolibrary.org/obo/PORO_0000991", //cavity of canal
+				"http://purl.obolibrary.org/obo/PORO_0000303", //facial plane
+				"http://purl.obolibrary.org/obo/PORO_0000406", //micropyle
+				"http://purl.obolibrary.org/obo/PORO_0000018", //osculum
+				"http://purl.obolibrary.org/obo/PORO_0000035", //pore
+				"http://purl.obolibrary.org/obo/PORO_0000020" //spongeocoel
+		};
+		Set<OWLClass> result = new HashSet<OWLClass>();
+		
+		Set<OWLOntology> ontologies = new HashSet<OWLOntology>();
+		OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
+		File ontologyDirectory = new File(Configuration.ontologyDirectory);
+		for(File ontologyFile : ontologyDirectory.listFiles()) {
+			try {
+				OWLOntology ontology = owlOntologyManager.loadOntologyFromOntologyDocument(ontologyFile);
+				ontologies.add(ontology);
+			} catch (OWLOntologyCreationException e) {
+				log(LogLevel.ERROR, "Couldn't load ontology " + ontologyFile.getAbsolutePath(), e);
+			}
+		}
+		
+		OntologyAccess ontologyAccess = new OntologyAccess(ontologies);
+		for(String upperBound : upperBounds) {
+			OWLEntity owlEntity = ontologyAccess.getOWLEntityForIRI(upperBound);
+			if(owlEntity instanceof OWLClass)
+				result.add((OWLClass)owlEntity);
+		}
+		return result;
 	}
 
 	private List<CellValueRawenizer> createCellValueRawenizers() {

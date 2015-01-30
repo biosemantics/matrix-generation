@@ -12,6 +12,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
@@ -39,11 +42,15 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 	private OntologyAccess ontologyAccess;
 	private OWLOntologyManager owlOntologyManager;
 	private OWLDataFactory owlDataFactory;
+	private Set<OWLClass> upperBounds;
 
-	public OntologySuperclassInheritanceTransformer() {
+	@Inject
+	public OntologySuperclassInheritanceTransformer(@Named("OntologySuperclassInheritanceTransformer_UpperBounds")
+			Set<OWLClass> upperBounds) {
 		Set<OWLOntology> ontologies = new HashSet<OWLOntology>();
 		owlOntologyManager = OWLManager.createOWLOntologyManager();
 		owlDataFactory = owlOntologyManager.getOWLDataFactory();
+		this.upperBounds = upperBounds;
 		
 		File ontologyDirectory = new File(Configuration.ontologyDirectory);
 		for(File ontologyFile : ontologyDirectory.listFiles()) {
@@ -126,12 +133,24 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 		Set<Structure> result = new HashSet<Structure>();
 		if(structure.hasStructureOntologyId()) {
 			OWLClass subclass = owlDataFactory.getOWLClass(IRI.create(structure.getStructureOntologyId()));
-			Set<OWLClass> descendants = ontologyAccess.getDescendants(subclass);
-			for(OWLClass descendant : descendants) {
-				String label = ontologyAccess.getLabel(descendant);
-				result.add(new Structure(label, null, descendant.getIRI().toString()));
+			Set<OWLClass> ancestors = ontologyAccess.getAncestors(subclass);
+			for(OWLClass ancestor : ancestors) {
+				if(!isAboveUpperBound(ancestor)) {
+					String label = ontologyAccess.getLabel(ancestor);
+					result.add(new Structure(label, null, ancestor.getIRI().toString()));
+				} else {
+					log(LogLevel.INFO, "Left out ancestor: " + ancestor.getIRI().toString() + " due to upper bound restriction");
+				}
 			}
 		}
 		return result;
+	}
+
+	private boolean isAboveUpperBound(OWLClass owlClass) {
+		for(OWLClass upperBound : upperBounds) {
+			if(upperBound.equals(owlClass) || ontologyAccess.getDescendants(owlClass).contains(upperBound))
+				return true;
+		}
+		return false;
 	}
 }
