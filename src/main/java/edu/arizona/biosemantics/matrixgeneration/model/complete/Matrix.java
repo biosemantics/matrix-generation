@@ -166,6 +166,16 @@ public class Matrix implements Serializable {
 		}
 	}
 	
+	public void removeStructure(Structure structure, Taxon taxon) {
+		StructureIdentifier structureIdentifier = new StructureIdentifier(structure);
+		if(structureIdTaxonStructuresMap.containsKey(structureIdentifier)) {
+			Map<Taxon, List<Structure>> taxonStructureMap = structureIdTaxonStructuresMap.get(structureIdentifier);
+			taxonStructureMap.remove(taxon);
+			if(taxonStructureMap.isEmpty())
+				structureIdTaxonStructuresMap.remove(structureIdentifier);
+		}
+	}
+	
 	public File getSourceFile(Taxon taxon) {
 		return sourceFiles.get(taxon);
 	}
@@ -174,40 +184,6 @@ public class Matrix implements Serializable {
 		return rankDataMap.get(rankData);
 	}
 	
-	/* Unclear which is needed to be created when evaluating part_of relations, dummy implementations for now */
-	/**
-	 * Returns parent structure specific to taxon
-	 * @param structre
-	 * @return
-	 */
-	public Structure getParent(Structure structure) {
-		return null;
-	}
-	/**
-	 * Returns child structures specific to taxon
-	 * @param structure
-	 * @return
-	 */
-	public List<Structure> getChildren(Structure structure) {
-		return new LinkedList<Structure>();
-	}
-	/**
-	 * Returns parent structure of *merged by identifier* structure hierarchy
-	 * @param structureIdentifier
-	 * @return
-	 */
-	public StructureIdentifier getParent(StructureIdentifier structureIdentifier) {
-		return null;
-	}
-	/**
-	 * Returns child structures of *merged by identifier* structure hierarchy
-	 * @param StructureIdentifier
-	 * @return
-	 */
-	public List<StructureIdentifier> getChildren(StructureIdentifier StructureIdentifier) {
-		return new LinkedList<StructureIdentifier>();
-	}
-
 	public List<Taxon> getLeafTaxa() {
 		List<Taxon> leafTaxa = new LinkedList<Taxon>();
 		for(Taxon rootTaxon : rootTaxa) {
@@ -226,4 +202,10 @@ public class Matrix implements Serializable {
 		}
 		return result;
 	}
+
+	public Set<StructureIdentifier> getStructureIdentifiers() {
+		return structureIdTaxonStructuresMap.keySet();
+	}
+
+	
 }

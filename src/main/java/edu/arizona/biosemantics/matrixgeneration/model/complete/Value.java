@@ -32,6 +32,7 @@ public class Value implements Cloneable, Serializable {
 	private String ontologyId;
 	private String provenance;
 	private String notes;
+	private boolean isModifier = false;
 
 	private List<String> generationProvenance = new LinkedList<String>();
 	
@@ -459,4 +460,17 @@ public class Value implements Cloneable, Serializable {
 	public List<String> getGenerationProvenance() {
 		return generationProvenance;
 	}
+
+	public void setIsModifier(String isModifier) {
+		try {
+			this.isModifier = Boolean.parseBoolean(isModifier);
+		} catch(Exception e) {
+			this.isModifier = false;
+		} 
+	}
+	
+	public boolean getIsModifier() {
+		return isModifier;
+	}
 }
+
