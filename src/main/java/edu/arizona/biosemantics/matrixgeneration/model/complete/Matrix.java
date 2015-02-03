@@ -207,5 +207,22 @@ public class Matrix implements Serializable {
 		return structureIdTaxonStructuresMap.keySet();
 	}
 
+	public void updateStructure(Structure structure, StructureIdentifier oldStructureIdentifier, StructureIdentifier newStructureIdentifier, Taxon taxon) {
+		if(structureIdTaxonStructuresMap.containsKey(oldStructureIdentifier)) {
+			Map<Taxon, List<Structure>> taxonStructuresMap = structureIdTaxonStructuresMap.get(oldStructureIdentifier);
+			if(taxonStructuresMap.containsKey(taxon)) {
+				List<Structure> taxonStructures = taxonStructuresMap.get(taxon);
+				taxonStructures.remove(structure);
+			}
+		}
+		
+		if(!structureIdTaxonStructuresMap.containsKey(newStructureIdentifier)) 
+			structureIdTaxonStructuresMap.put(newStructureIdentifier, new HashMap<Taxon, List<Structure>>());
+		Map<Taxon, List<Structure>> taxonStructuresMap = structureIdTaxonStructuresMap.get(newStructureIdentifier);
+		if(!taxonStructuresMap.containsKey(taxon))  
+			taxonStructuresMap.put(taxon,  new LinkedList<Structure>());
+		List<Structure> taxonStructures = taxonStructuresMap.get(taxon);
+		taxonStructures.add(structure);
+	}
 	
 }

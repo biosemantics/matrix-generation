@@ -42,17 +42,15 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 	public void transform(Matrix matrix) {
 		for(Taxon taxon : matrix.getTaxa()) {
 			for(Structure structure : taxon.getStructures()) {
-	
-				Structure fixedStructure = isFixStructure(structure);			
-				if(fixedStructure != null) {
-					matrix.removeStructure(structure, taxon);
-					matrix.addStructure(fixedStructure, taxon);
-				}
+				StructureIdentifier oldStructureIdentifier = new StructureIdentifier(structure);
+				fixStructure(structure);
+				StructureIdentifier newStructureIdentifier = new StructureIdentifier(structure);
+				matrix.updateStructure(structure, oldStructureIdentifier,  newStructureIdentifier, taxon);
 			}
 		}
 	}
 
-	private Structure isFixStructure(Structure structure) {	
+	private void fixStructure(Structure structure) {	
 		StructureIdentifier structureIdentifier = new StructureIdentifier(structure);
 		
 		//restore order because we only want to search the terms in ontology in order they appeared in text
@@ -92,8 +90,10 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 			log(LogLevel.DEBUG, "Search for " + searchString + " (Is_modifier characters " + characterModifierValues.keySet().size() + ")");
 			
 			if(!searchString.isEmpty()) {
-				if(searchCache.containsKey(searchString) && searchCache.get(searchString))
-					return createNewStructure(structure, characterModifierValues);
+				if(searchCache.containsKey(searchString) && searchCache.get(searchString)) {
+					updateStructure(structure, characterModifierValues);
+					return;
+				}
 				
 				for(Searcher searcher : searchers) {
 					log(LogLevel.DEBUG, "Try searcher " + searcher);
@@ -102,41 +102,38 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 					searchCache.put(searchString, !ontologyEntries.isEmpty());
 					if(!ontologyEntries.isEmpty()) {
 						log(LogLevel.DEBUG, "Found ontology match for " + searchString);
-						return createNewStructure(structure, characterModifierValues);
+						updateStructure(structure, characterModifierValues);
+						return;
 					}
 				}
 			}
 			characterModifierValues.remove(characterModifierValues.keySet().iterator().next());
 		}
-		
-		return null;
 	}
 
-	private Structure createNewStructure(Structure structure,
+	private void updateStructure(Structure structure,
 			LinkedHashMap<Character, Values> matchedCharacterModifierValues) {
-		Structure result = structure.clone();
+		//Structure result = structure.clone();
 		
 		String constraintAddition = "";
 		for(Character matchedCharacter : matchedCharacterModifierValues.keySet()) {
-			Values values = result.getCharacterValues(matchedCharacter);
+			Values values = structure.getCharacterValues(matchedCharacter);
 			if(values != null) {
 				Values toRemove = matchedCharacterModifierValues.get(matchedCharacter);
 				constraintAddition += toRemove.getCombinedText(" ") + " ";
 				
-				values.removeAll(matchedCharacterModifierValues.get(matchedCharacter));
+				values.removeAll(toRemove);
 				if(values.isEmpty()) {
-					result.removeCharacterValues(matchedCharacter);
+					structure.removeCharacterValues(matchedCharacter);
 				}
 			}
 		}
 		constraintAddition = constraintAddition.trim();
 		
-		if(result.getConstraint() == null)
-			result.setConstraint(constraintAddition);
+		if(structure.getConstraint() == null)
+			structure.setConstraint(constraintAddition);
 		else 
-			result.setConstraint(constraintAddition + " " + result.getConstraint());
-		
-		return result;
+			structure.setConstraint(constraintAddition + " " + structure.getConstraint());
 	}
 
 }
