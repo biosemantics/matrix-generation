@@ -316,11 +316,14 @@ public class SemanticMarkupReader implements Reader {
 			value.setOntologyId(characterElement.getAttributeValue("ontologyid"));
 			value.setProvenance(characterElement.getAttributeValue("provenance"));
 			value.setNotes(characterElement.getAttributeValue("notes"));
-			value.setIsModifier(characterElement.getAttributeValue("is_modifier"));
+			
+			boolean isModifier = false;
+			try {
+				isModifier = Boolean.parseBoolean(characterElement.getAttributeValue("is_modifier"));
+			} catch(Exception e) {	} 
+			value.setIsModifier(isModifier);
 						
 			String name = characterElement.getAttributeValue("name");
-			
-			
 			Character character = createCharacter(taxon, structureIdentifier, name, value);
 			if(!characters.containsKey(character))
 				characters.put(character, character);

@@ -21,6 +21,7 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
+import edu.arizona.biosemantics.common.biology.TaxonGroup;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.io.complete.in.Reader;
@@ -79,12 +80,13 @@ public class RunConfig extends BaseConfig {
 	
 	// Transformer specific
 	private Set<OWLClass> upperBounds = createUpperBounds();
+	private TaxonGroup taxonGroup = TaxonGroup.PLANT;
 
 	@Override
 	protected void configure() {
 		super.configure();
 		
-		//try {
+			//try {
 			bind(IRun.class).to(MatrixGenerationRun.class);
 			
 			// IO
@@ -123,6 +125,7 @@ public class RunConfig extends BaseConfig {
 			// Transformers
 			bind(new TypeLiteral<Set<OWLClass>>() {} ).annotatedWith(
 					Names.named("OntologySuperclassInheritanceTransformer_UpperBounds")).toInstance(upperBounds);
+			bind(TaxonGroup.class).toInstance(taxonGroup);
 			
 		//} catch(IOException e) {
 		//	log(LogLevel.ERROR, "Exception loading configuration", e);
@@ -232,5 +235,9 @@ public class RunConfig extends BaseConfig {
 
 	public void setOutputProvenance(boolean value) {
 		this.outputProvenance = value;
+	}
+
+	public void setTaxonGroup(TaxonGroup taxonGroup) {
+		this.taxonGroup = taxonGroup;
 	}
 }

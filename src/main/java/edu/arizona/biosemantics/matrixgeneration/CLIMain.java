@@ -18,6 +18,7 @@ import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
+import edu.arizona.biosemantics.common.biology.TaxonGroup;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.config.RunConfig;
 import edu.arizona.biosemantics.matrixgeneration.io.complete.in.SemanticMarkupReader;
@@ -26,6 +27,7 @@ import edu.arizona.biosemantics.matrixgeneration.io.raw.out.SerializeWriter;
 import edu.arizona.biosemantics.matrixgeneration.run.IRun;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.AbsentPresentFromBiologicalEntitiesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.AbsentPresentFromRelationsTranformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.complete.FixConstraintedStructuresTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.RemoveAttributeCharactersTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUnitsTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUnitsTransformer.Unit;
@@ -98,6 +100,8 @@ public class CLIMain {
 				"split range values into separate characters for extreme values");
 		options.addOption("add_source", "add source file as column", false, 
 				"add source file as column");
+		options.addOption("taxon_group", "taxon group", true, 
+				"taxon group");
 		options.addOption("help", "help", false, "shows the help");
 				
 		try {
@@ -124,12 +128,42 @@ public class CLIMain {
 		    	throw new IllegalArgumentException();
 		    }
 		    config.setOutputFile(commandLine.getOptionValue("output"));
+		    if(!commandLine.hasOption("taxon_group")) {
+		    	log(LogLevel.ERROR, "Taxon Group is required");
+	    		throw new IllegalArgumentException("Taxon Group is required");
+		    }
+			try {
+				TaxonGroup taxonGroup = TaxonGroup.valueOf(commandLine.getOptionValue("taxon_group"));
+				config.setTaxonGroup(taxonGroup);
+			} catch(Exception e) {
+				log(LogLevel.ERROR, "Unknown Taxon Group");
+		    	throw new IllegalArgumentException("Unknown Taxon Group");
+			}
 		    
 		    //could determine order here based on parameters
 		    List<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer> completeTransformers = 
 		    		new LinkedList<edu.arizona.biosemantics.matrixgeneration.transform.complete.Transformer>();
 		    List<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer> rawTransformers = 
 		    		new LinkedList<edu.arizona.biosemantics.matrixgeneration.transform.raw.Transformer>();
+		    config.setCompleteTransformers(completeTransformers);
+		    config.setRawTransformers(rawTransformers);
+		    
+		    config.setReader(SemanticMarkupReader.class);
+		    if(commandLine.hasOption("output_format")) {
+		    	switch(commandLine.getOptionValue("output_format")) {
+		    	case "csv":
+		    		config.setWriter(CSVWriter.class);
+		    		break;
+		    	case "serialize":
+		    		config.setWriter(SerializeWriter.class);
+		    		break;
+		    	default:
+		    		throw new IllegalArgumentException("output format not supported");
+		    	}
+		    } else 
+		    	config.setWriter(CSVWriter.class);
+		    config.setOutputProvenance(false);
+
 		    
 		    Injector injector = Guice.createInjector(config);
 		    if(commandLine.hasOption("presence_relation")) {
@@ -174,27 +208,12 @@ public class CLIMain {
 			if(commandLine.hasOption("add_source")) {
 				rawTransformers.add(injector.getInstance(AddSourceColumnTransformer.class));
 			}
+			
+			//always apply
+			completeTransformers.add(injector.getInstance(FixConstraintedStructuresTransformer.class));
 			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
 			rawTransformers.add(injector.getInstance(SortTransformer.class));
-			
-		    config.setCompleteTransformers(completeTransformers);
-		    config.setRawTransformers(rawTransformers);
-		    config.setReader(SemanticMarkupReader.class);
-		    if(commandLine.hasOption("output_format")) {
-		    	switch(commandLine.getOptionValue("output_format")) {
-		    	case "csv":
-		    		config.setWriter(CSVWriter.class);
-		    		break;
-		    	case "serialize":
-		    		config.setWriter(SerializeWriter.class);
-		    		break;
-		    	default:
-		    		throw new IllegalArgumentException("output format not supported");
-		    	}
-		    } else 
-		    	config.setWriter(CSVWriter.class);
-		    
-		    config.setOutputProvenance(false);
+			//		    
 		    
 		} catch(ParseException e) {
 			log(LogLevel.ERROR, "Problem parsing parameters", e);

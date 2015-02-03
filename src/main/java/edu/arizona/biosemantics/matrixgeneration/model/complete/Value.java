@@ -461,12 +461,8 @@ public class Value implements Cloneable, Serializable {
 		return generationProvenance;
 	}
 
-	public void setIsModifier(String isModifier) {
-		try {
-			this.isModifier = Boolean.parseBoolean(isModifier);
-		} catch(Exception e) {
-			this.isModifier = false;
-		} 
+	public void setIsModifier(boolean isModifier) {
+		this.isModifier = isModifier;
 	}
 	
 	public boolean getIsModifier() {

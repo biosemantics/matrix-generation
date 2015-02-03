@@ -44,6 +44,8 @@ public class TaxonomyRowHeadRawenizer implements RowHeadRawenizer {
 		
 		String result = "";
 		while(true) {
+			if(rankDatas.isEmpty())
+				break;
 			RankData rankData = rankDatas.removeLast();
 			if(Rank.aboveGenus(rankData.getRank()))
 				break;

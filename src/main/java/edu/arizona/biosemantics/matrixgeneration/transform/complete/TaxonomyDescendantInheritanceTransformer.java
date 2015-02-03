@@ -33,8 +33,8 @@ public class TaxonomyDescendantInheritanceTransformer implements Transformer {
 						if(!childStructure.containsCharacter(character)) {
 							Values newValues = structure.getCharacterValues(character).clone();
 							log(LogLevel.DEBUG, "Propagate from " + taxon.toString() + " to descendant: " + child.toString() + ": "
-									+ "Propagate for character: " + character.toString() + ",\t new value: " + newValues.getCombinedText() + ",\t old value: " + 
-									structure.getCharacterValues(character).getCombinedText());
+									+ "Propagate for character: " + character.toString() + ",\t new value: " + newValues.getCombinedText(" | ") + ",\t old value: " + 
+									structure.getCharacterValues(character).getCombinedText(" | "));
 							childStructure.setCharacterValues(character, newValues);
 						}
 					}

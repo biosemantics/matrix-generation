@@ -11,6 +11,7 @@ public class Configuration {
 	
 	public static String projectVersion;
 	public static String ontologyDirectory;
+	public static String wordNetDirectory;
 	
 	public static String rdfPrefixStructure;
 	public static String rdfPrefixCharacter;
@@ -38,6 +39,7 @@ public class Configuration {
 			
 			properties.load(loader.getResourceAsStream("edu/arizona/biosemantics/matrixgeneration/config.properties"));
 			ontologyDirectory = properties.getProperty("ontologyDirectory");
+			wordNetDirectory = properties.getProperty("wordNetDirectory");
 		} catch (IOException e) {
 			logger.error("Couldn't read configuration", e);
 		}

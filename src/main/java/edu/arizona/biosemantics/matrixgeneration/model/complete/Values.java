@@ -1,13 +1,10 @@
 package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
-public class Values extends HashMap<Value, Value> implements Cloneable, Iterable<Value> {
+public class Values extends LinkedHashMap<Value, Value> implements Cloneable, Iterable<Value> {
 	
 	public Values() {
 		super();
@@ -46,13 +43,13 @@ public class Values extends HashMap<Value, Value> implements Cloneable, Iterable
 		return this.keySet().iterator().next();
 	}
 
-	public String getCombinedText() {
+	public String getCombinedText(String combiner) {
 		StringBuilder result = new StringBuilder();
 		for(Value value : this.keySet()) {
-			result.append(value.getValue() + " | ");
+			result.append(value.getValue() + combiner);
 		}
 		String r = result.toString();
-		return r.substring(0, r.length() - 3);
+		return r.substring(0, r.length() - combiner.length());
 	}
 
 	@Override
@@ -62,6 +59,11 @@ public class Values extends HashMap<Value, Value> implements Cloneable, Iterable
 
 	public Collection<? extends Value> getAll() {
 		return this.keySet();
+	}
+
+	public void removeAll(Values values) {
+		for(Value value : values)
+			this.remove(value);
 	}
 
 }
