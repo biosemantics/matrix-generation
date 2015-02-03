@@ -28,6 +28,7 @@ import edu.arizona.biosemantics.matrixgeneration.run.IRun;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.AbsentPresentFromBiologicalEntitiesTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.AbsentPresentFromRelationsTranformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.FixConstraintedStructuresTransformer;
+import edu.arizona.biosemantics.matrixgeneration.transform.complete.RemoveAbsentStructuresTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.RemoveAttributeCharactersTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUnitsTransformer;
 import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUnitsTransformer.Unit;
@@ -166,6 +167,13 @@ public class CLIMain {
 
 		    
 		    Injector injector = Guice.createInjector(config);
+		    //always apply
+			completeTransformers.add(injector.getInstance(RemoveAbsentStructuresTransformer.class));
+			completeTransformers.add(injector.getInstance(FixConstraintedStructuresTransformer.class));
+			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
+			rawTransformers.add(injector.getInstance(SortTransformer.class));
+			//		
+			
 		    if(commandLine.hasOption("presence_relation")) {
 			    completeTransformers.add(injector.getInstance(AbsentPresentFromRelationsTranformer.class));
 		    }
@@ -207,14 +215,7 @@ public class CLIMain {
 			}
 			if(commandLine.hasOption("add_source")) {
 				rawTransformers.add(injector.getInstance(AddSourceColumnTransformer.class));
-			}
-			
-			//always apply
-			completeTransformers.add(injector.getInstance(FixConstraintedStructuresTransformer.class));
-			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
-			rawTransformers.add(injector.getInstance(SortTransformer.class));
-			//		    
-		    
+			}		    
 		} catch(ParseException e) {
 			log(LogLevel.ERROR, "Problem parsing parameters", e);
 			throw new IllegalArgumentException(e);
