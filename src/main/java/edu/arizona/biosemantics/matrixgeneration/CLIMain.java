@@ -167,13 +167,11 @@ public class CLIMain {
 
 		    
 		    Injector injector = Guice.createInjector(config);
-		    //always apply
-			completeTransformers.add(injector.getInstance(RemoveAbsentStructuresTransformer.class));
+		    
+		    //order matters
 			completeTransformers.add(injector.getInstance(FixConstraintedStructuresTransformer.class));
-			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
-			rawTransformers.add(injector.getInstance(SortTransformer.class));
-			//		
-			
+			completeTransformers.add(injector.getInstance(RemoveAbsentStructuresTransformer.class));
+					
 		    if(commandLine.hasOption("presence_relation")) {
 			    completeTransformers.add(injector.getInstance(AbsentPresentFromRelationsTranformer.class));
 		    }
@@ -215,7 +213,12 @@ public class CLIMain {
 			}
 			if(commandLine.hasOption("add_source")) {
 				rawTransformers.add(injector.getInstance(AddSourceColumnTransformer.class));
-			}		    
+			}
+			
+			//order matters
+			rawTransformers.add(injector.getInstance(RemoveNotApplicableValuesOnlyColumnsTransformer.class));
+			rawTransformers.add(injector.getInstance(SortTransformer.class));
+			
 		} catch(ParseException e) {
 			log(LogLevel.ERROR, "Problem parsing parameters", e);
 			throw new IllegalArgumentException(e);
