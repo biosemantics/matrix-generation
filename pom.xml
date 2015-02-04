@@ -6,7 +6,7 @@
 	<version>${project.version}</version>
 
 	<properties>
-	    <project.version>0.1.38-SNAPSHOT</project.version>
+		<project.version>0.1.38-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
@@ -25,12 +25,18 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.googlecode.combinatoricslib</groupId>
+			<artifactId>combinatoricslib</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
 		</dependency>
-	
-   		<dependency>
+
+		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>eclipselink</artifactId>
 			<version>2.5.1</version>
@@ -113,7 +119,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>   
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

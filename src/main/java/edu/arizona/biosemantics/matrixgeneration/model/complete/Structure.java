@@ -2,6 +2,7 @@ package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
@@ -57,7 +58,7 @@ public class Structure implements Cloneable, Serializable {
 	public void addCharacterValue(Character character, Value value) {
 		if(values.containsKey(character))
 			log(LogLevel.WARN, "Structure " + this.getName() + " already contains a value for character " + character.getName() + 
-					". Tried to set:\n" + value.toString() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
+					". Set:\n" + value.toString() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
 		if(!values.containsKey(character))
 			values.put(character, new Values());
 		values.get(character).add(value);
@@ -71,8 +72,8 @@ public class Structure implements Cloneable, Serializable {
 		return values.remove(character);
 	}
 
-	public Set<Character> getCharacters() {
-		return values.keySet();
+	public LinkedHashSet<Character> getCharacters() {
+		return new LinkedHashSet<Character>(values.keySet());
 	}
 
 	public String getName() {

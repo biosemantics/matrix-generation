@@ -90,7 +90,7 @@ public class Matrix implements Serializable {
 		for(Taxon taxon : this.getTaxa()) {
 			if(this.hasStructure(structureIdentifier, taxon)) {
 				Structure structure = this.getStructure(structureIdentifier, taxon);
-				structure.getCharacters().remove(character);
+				structure.removeCharacterValues(character);
 				if(structure.getSetCharactersValuesCount() == 0) {
 					structureIdTaxonStructuresMap.get(structureIdentifier).remove(taxon);
 				} else {
