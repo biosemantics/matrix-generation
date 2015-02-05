@@ -26,7 +26,7 @@ public class Structure implements Cloneable, Serializable {
 	
 	private LinkedHashMap<Character, Values> values = new LinkedHashMap<Character, Values>();
 
-	public Structure() { }
+	public Structure() { 	}
 	
 	public Structure(String name) {
 		this.name = name == null ? null : name.trim().isEmpty() ? null : name.trim();
@@ -37,7 +37,7 @@ public class Structure implements Cloneable, Serializable {
 		this.ontologyId = ontologyId == null ? null : ontologyId.trim().isEmpty() ? null : ontologyId.trim();
 	}
 	
-	public Structure(String name, String constraint, String ontologyid) {
+	public Structure(String name, String constraint, String ontologyId) {
 		this.name = name == null ? null : name.trim().isEmpty() ? null : name.trim();
 		this.constraint = constraint == null ? null : constraint.trim().isEmpty() ? null : constraint.trim();
 		this.ontologyId = ontologyId == null ? null : ontologyId.trim().isEmpty() ? null : ontologyId.trim();

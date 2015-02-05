@@ -10,7 +10,7 @@ public class AbsentPresentCharacter extends Character {
 		this.bearedStructure = bearedStructure;
 	}
 
-	public StructureIdentifier getBearedStructure() {
+	public StructureIdentifier getBearedStructureIdentifier() {
 		return bearedStructure;
 	}
 

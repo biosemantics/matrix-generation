@@ -70,7 +70,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 		for(Character character : iteratable) {
 			if(character instanceof AbsentPresentCharacter) {
 				StructureIdentifier bearerStructure = character.getBearerStructureIdentifier();
-				StructureIdentifier bearedStructure = ((AbsentPresentCharacter)character).getBearedStructure();
+				StructureIdentifier bearedStructure = ((AbsentPresentCharacter)character).getBearedStructureIdentifier();
 				log(LogLevel.INFO, "Infer from base character " + character.toString());
 				log(LogLevel.INFO, "Infer from beared structure " + bearedStructure.toString());
 				Set<Structure> inferredSuperclassStructures = getSuperclassStructures(bearedStructure);

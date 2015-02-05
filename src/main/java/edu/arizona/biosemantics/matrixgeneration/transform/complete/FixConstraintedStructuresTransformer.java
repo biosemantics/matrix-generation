@@ -45,7 +45,8 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 				StructureIdentifier oldStructureIdentifier = new StructureIdentifier(structure);
 				fixStructure(structure);
 				StructureIdentifier newStructureIdentifier = new StructureIdentifier(structure);
-				matrix.updateStructure(structure, oldStructureIdentifier,  newStructureIdentifier, taxon);
+				//if(!oldStructureIdentifier.equals(newStructureIdentifier))
+					matrix.updateStructure(structure, oldStructureIdentifier,  newStructureIdentifier, taxon);
 			}
 		}
 	}

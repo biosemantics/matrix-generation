@@ -169,8 +169,9 @@ public class Matrix implements Serializable {
 		
 		Collections.sort(columnList);
 		
+		for(RowHead rowHead : cellValues.keySet()) 
+			cellValues.get(rowHead).clear();
 		columnHeads.clear();
-		this.cellValues.clear();
 		for(int i=0; i<columnList.size(); i++){
 			Column column = columnList.get(i);
 			columnHeads.add(column.getColumnHead());

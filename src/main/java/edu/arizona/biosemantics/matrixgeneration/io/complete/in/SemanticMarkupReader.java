@@ -188,7 +188,8 @@ public class SemanticMarkupReader implements Reader {
 			
 			List<Element> structures = statement.getChildren("biological_entity");
 			for(Element structure : structures) {
-				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure"))
+				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure") && 
+						structure.getAttributeValue("name") != null && !structure.getAttributeValue("name").equals("whole_organism"))
 					taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
 			}
 			
@@ -331,11 +332,17 @@ public class SemanticMarkupReader implements Reader {
 			
 			result.addCharacterValue(character, value);
 			
-			if(!structureIdTaxonStructuresMap.containsKey(character.getBearerStructureIdentifier()))
-				structureIdTaxonStructuresMap.put(character.getBearerStructureIdentifier(), new HashMap<Taxon, List<Structure>>());
-			if(!structureIdTaxonStructuresMap.get(character.getBearerStructureIdentifier()).containsKey(taxon))
-				structureIdTaxonStructuresMap.get(character.getBearerStructureIdentifier()).put(taxon, new LinkedList<Structure>());
-			structureIdTaxonStructuresMap.get(character.getBearerStructureIdentifier()).get(taxon).add(result);
+			/*StructureIdentifier toAddStructureIdentifier = null;
+			if(character instanceof AbsentPresentCharacter) {
+				toAddStructureIdentifier = ((AbsentPresentCharacter) character).getBearedStructureIdentifier();
+			} else if(character instanceof AttributeCharacter) {
+				toAddStructureIdentifier = character.getBearerStructureIdentifier();
+			}
+			if(!structureIdTaxonStructuresMap.containsKey(toAddStructureIdentifier))
+				structureIdTaxonStructuresMap.put(toAddStructureIdentifier, new HashMap<Taxon, List<Structure>>());
+			if(!structureIdTaxonStructuresMap.get(toAddStructureIdentifier).containsKey(taxon))
+				structureIdTaxonStructuresMap.get(toAddStructureIdentifier).put(taxon, new LinkedList<Structure>());
+			structureIdTaxonStructuresMap.get(toAddStructureIdentifier).get(taxon).add(result);*/
 		}
 		
 		return result;
