@@ -119,7 +119,7 @@ public class SemanticMarkupReader implements Reader {
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		File input = new File(inputDirectory);
 		
-		String wholeOrganismOntologyId = readWholeOrganismId(input);
+		String wholeOrganismOntologyId = readWholeOrganismOntologyId(input);
 		
 		for(File file : input.listFiles()) {
 			if(file.isFile()) {
@@ -141,7 +141,7 @@ public class SemanticMarkupReader implements Reader {
 		}
 	}
 	
-	private String readWholeOrganismId(File input) throws JDOMException, IOException {
+	private String readWholeOrganismOntologyId(File input) throws JDOMException, IOException {
 		String result = null;
 		for(File file : input.listFiles()) {
 			if(file.isFile()) {
@@ -166,12 +166,23 @@ public class SemanticMarkupReader implements Reader {
 			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Structure wholeOrganism = new Structure("whole_organism", null, wholeOrganismOntologyId);
 		taxon.setWholeOrganism(wholeOrganism);
-		StructureIdentifier structureIdentifier = new StructureIdentifier(wholeOrganism);
+		addStructureToStructureIdTaxonStructuresMap(wholeOrganism, taxon, structureIdTaxonStructuresMap);
+	}
+
+	private void addStructureToStructureIdTaxonStructuresMap(
+			Structure structure, Taxon taxon, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
+		StructureIdentifier structureIdentifier = new StructureIdentifier(structure);
 		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
 			structureIdTaxonStructuresMap.put(structureIdentifier, new HashMap<Taxon, List<Structure>>());
 		if(!structureIdTaxonStructuresMap.get(structureIdentifier).containsKey(taxon))
 			structureIdTaxonStructuresMap.get(structureIdentifier).put(taxon, new LinkedList<Structure>());
-		structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon).add(wholeOrganism);
+		if(structureIdentifier.getStructureName().equals("whole_organism")) {
+			List<Structure> wholeOrganisms = structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon);
+			wholeOrganisms.clear();
+			wholeOrganisms.add(structure);
+		} else {
+			structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon).add(structure);
+		}
 	}
 
 	private Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
@@ -188,8 +199,7 @@ public class SemanticMarkupReader implements Reader {
 			
 			List<Element> structures = statement.getChildren("biological_entity");
 			for(Element structure : structures) {
-				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure") && 
-						structure.getAttributeValue("name") != null && !structure.getAttributeValue("name").equals("whole_organism"))
+				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure"))
 					taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
 			}
 			
@@ -267,8 +277,7 @@ public class SemanticMarkupReader implements Reader {
 			Taxon taxon, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Structure result = new Structure();
 		String id = structure.getAttributeValue("id");
-		idStructureMap.put(id, result);
-		
+
 		result.setName(structure.getAttributeValue("name"));
 		result.setAlterName(structure.getAttributeValue("alter_name"));
 		result.setConstraint(structure.getAttributeValue("constraint"));
@@ -284,12 +293,11 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(structure.getAttributeValue("provenance"));
 		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
+		if(result.getName().equals("whole_organism"))
+			taxon.setWholeOrganism(result);
+		idStructureMap.put(id, result);
+		this.addStructureToStructureIdTaxonStructuresMap(result, taxon, structureIdTaxonStructuresMap);
 		StructureIdentifier structureIdentifier = new StructureIdentifier(result);
-		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
-			structureIdTaxonStructuresMap.put(structureIdentifier, new HashMap<Taxon, List<Structure>>());
-		if(!structureIdTaxonStructuresMap.get(structureIdentifier).containsKey(taxon))
-			structureIdTaxonStructuresMap.get(structureIdentifier).put(taxon, new LinkedList<Structure>());
-		structureIdTaxonStructuresMap.get(structureIdentifier).get(taxon).add(result);
 		
 		for(Element characterElement : structure.getChildren("character")) {
 			String v = characterElement.getAttributeValue("value");
