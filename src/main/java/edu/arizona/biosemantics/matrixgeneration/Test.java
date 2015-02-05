@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Test {
 
 	public static void main(String[] args) throws Throwable {
-		String[] startArgs = { "-input", "i", "-output", "MatrixTest.csv"
+		String[] startArgs = { "-input", "input", "-output", "MatrixTest.csv"
 				, "-up_taxonomy_inheritance"
 				, "-down_taxonomy_inheritance"
 				, "-presence_relation"
