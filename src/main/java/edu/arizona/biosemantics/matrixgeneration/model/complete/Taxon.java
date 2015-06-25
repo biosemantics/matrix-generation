@@ -12,9 +12,6 @@ import java.util.Set;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
 public class Taxon implements Serializable {
-
-	private String author;
-	private String year;
 	
 	private TaxonIdentification taxonIdentification;
 	private LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();

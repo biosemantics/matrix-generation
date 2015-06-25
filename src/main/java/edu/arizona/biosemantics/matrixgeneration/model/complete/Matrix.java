@@ -15,6 +15,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
+import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
 public class Matrix implements Serializable {
 
@@ -25,11 +26,11 @@ public class Matrix implements Serializable {
 	/* <structure identifier, taxon> to taxon's structure map */
 	private Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap;
 	private Map<Taxon, File> sourceFiles;
-	private Map<RankData, Taxon> rankDataMap;
+	private Map<TaxonIdentification, Taxon> rankDataMap;
 	
 	public Matrix(List<Taxon> rootTaxa, Map<Character, Character> characters, 
 			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, Map<Taxon, File> sourceFiles, 
-			Map<RankData, Taxon> rankTaxaMap) {
+			Map<TaxonIdentification, Taxon> rankTaxaMap) {
 		this.rootTaxa = rootTaxa;
 		this.characters = characters;
 		this.structureIdTaxonStructuresMap = structureIdTaxonStructuresMap;

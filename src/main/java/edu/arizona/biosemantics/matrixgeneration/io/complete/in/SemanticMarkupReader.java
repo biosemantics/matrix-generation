@@ -61,7 +61,7 @@ public class SemanticMarkupReader implements Reader {
 		Map<String, Relation> idRelationMap = new HashMap<String, Relation>();
 		
 		List<TaxonIdentification> taxonIdentifications = new LinkedList<TaxonIdentification>();
-		Map<RankData, Taxon> rankTaxaMap = new HashMap<RankData, Taxon>();
+		Map<TaxonIdentification, Taxon> rankTaxaMap = new HashMap<TaxonIdentification, Taxon>();
 		
 		Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap = 
 				new HashMap<StructureIdentifier, Map<Taxon, List<Structure>>>();
@@ -89,20 +89,27 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	private List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
-			Map<RankData, Taxon> rankTaxaMap) {		
+			Map<TaxonIdentification, Taxon> rankTaxaMap) {		
 		List<Taxon> rootTaxa = new LinkedList<Taxon>();
 		for(TaxonIdentification taxonIdentification : taxonIdentifications) {
 			LinkedList<RankData> rankData = taxonIdentification.getRankData();
-			Taxon taxon = rankTaxaMap.get(rankData.getLast());
+			Taxon taxon = rankTaxaMap.get(taxonIdentification);
 			if(rankData.size() == 1)
 				rootTaxa.add(taxon);
 			if(rankData.size() > 1) {
-				int parentRankIndex = rankData.size() - 2;
+				//int parentRankIndex = rankData.size() - 2;
 				Taxon parentTaxon = null;
-				while(parentTaxon == null && parentRankIndex >= 0) {
-					RankData parentRankData = rankData.get(parentRankIndex);
-					parentTaxon = rankTaxaMap.get(parentRankData);
-					parentRankIndex--;
+				//while(parentTaxon == null && parentRankIndex >= 0) {
+				LinkedList<RankData> parentRankDatas = new LinkedList<RankData>(rankData);
+	    		while(parentRankDatas.size() > 1) {
+	    			parentRankDatas.removeLast();
+	    			TaxonIdentification parentTaxonIdentificaiton = new TaxonIdentification(parentRankDatas, 
+		    				taxonIdentification.getAuthor(), taxonIdentification.getDate());
+					//RankData parentRankData = rankData.get(parentRankIndex);
+					parentTaxon = rankTaxaMap.get(parentTaxonIdentificaiton);
+					//parentRankIndex--;
+					if(parentTaxon != null)
+						break;
 				}
 				if(parentTaxon == null)
 					rootTaxa.add(taxon);
@@ -114,7 +121,7 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Map<Character, Character> characters, 
-			List<TaxonIdentification> taxonNames, Map<RankData, Taxon> rankTaxaMap, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, 
+			List<TaxonIdentification> taxonNames, Map<TaxonIdentification, Taxon> rankTaxaMap, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, 
 			Map<Taxon, File> sourceFilesMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
 		File input = new File(inputDirectory);
@@ -129,14 +136,14 @@ public class SemanticMarkupReader implements Reader {
 				String date = sourceElement.getChildText("date");
 				
 				LinkedList<RankData> rankDatas = createRankDatas(document, rankDataInstances);
-				TaxonIdentification taxonName = new TaxonIdentification(rankDatas, author, date);
-				taxonNames.add(taxonName);
+				TaxonIdentification taxonIdentification = new TaxonIdentification(rankDatas, author, date);
+				taxonNames.add(taxonIdentification);
 				
-				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonName, structureIdTaxonStructuresMap, 
+				Taxon taxon = createTaxon(document, idStructureMap, idRelationMap, characters, taxonIdentification, structureIdTaxonStructuresMap, 
 						wholeOrganismOntologyId);
 				taxon.setSourceFile(file);
 				sourceFilesMap.put(taxon, file);
- 				rankTaxaMap.put(taxonName.getRankData().getLast(), taxon);
+ 				rankTaxaMap.put(taxonIdentification, taxon);
 			}
 		}
 	}
