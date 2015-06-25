@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Column implements Serializable, Comparable<Column> {
+	
+	private static final long serialVersionUID = 1L;
 
 	private ColumnHead columnHead;
 	private Map<RowHead, CellValue> cellValues = new HashMap<RowHead, CellValue>();

@@ -11,6 +11,8 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
 
 public class CellValue implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private List<String> generationProvenance = new LinkedList<String>();
 	private Values source;

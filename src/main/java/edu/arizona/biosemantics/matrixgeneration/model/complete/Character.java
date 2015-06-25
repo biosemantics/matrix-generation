@@ -7,6 +7,8 @@ import java.util.List;
 
 public class Character implements Comparable<Character>, Serializable {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private List<String> generationProvenance = new LinkedList<String>();
 	private String name;
 	private String connector;

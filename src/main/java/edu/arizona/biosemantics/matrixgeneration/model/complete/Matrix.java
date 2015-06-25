@@ -18,6 +18,8 @@ import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
 public class Matrix implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	/* contains the root taxa */
 	private List<Taxon> rootTaxa;

@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Iterator;
 
 public class Values extends LinkedHashMap<Value, Value> implements Cloneable, Iterable<Value> {
+
+	private static final long serialVersionUID = 1L;
 	
 	public Values() {
 		super();

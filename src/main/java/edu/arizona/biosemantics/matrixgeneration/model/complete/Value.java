@@ -8,6 +8,8 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class Value implements Cloneable, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private String value;
 	private String type;

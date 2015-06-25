@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class StructureIdentifier implements Serializable, Comparable<StructureIdentifier> {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private String structureName;
 	private String structureConstraint;
 	private String structureOntologyId;

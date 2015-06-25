@@ -3,6 +3,8 @@ package edu.arizona.biosemantics.matrixgeneration.model.complete;
 import java.io.Serializable;
 
 public class Relation implements Cloneable, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private boolean negated;
 	private String name;

@@ -8,6 +8,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
 
 public class RowHead implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private Taxon source;
 	private String value;

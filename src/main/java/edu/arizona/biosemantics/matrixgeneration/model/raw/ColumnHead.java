@@ -7,6 +7,8 @@ import java.util.List;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 
 public class ColumnHead implements Serializable, Comparable<ColumnHead> {
+	
+	private static final long serialVersionUID = 1L;
 
 	private List<String> generationProvenance = new LinkedList<String>();
 	private String value;

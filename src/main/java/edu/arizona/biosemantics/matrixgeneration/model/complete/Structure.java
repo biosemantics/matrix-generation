@@ -8,6 +8,8 @@ import java.util.Set;
 import edu.arizona.biosemantics.common.log.LogLevel;
 
 public class Structure implements Cloneable, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private String name;
 	private String constraint;

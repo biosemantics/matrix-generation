@@ -3,16 +3,15 @@ package edu.arizona.biosemantics.matrixgeneration.model.raw;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
-
 public class Matrix implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private List<RowHead> rootRowHeads;
 	private List<ColumnHead> columnHeads;
 	private Map<RowHead, List<CellValue>> cellValues;

@@ -13,6 +13,8 @@ import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
 public class Taxon implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private TaxonIdentification taxonIdentification;
 	private LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
