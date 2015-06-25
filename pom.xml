@@ -6,7 +6,7 @@
 	<version>${project.version}</version>
 
 	<properties>
-		<project.version>0.1.41-SNAPSHOT</project.version>
+		<project.version>0.1.42-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
@@ -100,6 +100,23 @@
 			<groupId>edu.arizona.biosemantics.common.ontology</groupId>
 			<artifactId>search</artifactId>
 			<version>0.0.26-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>owlapi-distribution</artifactId>
+					<groupId>net.sourceforge.owlapi</groupId>
+				</exclusion>
+				<!-- exclude as long as this depends on owl api 3.4.5 -->
+				<exclusion>
+					<artifactId>oto-common</artifactId>
+					<groupId>edu.arizona.biosemantics.oto</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- include as long as this depends on owl api 3.4.5 -->
+		<dependency>
+			<groupId>edu.arizona.biosemantics.oto</groupId>
+			<artifactId>oto-common</artifactId>
+			<version>0.0.13-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
@@ -111,6 +128,12 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-distribution</artifactId>
+			<version>3.4.5</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
