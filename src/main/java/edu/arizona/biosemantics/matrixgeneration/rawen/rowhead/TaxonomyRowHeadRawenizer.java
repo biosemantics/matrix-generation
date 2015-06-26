@@ -50,7 +50,7 @@ public class TaxonomyRowHeadRawenizer implements RowHeadRawenizer {
 			if(Rank.aboveGenus(rankData.getRank()))
 				break;
 			else
-				result += rankData.getName() + " ";
+				result = rankData.getName() + " " + result;
 		}
 		return result;
 	}
