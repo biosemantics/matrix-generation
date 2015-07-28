@@ -99,7 +99,7 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.common.ontology</groupId>
 			<artifactId>search</artifactId>
-			<version>0.0.26-SNAPSHOT</version>
+			<version>0.0.26.2-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>owlapi-distribution</artifactId>

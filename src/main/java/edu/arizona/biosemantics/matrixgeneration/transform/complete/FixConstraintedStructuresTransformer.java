@@ -98,8 +98,13 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 				
 				for(Searcher searcher : searchers) {
 					log(LogLevel.DEBUG, "Try searcher " + searcher);
-					List<OntologyEntry> ontologyEntries = searcher.getEntries(searchString, Type.ENTITY);
-					
+					List<OntologyEntry> ontologyEntries = new LinkedList<OntologyEntry>();
+					try {
+						ontologyEntries = searcher.getEntries(searchString, Type.ENTITY);
+					} catch(Throwable t) {
+						log(LogLevel.ERROR, "Searcher failed! ", t);
+					}
+						
 					searchCache.put(searchString, !ontologyEntries.isEmpty());
 					if(!ontologyEntries.isEmpty()) {
 						log(LogLevel.DEBUG, "Found ontology match for " + searchString);
