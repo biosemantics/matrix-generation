@@ -77,4 +77,4 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * Final full unpartitioned raw ouput to use some libraries designed for sparse matrices? e.g. https://java-matrix.org/
 
 ###### References
-* This list is based on a first version from https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
+* This list is a complete version that has been merged from a first version available @ https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
