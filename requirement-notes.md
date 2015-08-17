@@ -1,5 +1,10 @@
 requirement-notes
 --------------------
+* Input: 
+** text capture output
+** ontologies that can be used to map structure (or possibly also quality terms against?)
+
+
 * Matrix consists of rows (Taxa), columns (Characters) and cells (character-values for taxon)
 * Matrix reading from text capture output XML schema: https://github.com/biosemantics/schemas/blob/master/semanticMarkupOutput.xsd
 * Matrix output format: The serialized matrix model (can be deserialized by ETC and fed to matrix review)
@@ -33,7 +38,28 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 ** include modifier into the cell value; with exceptions given per a fixed list (e.g. frequency modifiers or comparison modifiers such as "than").
 ** Ability to deal with negation modifiers e.g. "not"
 
-** Matrix transformation:
+** Matrix transformation
+*** Generate absent present characters and values from existing structures
+*** Generate absent present characters from relations e.g. "stem with leafs" with relation "with" leads to "presence of leaf at stem"
+*** Ontology Implying inheritance: Implication can be determined by ontology relations between individuals. E.g. The Is-a relation can determine If flower is absent, petal must be absent too / If petal is present, flower must be present too. Similarly for the "sub/superclass relation". Other relation types?
+
+*** Removal of attribute characters where structure absent e.g."flower without large petal", usually in markup looks as follows
+  <structure name="flower"> .. </structure>
+  <structure name="petal">
+     <character type="size" value="large"/>
+  </structure>
+  <relation from.. to.. "without/>
+  In the matrix, we usually don't want to see attribute characters such as "size of petal" = large if the text actually expressed that it is absent
+  We usually only want to know "presence of large petal of/at flower" = absent.
+
+*** Filter character types (e.g. show only absent/present characters or only attribute characters)
+*** Split range values: Instead of a single character "length.." "3-5cm" have two characters "length_max" "5cm" / "length_min" "3cm"
+*** Taxonomy descendant inheritance: inherit values from parent to child if the child does not have a value for the character but a value can be applicable
+*** (Taxonomy ancestor inheritance: if all children of parent contain the structure and have the character set the same parent could inherit: if contains structure and value can be applicable) This has been discarded.
+*** Fix constrainted structures
+**** Prepend structure by is_modifier character values and search ontologies for matches: If match found adapt structure accordingly and remove these is_modifier characters/values. Longer constrainted structure matches are preferred.
+
+
 *** frequency modifiers from XML input can enable/disable inheritance e.g. rarely yellow; often red 
 *** position modifiers can ...? e.g. laterally, ...?
 *** Unify measurment units e.g. everything in cm
@@ -41,6 +67,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 
 
 * Provenance tracking: Cell values and characters
+
 
 * CLI to (de-)activate options
 * Memory efficiency: Can we partition the processing on full blown XML input data?
