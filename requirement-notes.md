@@ -39,7 +39,10 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
         * include negation modifier into value e.g. "not red", "rarely red", "seldom red". 
          Negation modifiers: never|seldom|infrequently|rarely|unusually|uncommonly|occasionally
         * frequency modifiers not included: frequency/degree modifiers:sometimes|always|often|normally|generally|typically|usually|in general|mainly|mostly|frequently|commonly|regularly|largely|mostly|primarily|essentially|chiefly|predominantly|ofttimes|oftentimes|conspicuously|rather|completely
-     * Ability to deal with negation modifiers e.g. "not"
+     * Modifier "not". Add to value 
+        * E.g. leave length character value could be "long" with modifier "not". Value would be "not long"
+     * Modifier starting with "than" is added to value. 
+        * E.g. a leave length character value could be "longer", character modifier could be " than width", so the value is "longer than width"
 
 ###### Matrix transformation
  * Generate absent present characters and values from existing structures
