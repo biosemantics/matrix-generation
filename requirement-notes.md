@@ -83,6 +83,9 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 * Memory efficiency: Can we partition the processing on full blown XML input data?
  * e.g. only one root node at a time (should be sufficient if only upward/downward taxonomical inheritances)
  * Final full unpartitioned raw ouput to use some libraries designed for sparse matrices? e.g. https://java-matrix.org/
+* Common model needs and sharing of model between matrix-generation, matrix-review and taxon comparison? 
+  * see [1]; Also matrix generation result has to be manually transformed into matrix-review model
 
 ###### References
-* This list is a complete version that has been merged from a first version available @ https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
+* [1] https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
+   * This list is a complete version that has been merged from a first version available 
