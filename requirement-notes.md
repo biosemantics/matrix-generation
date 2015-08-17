@@ -53,7 +53,8 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * Filter character types (e.g. show only absent/present characters or only attribute characters)
  * Split range values: Instead of a single character `"length.." "3-5cm"` have two characters `"length_max" "5cm"` / `"length_min" "3cm"`
  * Taxonomy descendant inheritance: inherit values from parent to child if the child does not have a value for the character but a value can be applicable
- * (Taxonomy ancestor inheritance: if all children of parent contain the structure and have the character set the same parent could inherit: if contains structure and value can be applicable) This has been discarded.
+ * (Taxonomy ancestor inheritance: if all children of parent contain the structure and have the character set the same parent could inherit: if contains structure and value can be applicable)
+   *  This has been discarded, see https://github.com/biosemantics/matrix-generation/issues/4
  * Fix constrainted structures
   * Prepend structure by is_modifier character values and search ontologies for matches: If match found adapt structure accordingly and remove these is_modifier characters/values. Longer constrainted structure matches are preferred.
  * Remove characters with only a single value over all taxa
