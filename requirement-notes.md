@@ -56,6 +56,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * Generate absent present characters and values from existing structures
  * Generate absent present characters from relations e.g. "stem with leafs" with relation "with" leads to "presence of leaf at stem"
  * Ontology-implying inheritance: Implication can be determined by ontology relations between individuals. E.g. The Is-a relation can determine If flower is absent, petal must be absent too / If petal is present, flower must be present too. Similarly for the "sub/superclass relation". Other relation types?
+    * Dont infer anything if values indicate both absence and presence, that would not make any sense
  * Removal of attribute characters where structure absent e.g."flower without large petal", usually in markup looks as follows
   `<structure name="flower"> .. </structure>
   <structure name="petal">
@@ -86,6 +87,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 * Common model needs and sharing of model between matrix-generation, matrix-review and taxon comparison? 
   * see [1]
   * Matrix generation result has to be manually transformed into matrix-review model inside etc-site project
+* Order of transformation steps (impacts outcome)
 
 ###### References
 * [1] https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
