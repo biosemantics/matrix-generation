@@ -43,6 +43,14 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
         * E.g. leave length character value could be "long" with modifier "not". Value would be "not long"
      * Modifier starting with "than" is added to value. 
         * E.g. a leave length character value could be "longer", character modifier could be " than width", so the value is "longer than width"
+     * Ability to deal with multiple values for a character
+        * `<structure name=plant>
+	<character name=count from=1 to=few char_type=range_value/>
+</structure>
+<structure name=plant>
+	<character name=count value=”numerous” constraint=in carpel/>
+</structure>`
+        This should result in something like `count of plant, value = “1 to few, or numerous in carpel"`
 
 ###### Matrix transformation
  * Generate absent present characters and values from existing structures
