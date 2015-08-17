@@ -36,6 +36,9 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
      * Can be simple: "red"
      * Can be a range e.g. "3cm - 5cm"
      * include modifier into the cell value; with exceptions given per a fixed list (e.g. frequency modifiers or comparison modifiers such as "than").
+        * include negation modifier into value e.g. "not red", "rarely red", "seldom red". 
+         Negation modifiers: never|seldom|infrequently|rarely|unusually|uncommonly|occasionally
+        * frequency modifiers not included: frequency/degree modifiers:sometimes|always|often|normally|generally|typically|usually|in general|mainly|mostly|frequently|commonly|regularly|largely|mostly|primarily|essentially|chiefly|predominantly|ofttimes|oftentimes|conspicuously|rather|completely
      * Ability to deal with negation modifiers e.g. "not"
 
 ###### Matrix transformation
