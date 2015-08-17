@@ -75,3 +75,6 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 * Memory efficiency: Can we partition the processing on full blown XML input data?
  * e.g. only one root node at a time (should be sufficient if only upward/downward taxonomical inheritances)
  * Final full unpartitioned raw ouput to use some libraries designed for sparse matrices? e.g. https://java-matrix.org/
+
+###### References
+* This list is based on a first version from https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
