@@ -84,7 +84,8 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * e.g. only one root node at a time (should be sufficient if only upward/downward taxonomical inheritances)
  * Final full unpartitioned raw ouput to use some libraries designed for sparse matrices? e.g. https://java-matrix.org/
 * Common model needs and sharing of model between matrix-generation, matrix-review and taxon comparison? 
-  * see [1]; Also matrix generation result has to be manually transformed into matrix-review model
+  * see [1]
+  * Matrix generation result has to be manually transformed into matrix-review model inside etc-site project
 
 ###### References
 * [1] https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
