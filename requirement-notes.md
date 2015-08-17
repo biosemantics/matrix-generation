@@ -1,5 +1,6 @@
 requirement-notes
 --------------------
+###### Blackbox
 * Input: 
  * text capture output, see https://github.com/biosemantics/schemas/blob/master/semanticMarkupOutput.xsd
  * ontologies that can be used to map structure (or possibly also quality terms against?)
@@ -7,7 +8,9 @@ requirement-notes
 * Output: 
  * Serialized model (for now)
 
-* Domain 
+* CLI to (de-)activate options (e.g. transformation steps, see below)
+
+###### Domain 
  * Matrix consists of rows (Taxa), columns (Characters) and cells (character-values for taxon)
  * Characters 
    * Types
@@ -34,7 +37,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
      * include modifier into the cell value; with exceptions given per a fixed list (e.g. frequency modifiers or comparison modifiers such as "than").
      * Ability to deal with negation modifiers e.g. "not"
 
-* Matrix transformation
+###### Matrix transformation
  * Generate absent present characters and values from existing structures
  * Generate absent present characters from relations e.g. "stem with leafs" with relation "with" leads to "presence of leaf at stem"
  * Ontology-implying inheritance: Implication can be determined by ontology relations between individuals. E.g. The Is-a relation can determine If flower is absent, petal must be absent too / If petal is present, flower must be present too. Similarly for the "sub/superclass relation". Other relation types?
@@ -60,7 +63,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * Detect value conflicts by looking at provenance
  * Sort taxa by name; Sort characters by structure name and then by name
 
-* CLI to (de-)activate options
+###### Considerations
 * Memory efficiency: Can we partition the processing on full blown XML input data?
  * e.g. only one root node at a time (should be sufficient if only upward/downward taxonomical inheritances)
  * Final full unpartitioned raw ouput to use some libraries designed for sparse matrices? e.g. https://java-matrix.org/
