@@ -81,6 +81,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * Sort taxa by name; Sort characters by structure name and then by name
  * Use synonymy information between structure names to merge/collapse structures and thus characters together
  * Quantity = 0 characters -> absence
+ * modified by “usually” present => absent or present; similarly the other way around and there are also with similar modifiers.
 
 ###### Considerations
 * Memory efficiency: Can we partition the processing on full blown XML input data?
@@ -105,7 +106,9 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
         <relation from="o23" id="r14" name="with" negation="false" to="o24" />
      </statement>`
      * Hong answer: Keep both “presence of long-rhabdome triaene” = absent and also “size of ..” = reduced
-
+ * AbsentPresentFromRelation can create "absent" while AbsentPresentFromBiologicalEntity creates "present", where the latter one is not correct
+    * e.g. where it's not ok: “without oxea” relation while oxea is described as structure in XML, relation: whole_organism without oxea
+    * e.g. wherre it's ok: "stem without oxea" relation while oxea is described as structure in XML, relation: stem without oxea -> presence of oxea at stem "absent" while AbsentPresentFromBiologicalEntity can at the same time say it's "present"
 
 ###### References
 * [1] https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
