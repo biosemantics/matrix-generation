@@ -22,6 +22,7 @@ requirement-notes
         * `<absent/present> of <beared structure> at <bearer structure>`
         * e.g. color of leaf (at whole_organism *ommitted in ouput*) if no <bearer structure> is available.
         * Question: is this sufficient information to tell *which* structure is described
+        * e.g. see discussion/open question: https://github.com/biosemantics/matrix-generation/issues/1
  * Taxon 
     * consists of structures / (organs)
     * always consists at least of structure "whole_organism"
