@@ -59,6 +59,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 *** Fix constrainted structures
 **** Prepend structure by is_modifier character values and search ontologies for matches: If match found adapt structure accordingly and remove these is_modifier characters/values. Longer constrainted structure matches are preferred.
 
+*** Remove characters with only a single value over all taxa
 
 *** frequency modifiers from XML input can enable/disable inheritance e.g. rarely yellow; often red 
 *** position modifiers can ...? e.g. laterally, ...?
@@ -67,6 +68,9 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
 
 
 * Provenance tracking: Cell values and characters
+* Detect value conflicts by looking at provenance
+
+* Sort taxa by name; Sort characters by structure name and then by name
 
 
 * CLI to (de-)activate options
