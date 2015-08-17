@@ -79,6 +79,8 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
  * Provenance tracking: Cell values and characters
  * Detect value conflicts by looking at provenance
  * Sort taxa by name; Sort characters by structure name and then by name
+ * Use synonymy information between structure names to merge/collapse structures and thus characters together
+ * Quantity = 0 characters -> absence
 
 ###### Considerations
 * Memory efficiency: Can we partition the processing on full blown XML input data?
@@ -88,6 +90,22 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
   * see [1]
   * Matrix generation result has to be manually transformed into matrix-review model inside etc-site project
 * Order of transformation steps (impacts outcome)
+* "Structures in markup that are shown as “missing” in relation are parsed as if they were present." [1]
+   * This needs more thought: What is absence is determined later from ontology. Remove all characters from XML?
+* Partition processing phases (1) Determination of what is absent and present (2) Determin the attributes of what is present
+* How to deal with "or reduced"? If absent attribute characters would be removed
+`<statement id="d0_s0">
+        <text>Astrophorida with long-rhabdome triaenes, which may reduced or even absent, and oxeas. </text>
+        <biological_entity id="o23" name="whole_organism" name_original="" ontologyid="http://purl.obolibrary.org/obo/UBERON_0000468" type="structure" />
+        <biological_entity constraint="long-rhabdome" id="o24" name="triaene" name_original="triaenes" type="structure">
+           <character is_modifier="false" name="size" value="reduced" />
+           <character is_modifier="false" modifier="even" name="quantity" value="0" />
+        </biological_entity>
+        <biological_entity id="o25" name="oxea" name_original="oxeas" ontologyid="http://purl.obolibrary.org/obo/PORO_0000431" type="structure" />
+        <relation from="o23" id="r14" name="with" negation="false" to="o24" />
+     </statement>`
+     * Hong answer: Keep both “presence of long-rhabdome triaene” = absent and also “size of ..” = reduced
+
 
 ###### References
 * [1] https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
