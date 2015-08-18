@@ -110,7 +110,7 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
     * e.g. where it's not ok: “without oxea” relation while oxea is described as structure in XML, relation: whole_organism without oxea
     * e.g. wherre it's ok: "stem without oxea" relation while oxea is described as structure in XML, relation: stem without oxea -> presence of oxea at stem "absent" while AbsentPresentFromBiologicalEntity can at the same time say it's "present"
 
-##### Problems
+###### Problems
 present/absent treatment depends on whether we have a type description or character state description:
 character state description
 (1) red leaf present -> presence of leaf = present | color of leaf = red   NOT  presence of red leaf = present
