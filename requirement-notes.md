@@ -110,6 +110,42 @@ Information missing (empty string, e.g. taxon has structure but it is not descri
     * e.g. where it's not ok: “without oxea” relation while oxea is described as structure in XML, relation: whole_organism without oxea
     * e.g. wherre it's ok: "stem without oxea" relation while oxea is described as structure in XML, relation: stem without oxea -> presence of oxea at stem "absent" while AbsentPresentFromBiologicalEntity can at the same time say it's "present"
 
+##### Problems
+present/absent treatment depends on whether we have a type description or character state description:
+character state description
+(1) red leaf present -> presence of leaf = present | color of leaf = red   NOT  presence of red leaf = present
+(2) red leaf absent -> presence of red leaf = absent    NOT    presence of leaf = absent | color of leaf = red
+type description
+(1) lateral leaf present -> presence of lateral leaf = present
+(2) lateral leaf absent -> presence of lateral leaf = absent
+
+We have to differentaitate between character state and type. Consult ontologies to see if whole phrase exists -> type if not consider as character state.
+is_modifier attribute on character also gives additional clue that could be used. It indicates whether the modifier appeared directly before the structure in the original text.
+
+We can differentiate two structure types: 
+- main structures (leaf, stem, fruit) -> utilize part-of knowledge only from ontology not from XML. Most reliable from ontology not from XML.
+- common substructures (apex, base, margin, tip), which can apply to pretty much any main structure (you can assume a list of these terms is known) -> utilize part-of knowledge from XML (not all ontologies manage these, 
+some do, others only contain main structures)
+
+Identity puzzle:
+same structure or different structure?
+e.g. 
+- female leg, male leg (both show up as structure name leg, only difference is the description type was female/male)
+- leaflet can be from first, second, third arch of the leaf. 
+Charaparser may not currently be able to differentiate these sufficiently. Consider a module to enhance output before matrix generation can work on an input that can be assumed to be detailed enough.
+
+Code flow: 
+(1) determine presence first
+(2) for present structures, determine their character values
+(3) filter what columns user wants to see (presence vs. attribute)
+-> hong wants to do analysis first to see if we run into problems where we are not able to identify the identity of structures uniquely enough 
+(which brings us back to structure hierarchy (depths))
+
+###### TODO
+Collect and then analyze datasets of joel (plants) and lorena (birds) 
+* Regarding the problems above.
+* Analze the categories of relations we have. Currently we know: part-of ("of"), location ("above, beyond")
+
 ###### References
 * [1] https://docs.google.com/document/d/1D-VwgFY7qGTpPFPxLHe88X7wXeJX2RTaFHYGrIfAlbM/edit
    * This list is a complete version that has been merged from a first version available 
