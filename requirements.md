@@ -141,7 +141,15 @@ Code flow:
 -> hong wants to do analysis first to see if we run into problems where we are not able to identify the identity of structures uniquely enough 
 (which brings us back to structure hierarchy (depths))
 
-###### TODO
+###### Analysis Results of Example datasets
+* Relation Types
+   * Part-of 54%
+   * Appearance 16%
+   * Location 18%
+   * Derivation .5%
+   * No Relation 11%
+  
+
 Collect and then analyze datasets of joel (plants) and lorena (birds) 
 * Regarding the problems above.
 * Analze the categories of relations we have. Currently we know: part-of ("of"), location ("above, beyond")
