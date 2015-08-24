@@ -148,12 +148,29 @@ Code flow:
    * Appearance 16%
    * No Relation 11%
    * Derivation .5%
-* Relation Modifiers
+* Relation Modifier Types
    * Degree ocurrence 94%
    * Other 5%
    * Location 1%
-
-
+* Entity Constraint Types
+   * Location 66%
+   * Type Identification 33%
+   * Other 1%
+* Character Modifier Types
+   * Degree Attribute 45.5%
+   * Degree Occurence 17.5%
+   * Shape 12.5%
+   * Position 11.5%
+   * Error 8.5%
+   * Orientation 2%
+   * Limitation 1.5%
+   * Timing 1%
+* Character Constraint Types
+   * Location 64%
+   * Error 24%
+   * Character argument (Relation) 7%
+   * Limitation 3%
+   * Shape 2%
 
 Collect and then analyze datasets of joel (plants) and lorena (birds) 
 * Regarding the problems above.
