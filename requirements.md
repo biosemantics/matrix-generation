@@ -144,11 +144,16 @@ Code flow:
 ###### Analysis Results of Example datasets
 * Relation Types
    * Part-of 54%
-   * Appearance 16%
    * Location 18%
-   * Derivation .5%
+   * Appearance 16%
    * No Relation 11%
-  
+   * Derivation .5%
+* Relation Modifiers
+   * Degree ocurrence 94%
+   * Other 5%
+   * Location 1%
+
+
 
 Collect and then analyze datasets of joel (plants) and lorena (birds) 
 * Regarding the problems above.
