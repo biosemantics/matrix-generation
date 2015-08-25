@@ -17,4 +17,6 @@ requirement-notes
 * Character constraint is put as
   * part of character value
   * new relation
+* Map ontology Ids to all terms used (entities, character states, ...?) to reduce effort down the road
+  * This should be a separate module, so it can be optionally put after charaparser, without the other prep steps above. Or make this tool configurable.
  
