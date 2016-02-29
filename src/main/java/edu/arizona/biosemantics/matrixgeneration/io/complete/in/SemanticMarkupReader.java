@@ -42,7 +42,7 @@ public class SemanticMarkupReader implements Reader {
 			xpathFactory.compile("/bio:treatment/meta/source", Filters.element(), null, 
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));
 	private XPathExpression<Element> taxonIdentificationXpath = 
-			xpathFactory.compile("/bio:treatment/taxon_identification[@status='ACCEPTED']/taxon_name", Filters.element(), null,
+			xpathFactory.compile("/bio:treatment/taxon_identification", Filters.element(), null,
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));
 	private XPathExpression<Element> statementXpath = 
 			xpathFactory.compile("//description[@type='morphology']/statement", Filters.element(), null, 
@@ -221,7 +221,15 @@ public class SemanticMarkupReader implements Reader {
 
 	private LinkedList<RankData> createRankDatas(Document document, HashMap<RankData, RankData> rankDataInstances) {
 		LinkedList<RankData> rankDatas = new LinkedList<RankData>();
-		for(Element taxonName : taxonIdentificationXpath.evaluate(document)) {
+		
+		List<Element> taxonNames = new LinkedList<Element>();
+		for(Element taxonIdentifiaction : taxonIdentificationXpath.evaluate(document)) {
+			if(taxonIdentifiaction.getAttributeValue("status").equalsIgnoreCase("accepted")) {
+				taxonNames.addAll(taxonIdentifiaction.getChildren("taxon_name"));
+			}
+		}
+		
+		for(Element taxonName : taxonNames) {
 			String rank = taxonName.getAttributeValue("rank");
 			String date = taxonName.getAttributeValue("date");
 			String authority = taxonName.getAttributeValue("authority");
