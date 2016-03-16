@@ -7,6 +7,7 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
 
 public class TaxonomyDescendantInheritanceTransformer implements Transformer {
@@ -32,6 +33,8 @@ public class TaxonomyDescendantInheritanceTransformer implements Transformer {
 					for(Character character : structure.getCharacters()) {		
 						if(!childStructure.containsCharacter(character)) {
 							Values newValues = structure.getCharacterValues(character).clone();
+							for(Value value : newValues)
+								value.addGenerationProvenance(this);
 							log(LogLevel.DEBUG, "Propagate from " + taxon.toString() + " to descendant: " + child.toString() + ": "
 									+ "Propagate for character: " + character.toString() + ",\t new value: " + newValues.getCombinedText(" | ") + ",\t old value: " + 
 									structure.getCharacterValues(character).getCombinedText(" | "));
