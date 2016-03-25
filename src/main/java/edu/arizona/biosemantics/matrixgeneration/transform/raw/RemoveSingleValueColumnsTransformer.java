@@ -35,5 +35,10 @@ public class RemoveSingleValueColumnsTransformer implements Transformer {
 		}
 		return cellValues.size() <= 1;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 }

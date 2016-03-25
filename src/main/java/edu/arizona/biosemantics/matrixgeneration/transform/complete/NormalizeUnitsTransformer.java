@@ -193,4 +193,9 @@ public class NormalizeUnitsTransformer implements Transformer {
 	public void setUnit(Unit unit) {
 		this.targetUnit = unit;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

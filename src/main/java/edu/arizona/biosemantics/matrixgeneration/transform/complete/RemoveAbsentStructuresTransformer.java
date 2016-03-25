@@ -72,4 +72,10 @@ public class RemoveAbsentStructuresTransformer implements Transformer {
 	private boolean isAbsentRelation(Relation relation) {
 		return absentRelations.contains(relation.getName());
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }
+

@@ -85,5 +85,10 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 	private boolean isPresentRelation(Relation relation) {
 		return presentRelations.contains(relation.getName());
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 }

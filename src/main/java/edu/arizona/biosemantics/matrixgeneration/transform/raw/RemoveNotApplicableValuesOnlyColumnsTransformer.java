@@ -33,5 +33,10 @@ public class RemoveNotApplicableValuesOnlyColumnsTransformer implements Transfor
 		}
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 }

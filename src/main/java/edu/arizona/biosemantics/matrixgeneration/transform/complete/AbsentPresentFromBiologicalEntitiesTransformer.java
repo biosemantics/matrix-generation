@@ -36,5 +36,10 @@ public class AbsentPresentFromBiologicalEntitiesTransformer implements Transform
 				new StructureIdentifier(taxon.getWholeOrganism()), this);
 		return character;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 }

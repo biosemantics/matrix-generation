@@ -84,5 +84,10 @@ public class SplitRangeValuesTransformer implements Transformer {
 			matrix.removeCharacter(character);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 }

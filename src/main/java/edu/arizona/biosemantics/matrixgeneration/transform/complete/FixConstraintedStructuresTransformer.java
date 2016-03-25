@@ -141,5 +141,10 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 		else 
 			structure.setConstraint(constraintAddition + " " + structure.getConstraint());
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 }

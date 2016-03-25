@@ -24,4 +24,9 @@ public class TransformerStrategy implements Transformer {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+	
 }

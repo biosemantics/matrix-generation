@@ -26,7 +26,7 @@ public class TaxonomyDescendantInheritanceTransformer implements Transformer {
 			for(Taxon child : taxon.getChildren()) {
 				log(LogLevel.DEBUG, "Propagate from " + taxon.toString() + " to descendant: " + child.toString());
 				if(!child.containsStructure(structure.getName()))
-					child.addStructure(structure.clone());
+					child.addStructure(structure.clone(false));
 								
 				Set<Structure> childStructures = child.getStructures(structure.getName());
 				for(Structure childStructure : childStructures) {
@@ -48,6 +48,11 @@ public class TaxonomyDescendantInheritanceTransformer implements Transformer {
 		//recursively inherit character values
 		for(Taxon child : taxon.getChildren()) 
 			propagateToDescendants(child);
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
 	}
 
 }

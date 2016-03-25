@@ -153,4 +153,9 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

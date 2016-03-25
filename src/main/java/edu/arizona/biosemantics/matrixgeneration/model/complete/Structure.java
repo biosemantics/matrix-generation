@@ -198,8 +198,7 @@ public class Structure implements Cloneable, Serializable {
 		return values;
 	}
 
-	@Override
-	public Structure clone() {
+	public Structure clone(boolean includeCharacters) {
 		Structure structure = new Structure();
 		structure.setName(this.name);
 		structure.setAlterName(this.alterName);
@@ -216,8 +215,10 @@ public class Structure implements Cloneable, Serializable {
 		structure.setOntologyId(this.ontologyId);
 		structure.setProvenance(this.provenance);
 		structure.setTaxonConstraint(this.taxonConstraint);
-		for(Character character : values.keySet()) {
-			structure.setCharacterValues(character, this.getCharacterValues(character).clone());
+		if(includeCharacters) {
+			for(Character character : values.keySet()) {
+				structure.setCharacterValues(character, this.getCharacterValues(character).clone());
+			}
 		}
 		return structure;
 	}

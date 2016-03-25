@@ -67,6 +67,11 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		
 		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null, this);
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 
 	//if all children of parent contain the structure and have the character set the same
 	/*private Value determineParentValue(Taxon parent, Structure structure, Character character) {

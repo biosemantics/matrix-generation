@@ -24,6 +24,11 @@ public class AddSourceColumnTransformer implements Transformer {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+	
 }
 
 //package edu.arizona.biosemantics.matrixgeneration.transform.raw;
