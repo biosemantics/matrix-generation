@@ -170,7 +170,8 @@ public class RunConfig extends BaseConfig {
 
 	private List<CellValueRawenizer> createCellValueRawenizers() {
 		List<CellValueRawenizer> cellValueRawenizers = new LinkedList<CellValueRawenizer>();
-		cellValueRawenizers.add(new RangeValueCellValueRawenizer(frequencyModifierPatterns, comparisonModifierPatterns));
+		//no longer necessary. Enhance collapses range to value already
+		//cellValueRawenizers.add(new RangeValueCellValueRawenizer(frequencyModifierPatterns, comparisonModifierPatterns));
 		return cellValueRawenizers;
 	}
 	
