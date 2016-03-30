@@ -23,6 +23,7 @@ import com.google.inject.name.Named;
 import edu.arizona.biosemantics.common.taxonomy.Rank;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
+import edu.arizona.biosemantics.matrixgeneration.model.SemanticMarkupProvenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AttributeCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
@@ -315,8 +316,14 @@ public class SemanticMarkupReader implements Reader {
 		StructureIdentifier structureIdentifier = new StructureIdentifier(result);
 		
 		for(Element characterElement : structure.getChildren("character")) {
+			String name = characterElement.getAttributeValue("name");
+			Character character = createCharacter(taxon, structureIdentifier, name);
+			if(!characters.containsKey(character))
+				characters.put(character, character);
+			character = characters.get(character);
+			
 			String v = characterElement.getAttributeValue("value");
-			Value value = new Value(v, this);
+			Value value = new Value(v, new SemanticMarkupProvenance(this.getClass(), taxon, character));
 			value.setCharType(characterElement.getAttributeValue("char_type"));
 			value.setConstraint(characterElement.getAttributeValue("constraint"));
 			value.setConstraintId(characterElement.getAttributeValue("constraintid"));
@@ -347,11 +354,7 @@ public class SemanticMarkupReader implements Reader {
 			} catch(Exception e) {	} 
 			value.setIsModifier(isModifier);
 						
-			String name = characterElement.getAttributeValue("name");
-			Character character = createCharacter(taxon, structureIdentifier, name, value);
-			if(!characters.containsKey(character))
-				characters.put(character, character);
-			character = characters.get(character);
+
 			
 			result.addCharacterValue(character, value);
 			
@@ -371,7 +374,7 @@ public class SemanticMarkupReader implements Reader {
 		return result;
 	}
 
-	private Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name, Value value) {
+	private Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name) {
 		if(name.equals("presence"))
 			return new AbsentPresentCharacter(structureIdentifier, new StructureIdentifier(taxon.getWholeOrganism()), this);
 		return new AttributeCharacter(name, "of", structureIdentifier, this);

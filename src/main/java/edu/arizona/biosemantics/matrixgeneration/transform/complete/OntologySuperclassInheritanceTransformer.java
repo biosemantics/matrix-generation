@@ -18,6 +18,7 @@ import com.google.inject.name.Named;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
@@ -99,7 +100,7 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 
 	private void setPresent(Character inferredCharacter, Taxon taxon, Matrix matrix) {
 		Structure bearerStructure = matrix.getStructure(inferredCharacter.getBearerStructureIdentifier(), taxon);
-		bearerStructure.addCharacterValue(inferredCharacter, new Value("present", this));
+		bearerStructure.addCharacterValue(inferredCharacter, new Value("present", new Provenance(this.getClass())));
 	}
 
 	private boolean isPresent(Character character, Taxon taxon, Matrix matrix) {

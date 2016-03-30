@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
@@ -98,7 +99,7 @@ public class MatrixRawenizer {
 			}
 			
 			if(characterValues.isEmpty()) 
-				taxonsCellValues.add(new NotApplicableCellValue(this));
+				taxonsCellValues.add(new NotApplicableCellValue(new Provenance(this.getClass())));
 			else
 				taxonsCellValues.add(combineCellValues(characterValues));
 		}
@@ -121,7 +122,7 @@ public class MatrixRawenizer {
 			}
 		}
 		
-		return new CellValue(result.substring(0, result.length() - cellValueSeparator.length()).trim(), containedValues, sources, this);
+		return new CellValue(result.substring(0, result.length() - cellValueSeparator.length()).trim(), containedValues, sources, new Provenance(this.getClass()));
 	}
 
 	private Values combineValues(Values values, Values newValues) {

@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
+
 public class Value implements Cloneable, Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -36,14 +38,14 @@ public class Value implements Cloneable, Serializable {
 	private String notes;
 	private boolean isModifier = false;
 
-	private List<String> generationProvenance = new LinkedList<String>();
+	private List<Provenance> generationProvenance = new LinkedList<Provenance>();
 	
-	public Value(String value, Object generationProvenance) {
+	public Value(String value, Provenance generationProvenance) {
 		this.value = value;
 		this.addGenerationProvenance(generationProvenance);
 	}
 	
-	public Value(String value, List<String> generationProvenance) {
+	public Value(String value, List<Provenance> generationProvenance) {
 		this.value = value;
 		this.addGenerationProvenance(generationProvenance);
 	}
@@ -244,7 +246,7 @@ public class Value implements Cloneable, Serializable {
 
 	@Override
 	public Value clone() {
-		Value value = new Value(this.value, new ArrayList<String>(this.generationProvenance));
+		Value value = new Value(this.value, new ArrayList<Provenance>(this.generationProvenance));
 		value.setCharType(this.charType);
 		value.setConstraint(this.constraint);
 		value.setConstraintId(this.constraintId);
@@ -448,18 +450,15 @@ public class Value implements Cloneable, Serializable {
 	}
 	
 	
-	public void addGenerationProvenance(Object generationProvenance) {
-		if(generationProvenance instanceof String)
-			this.generationProvenance.add((String)generationProvenance);
-		else
-			this.generationProvenance.add(generationProvenance.getClass().getSimpleName());
+	public void addGenerationProvenance(Provenance generationProvenance) {
+		this.generationProvenance.add(generationProvenance);
 	}
 	
-	public void addGenerationProvenance(List<String> generationProvenance) {
+	public void addGenerationProvenance(List<Provenance> generationProvenance) {
 		this.generationProvenance.addAll(generationProvenance);
 	}
 	
-	public List<String> getGenerationProvenance() {
+	public List<Provenance> getGenerationProvenance() {
 		return generationProvenance;
 	}
 

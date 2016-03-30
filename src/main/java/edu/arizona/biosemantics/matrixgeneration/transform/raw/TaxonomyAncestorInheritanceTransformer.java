@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
@@ -56,7 +57,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		for(RowHead child : rowHead.getChildren()) {
 			CellValue value = matrix.getCellValue(child, columnHead);
 			if(value instanceof NotApplicableCellValue)
-				return new NotApplicableCellValue(this);
+				return new NotApplicableCellValue(new Provenance(this.getClass()));
 			allValues.addAll(Arrays.asList(value.getText().split(Pattern.quote(cellValueSeparator))));
 		}
 		StringBuilder valueBuilder = new StringBuilder();
@@ -65,7 +66,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		}
 		String newValue = valueBuilder.toString();
 		
-		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null, this);
+		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null, new Provenance(this.getClass()));
 	}
 	
 	@Override

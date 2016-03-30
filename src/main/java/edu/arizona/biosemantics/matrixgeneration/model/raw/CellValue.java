@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
 
@@ -14,33 +15,33 @@ public class CellValue implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private List<String> generationProvenance = new LinkedList<String>();
+	private List<Provenance> generationProvenance = new LinkedList<Provenance>();
 	private Values source;
 	private String text;
 	private Set<String> containedValues = new HashSet<String>();
 	
-	public CellValue(String text, Values source, Object generationProvenance) {
+	public CellValue(String text, Values source, Provenance generationProvenance) {
 		this.text = text;
 		this.containedValues.add(text);
 		this.source = source;
 		this.addGenerationProvenance(generationProvenance);
 	}
 	
-	public CellValue(String text, Value source, Object generationProvenance) {
+	public CellValue(String text, Value source, Provenance generationProvenance) {
 		this.text = text;
 		this.containedValues.add(text);
 		this.source = new Values(source);
 		this.addGenerationProvenance(generationProvenance);
 	}
 	
-	public CellValue(String text, Collection<String> containedValues, Values source, Object generationProvenance) {
+	public CellValue(String text, Collection<String> containedValues, Values source, Provenance generationProvenance) {
 		this.text = text;
 		this.containedValues.addAll(containedValues);
 		this.source = source;
 		this.addGenerationProvenance(generationProvenance);
 	}
 	
-	public CellValue(String text, Collection<String> containedValues, Value source, Object generationProvenance) {
+	public CellValue(String text, Collection<String> containedValues, Value source, Provenance generationProvenance) {
 		this.text = text;
 		this.containedValues.addAll(containedValues);
 		this.source = new Values(source);
@@ -84,14 +85,11 @@ public class CellValue implements Serializable {
 		return true;
 	}
 	
-	public void addGenerationProvenance(Object generationProvenance) {
-		if(generationProvenance instanceof String)
-			this.generationProvenance.add((String)generationProvenance);
-		else
-			this.generationProvenance.add(generationProvenance.getClass().getSimpleName());
+	public void addGenerationProvenance(Provenance generationProvenance) {
+		this.generationProvenance.add(generationProvenance);
 	}
 	
-	public List<String> getGenerationProvenance() {
+	public List<Provenance> getGenerationProvenance() {
 		return generationProvenance;
 	}
 }

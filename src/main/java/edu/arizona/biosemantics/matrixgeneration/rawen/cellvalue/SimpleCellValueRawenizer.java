@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 
@@ -58,7 +59,7 @@ public class SimpleCellValueRawenizer implements CellValueRawenizer {
 			
 		}
 		
-		return new CellValue(result.trim(), value, this);
+		return new CellValue(result.trim(), value, new Provenance(this.getClass()));
 	}
 
 	@Override

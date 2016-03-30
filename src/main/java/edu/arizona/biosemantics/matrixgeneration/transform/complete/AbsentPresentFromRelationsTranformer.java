@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
@@ -44,7 +45,7 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 					matrix.addCharacter(character);
 					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
 					log(LogLevel.DEBUG, "Set present for: " + taxon.toString());
-					structure.addCharacterValue(character, new Value("present", this));
+					structure.addCharacterValue(character, new Value("present", new Provenance(this.getClass())));
 				}
 			}
 			if(isAbsentRelation(relation)) {
@@ -54,7 +55,7 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 					matrix.addCharacter(character);
 					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
 					log(LogLevel.DEBUG, "Set absent for: " + taxon.toString());
-					structure.addCharacterValue(character, new Value("absent", this));
+					structure.addCharacterValue(character, new Value("absent", new Provenance(this.getClass())));
 				}
 			}
 		}

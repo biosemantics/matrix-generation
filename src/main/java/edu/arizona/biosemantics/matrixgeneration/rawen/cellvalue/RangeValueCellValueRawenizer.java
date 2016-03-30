@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 
@@ -50,7 +51,7 @@ public class RangeValueCellValueRawenizer implements CellValueRawenizer {
 			}
 		}*/
 		
-		return new CellValue(result.trim(), Arrays.asList(new String[]{ from, to }), value, this);
+		return new CellValue(result.trim(), Arrays.asList(new String[]{ from, to }), value, new Provenance(this.getClass()));
 	}
 
 	@Override

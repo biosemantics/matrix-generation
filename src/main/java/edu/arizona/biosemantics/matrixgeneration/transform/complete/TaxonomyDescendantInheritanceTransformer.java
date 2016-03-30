@@ -3,6 +3,7 @@ package edu.arizona.biosemantics.matrixgeneration.transform.complete;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
+import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
@@ -34,7 +35,7 @@ public class TaxonomyDescendantInheritanceTransformer implements Transformer {
 						if(!childStructure.containsCharacter(character)) {
 							Values newValues = structure.getCharacterValues(character).clone();
 							for(Value value : newValues)
-								value.addGenerationProvenance(this);
+								value.addGenerationProvenance(new Provenance(this.getClass()));
 							log(LogLevel.DEBUG, "Propagate from " + taxon.toString() + " to descendant: " + child.toString() + ": "
 									+ "Propagate for character: " + character.toString() + ",\t new value: " + newValues.getCombinedText(" | ") + ",\t old value: " + 
 									structure.getCharacterValues(character).getCombinedText(" | "));
