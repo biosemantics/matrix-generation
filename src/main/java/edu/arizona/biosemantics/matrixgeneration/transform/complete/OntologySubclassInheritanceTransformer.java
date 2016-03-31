@@ -15,6 +15,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.model.OntologySubclassProvenance;
 import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
@@ -84,16 +85,16 @@ public class OntologySubclassInheritanceTransformer implements Transformer {
 					for(Taxon taxon : matrix.getTaxa()) 
 						if(isAbsent(character, taxon, matrix)) {
 							log(LogLevel.DEBUG, "Set absent for taxon: " + taxon.toString());
-							setAbsent(inferredCharacter, taxon, matrix);	
+							setAbsent(inferredCharacter, taxon, matrix, bearedStructure);	
 						}
 				}
 			}
 		}
 	}
 
-	private void setAbsent(Character inferredCharacter, Taxon taxon, Matrix matrix) {
+	private void setAbsent(Character inferredCharacter, Taxon taxon, Matrix matrix, StructureIdentifier bearedStructure) {
 		Structure bearerStructure = matrix.getStructure(inferredCharacter.getBearerStructureIdentifier(), taxon);
-		bearerStructure.addCharacterValue(inferredCharacter, new Value("absent", new Provenance(this.getClass())));
+		bearerStructure.addCharacterValue(inferredCharacter, new Value("absent", new OntologySubclassProvenance(bearedStructure)));
 	}
 
 	private boolean isAbsent(Character character, Taxon taxon, Matrix matrix) {

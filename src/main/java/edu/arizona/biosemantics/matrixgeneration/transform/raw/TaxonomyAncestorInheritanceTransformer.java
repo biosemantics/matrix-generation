@@ -11,6 +11,7 @@ import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
+import edu.arizona.biosemantics.matrixgeneration.model.TaxonomyAncestorInheritanceProvenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.CellValue;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
@@ -40,7 +41,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		if(parent != null) {
 			log(LogLevel.DEBUG, "Propagate from " + rowHead.getValue() + " to ancestor: " + parent.getValue());
 			for(ColumnHead columnHead : matrix.getColumnHeads()) { 
-				CellValue newCellValue = determineParentCellValue(matrix, parent, columnHead);
+				CellValue newCellValue = determineParentCellValue(matrix, rowHead, parent, columnHead);
 				log(LogLevel.DEBUG, "Propagate from " + rowHead.getValue() + " to ancestor: " + parent.getValue() + ": "
 						+ "Propagate for column: " + columnHead.getValue() + ",\t new value: " + newCellValue.getText() + ",\t old value: " + 
 						matrix.getCellValue(rowHead, columnHead).getText());
@@ -52,12 +53,12 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		}
 	}
 
-	private CellValue determineParentCellValue(Matrix matrix, RowHead rowHead, ColumnHead columnHead) {
+	private CellValue determineParentCellValue(Matrix matrix, RowHead rowHead, RowHead parent, ColumnHead columnHead) {
 		Set<String> allValues = new HashSet<String>();
-		for(RowHead child : rowHead.getChildren()) {
+		for(RowHead child : parent.getChildren()) {
 			CellValue value = matrix.getCellValue(child, columnHead);
 			if(value instanceof NotApplicableCellValue)
-				return new NotApplicableCellValue(new Provenance(this.getClass()));
+				return new NotApplicableCellValue(new TaxonomyAncestorInheritanceProvenance(rowHead, columnHead));
 			allValues.addAll(Arrays.asList(value.getText().split(Pattern.quote(cellValueSeparator))));
 		}
 		StringBuilder valueBuilder = new StringBuilder();
@@ -66,7 +67,7 @@ public class TaxonomyAncestorInheritanceTransformer implements Transformer {
 		}
 		String newValue = valueBuilder.toString();
 		
-		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null, new Provenance(this.getClass()));
+		return new CellValue(newValue.substring(0, newValue.length() - cellValueSeparator.length()), (Value)null, new TaxonomyAncestorInheritanceProvenance(rowHead, columnHead));
 	}
 	
 	@Override

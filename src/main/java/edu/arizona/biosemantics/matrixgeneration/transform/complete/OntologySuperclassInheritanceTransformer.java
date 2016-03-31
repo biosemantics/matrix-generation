@@ -18,6 +18,7 @@ import com.google.inject.name.Named;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.ontology.search.OntologyAccess;
 import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
+import edu.arizona.biosemantics.matrixgeneration.model.OntologySuperclassProvenance;
 import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.AbsentPresentCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
@@ -91,16 +92,16 @@ public class OntologySuperclassInheritanceTransformer implements Transformer {
 					for(Taxon taxon : matrix.getTaxa()) 
 						if(isPresent(character, taxon, matrix)) {
 							log(LogLevel.DEBUG, "Set present for taxon: " + taxon.toString());
-							setPresent(inferredCharacter, taxon, matrix);
+							setPresent(inferredCharacter, taxon, matrix, bearedStructure);
 						}
 				}
 			}
 		}
 	}
 
-	private void setPresent(Character inferredCharacter, Taxon taxon, Matrix matrix) {
+	private void setPresent(Character inferredCharacter, Taxon taxon, Matrix matrix, StructureIdentifier bearedStructure) {
 		Structure bearerStructure = matrix.getStructure(inferredCharacter.getBearerStructureIdentifier(), taxon);
-		bearerStructure.addCharacterValue(inferredCharacter, new Value("present", new Provenance(this.getClass())));
+		bearerStructure.addCharacterValue(inferredCharacter, new Value("present", new OntologySuperclassProvenance(bearedStructure)));
 	}
 
 	private boolean isPresent(Character character, Taxon taxon, Matrix matrix) {

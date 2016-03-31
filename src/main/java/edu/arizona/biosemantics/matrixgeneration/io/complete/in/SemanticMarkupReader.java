@@ -323,7 +323,7 @@ public class SemanticMarkupReader implements Reader {
 			character = characters.get(character);
 			
 			String v = characterElement.getAttributeValue("value");
-			Value value = new Value(v, new SemanticMarkupProvenance(this.getClass(), taxon, character));
+			Value value = new Value(v, new SemanticMarkupProvenance(taxon, character));
 			value.setCharType(characterElement.getAttributeValue("char_type"));
 			value.setConstraint(characterElement.getAttributeValue("constraint"));
 			value.setConstraintId(characterElement.getAttributeValue("constraintid"));

@@ -1,5 +1,6 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.SemanticMarkupReader;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
 
@@ -8,8 +9,8 @@ public class SemanticMarkupProvenance extends Provenance {
 	private Taxon taxon;
 	private Character character;
 
-	public SemanticMarkupProvenance(Class<?> source, Taxon taxon, Character character) {
-		super(source);
+	public SemanticMarkupProvenance(Taxon taxon, Character character) {
+		super(SemanticMarkupReader.class);
 		this.taxon = taxon;
 		this.character = character;
 	}
