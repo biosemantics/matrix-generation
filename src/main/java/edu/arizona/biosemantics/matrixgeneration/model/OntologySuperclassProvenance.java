@@ -20,5 +20,10 @@ public class OntologySuperclassProvenance extends Provenance {
 		this.sourceStructure = sourceStructure;
 	}
 	
+	@Override
+	public String toString() {
+		return this.source.getSimpleName() + "; " + sourceStructure.getDisplayName();
+	}
+	
 }
 

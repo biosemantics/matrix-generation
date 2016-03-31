@@ -30,5 +30,10 @@ public class TaxonomyAncestorInheritanceProvenance extends Provenance {
 	public void setSourceColumnHead(ColumnHead sourceColumnHead) {
 		this.sourceColumnHead = sourceColumnHead;
 	}
+	
+	@Override
+	public String toString() {
+		return this.source.getSimpleName() + "; " + sourceRowHead.getValue() + "; " + sourceColumnHead.getValue();
+	}
 
 }

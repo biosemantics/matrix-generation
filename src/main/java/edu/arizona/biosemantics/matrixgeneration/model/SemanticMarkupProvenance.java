@@ -30,5 +30,10 @@ public class SemanticMarkupProvenance extends Provenance {
 	public void setCharacter(Character character) {
 		this.character = character;
 	}
+	
+	@Override
+	public String toString() {
+		return this.source.getSimpleName() + "; " + taxon.getTaxonIdentification().getDisplayName() + "; " + character.getDisplayName();
+	}
 
 }

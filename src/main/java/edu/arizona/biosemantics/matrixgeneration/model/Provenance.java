@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Provenance implements Serializable {
 
-	private Class<?> source;
+	protected Class<?> source;
 	
 	public Provenance(Class<?> source) {
 		this.source = source;
@@ -18,6 +18,9 @@ public class Provenance implements Serializable {
 		this.source = source;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return this.source.getSimpleName();
+	}
 	
 }

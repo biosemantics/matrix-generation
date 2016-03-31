@@ -42,6 +42,9 @@ public class TaxonomyDescendantInheritanceProvenance extends Provenance {
 		this.sourceCharacter = sourceCharacter;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return this.source.getSimpleName() + "; " + sourceTaxon.getTaxonIdentification().getDisplayName() + "; " + sourceStructure.getDisplayName() + "; " + sourceCharacter.getDisplayName();
+	}
 
 }
