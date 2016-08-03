@@ -44,6 +44,13 @@ public class AbsentPresentFromRelationsTranformer implements Transformer {
 					log(LogLevel.DEBUG, "Create from presence of relation character: " + character.toString());
 					matrix.addCharacter(character);
 					Structure structure = matrix.getStructure(character.getBearerStructureIdentifier(), taxon);
+					if(structure == null) {
+						StructureIdentifier identifier = character.getBearerStructureIdentifier();
+						structure = new Structure(identifier.getStructureName(), 
+								identifier.getStructureConstraint(), identifier.getStructureOntologyId());
+						matrix.addStructure(structure, taxon);
+						
+					}
 					log(LogLevel.DEBUG, "Set present for: " + taxon.toString());
 					structure.addCharacterValue(character, new Value("present", new Provenance(this.getClass())));
 				}
