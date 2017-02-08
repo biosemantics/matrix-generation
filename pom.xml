@@ -147,7 +147,11 @@
 			<artifactId>owlapi-distribution</artifactId>
 			<version>3.4.5</version>
 		</dependency>
-
+		<dependency>
+			<groupId>edu.arizona.biosemantics.common</groupId>
+			<artifactId>biology</artifactId>
+			<version>0.0.10-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
