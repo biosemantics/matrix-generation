@@ -19,7 +19,8 @@ public class Test {
 				, "-taxon_group", "PLANT"
 				};*/
 		String[] startArgs = {
-			"-input", "C:/Users/rodenhausen.CATNET/Desktop/etcsite/data/users/1/000",
+			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/FiveRanks/",
+			"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/Cathy/",
 			"-output", "Test.csv",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",

@@ -133,8 +133,12 @@ public class SemanticMarkupReader implements Reader {
 			if(file.isFile()) {
 				Document document = saxBuilder.build(file);
 				Element sourceElement = sourceXpath.evaluateFirst(document);
-				String author = sourceElement.getChildText("author");
-				String date = sourceElement.getChildText("date");
+				//Fix author/date values so taxa would be essentially identified using name+authority+date, 
+				//and not affected by author and date of the source publication.
+				//This won't affect the show of pub author and pub date info in the context panel of the TextCapture Review step. Those strings are fetched from input xml file.
+				//This won't affect TaxonComparsion because "sec" info will be manually entered by the users. 
+				String author = "the authors"/*sourceElement.getChildText("author")*/;
+				String date = "the date" /*sourceElement.getChildText("date")*/;
 				
 				LinkedList<RankData> rankDatas = createRankDatas(document, rankDataInstances);
 				TaxonIdentification taxonIdentification = new TaxonIdentification(rankDatas, author, date);
