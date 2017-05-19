@@ -60,7 +60,7 @@ public class Structure implements Cloneable, Serializable {
 	public void addCharacterValue(Character character, Value value) {
 		if(values.containsKey(character))
 			log(LogLevel.WARN, "Structure " + this.getName() + " already contains a value for character " + character.getName() + 
-					". Set:\n" + value.toString() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
+					". Set:\n" + value.getValue() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
 		if(!values.containsKey(character))
 			values.put(character, new Values());
 		values.get(character).add(value);

@@ -47,6 +47,9 @@ public class MatrixRawenizer {
 		this.cellValueSeparator = cellValueSeparator;
 	}
 	
+	/**
+	 * convert complete.Matrix to raw.Matrix
+	 */
 	public edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix convert(edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix matrix) {
 		List<RowHead> rootRowHeads = new LinkedList<RowHead>();
 		List<ColumnHead> columnHeads = new LinkedList<ColumnHead>();
@@ -61,15 +64,20 @@ public class MatrixRawenizer {
 		Collections.sort(characters);
 		for(Character character : characters) {
 			ColumnHead columnHead = columnHeadRawenizer.transform(character);
+			//System.out.println("complete metraix column head:"+columnHead.getValue()+" is "+character.getDisplayName());
 			columnHeads.add(columnHead);
 		}
 		for(RowHead rowHead : rootRowHeads) {
+			//System.out.println("complete metraix raw head:"+rowHead.getValue()+" is "+cellValues.get(rowHead));
 			addRowsAndDescendantsCellValues(rowHead, characters, cellValues);
 		}
 		
 		return new edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix(rootRowHeads, columnHeads, cellValues, matrix);
 	}
 
+	/**
+	 * transform cell values for each row head
+	 */
 	private void addRowsAndDescendantsCellValues(RowHead rowHead, List<Character> characters, Map<RowHead, List<CellValue>> cellValues) {
 		Taxon taxon = rowHead.getSource();
 		List<CellValue> taxonsCellValues = new LinkedList<CellValue>();
@@ -85,6 +93,7 @@ public class MatrixRawenizer {
 				for(Structure structure : structures) {
 					Values newValues = structure.getCharacterValues(character);
 					values = combineValues(values, newValues);
+					//System.out.println(taxon.toString()+":"+structure+" character="+character+" values="+values);
 				}
 				if(values != null)
 					for(Value value : values) {
@@ -94,7 +103,9 @@ public class MatrixRawenizer {
 						} else {
 							CellValue cellValue = cellValueRawenizer.rawenize(value);
 							characterValues.add(cellValue);
+							//System.out.println(character.getDisplayName()+"-->"+cellValue.getText());
 						}
+						
 					}
 			}
 			

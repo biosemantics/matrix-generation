@@ -21,6 +21,8 @@ import com.google.inject.name.Names;
 import edu.arizona.biosemantics.common.biology.TaxonGroup;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.config.RunConfig;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.MicroPIESemanticMarkupReader;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.Reader;
 import edu.arizona.biosemantics.matrixgeneration.io.complete.in.SemanticMarkupReader;
 import edu.arizona.biosemantics.matrixgeneration.io.raw.out.CSVWriter;
 import edu.arizona.biosemantics.matrixgeneration.io.raw.out.SerializeWriter;
@@ -136,6 +138,10 @@ public class CLIMain {
 			try {
 				TaxonGroup taxonGroup = TaxonGroup.valueOf(commandLine.getOptionValue("taxon_group"));
 				config.setTaxonGroup(taxonGroup);
+				if(taxonGroup.equals(TaxonGroup.BACTERIA))
+					config.setReader(MicroPIESemanticMarkupReader.class);
+				else
+					config.setReader(SemanticMarkupReader.class);
 			} catch(Exception e) {
 				log(LogLevel.ERROR, "Unknown Taxon Group");
 		    	throw new IllegalArgumentException("Unknown Taxon Group");
@@ -149,7 +155,7 @@ public class CLIMain {
 		    config.setCompleteTransformers(completeTransformers);
 		    config.setRawTransformers(rawTransformers);
 		    
-		    config.setReader(SemanticMarkupReader.class);
+		  
 		    if(commandLine.hasOption("output_format")) {
 		    	switch(commandLine.getOptionValue("output_format")) {
 		    	case "csv":
