@@ -469,5 +469,9 @@ public class Value implements Cloneable, Serializable {
 	public boolean getIsModifier() {
 		return isModifier;
 	}
+	
+	public String toString(){
+		return this.value;
+	}
 }
 

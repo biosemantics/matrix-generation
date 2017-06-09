@@ -36,16 +36,16 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 
 public class SemanticMarkupReader implements Reader {
 	
-	private String inputDirectory;
-	private SAXBuilder saxBuilder = new SAXBuilder();
-	private XPathFactory xpathFactory = XPathFactory.instance();
-	private XPathExpression<Element> sourceXpath = 
+	protected String inputDirectory;
+	protected SAXBuilder saxBuilder = new SAXBuilder();
+	protected XPathFactory xpathFactory = XPathFactory.instance();
+	protected XPathExpression<Element> sourceXpath = 
 			xpathFactory.compile("/bio:treatment/meta/source", Filters.element(), null, 
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));
-	private XPathExpression<Element> taxonIdentificationXpath = 
+	protected XPathExpression<Element> taxonIdentificationXpath = 
 			xpathFactory.compile("/bio:treatment/taxon_identification", Filters.element(), null,
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));
-	private XPathExpression<Element> statementXpath = 
+	protected XPathExpression<Element> statementXpath = 
 			xpathFactory.compile("//description[@type='morphology']/statement", Filters.element(), null, 
 					Namespace.getNamespace("bio", "http://www.github.com/biosemantics"));	
 
@@ -71,6 +71,7 @@ public class SemanticMarkupReader implements Reader {
 		readPlainData(idStructureMap, idRelationMap, characters, taxonIdentifications, rankTaxaMap, structureIdTaxonStructuresMap, sourceFilesMap);
 		List<Taxon> rootTaxa = createTaxaHierarchy(taxonIdentifications, rankTaxaMap);
 		//rankTaxaMap holds taxon hierarchical relationships
+
 		Matrix result = new Matrix(rootTaxa, characters, structureIdTaxonStructuresMap, sourceFilesMap, rankTaxaMap);
 		//have to pass through id references because maps may not have been complete due to how things are ordered in xml
 		//e.g. there are cases where a relation references a structure mentioned in the subsequent statement 
@@ -79,7 +80,7 @@ public class SemanticMarkupReader implements Reader {
 		return result;
 	}
 
-	private void ensureIdsReferenced(Matrix matrix, Map<String, Structure> idStructureMap,
+	protected void ensureIdsReferenced(Matrix matrix, Map<String, Structure> idStructureMap,
 			Map<String, Relation> idRelationMap) {
 		for(Taxon taxon : matrix.getTaxa()) {
 			for(Relation relation : taxon.getRelations()) {
@@ -95,7 +96,7 @@ public class SemanticMarkupReader implements Reader {
 	 * @param rankTaxaMap
 	 * @return one rootTaxon, update rankTaxaMap
 	 */
-	private List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
+	protected List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
 			Map<TaxonIdentification, Taxon> rankTaxaMap) {		
 		List<Taxon> rootTaxa = new LinkedList<Taxon>();
 		for(TaxonIdentification taxonIdentification : taxonIdentifications) {
@@ -127,7 +128,7 @@ public class SemanticMarkupReader implements Reader {
 		return rootTaxa;
 	}
 
-	private void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Map<Character, Character> characters, 
+	protected void readPlainData(Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap, Map<Character, Character> characters, 
 			List<TaxonIdentification> taxonNames, Map<TaxonIdentification, Taxon> rankTaxaMap, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, 
 			Map<Taxon, File> sourceFilesMap) throws JDOMException, IOException {		
 		HashMap<RankData, RankData> rankDataInstances = new HashMap<RankData, RankData>();
@@ -159,7 +160,7 @@ public class SemanticMarkupReader implements Reader {
 		}
 	}
 	
-	private String readWholeOrganismOntologyId(File input) throws JDOMException, IOException {
+	protected String readWholeOrganismOntologyId(File input) throws JDOMException, IOException {
 		String result = null;
 		for(File file : input.listFiles()) {
 			if(file.isFile()) {
@@ -180,14 +181,14 @@ public class SemanticMarkupReader implements Reader {
 		return result;
 	}
 
-	private void createWholeOrganism(String wholeOrganismOntologyId, Taxon taxon, 
+	protected void createWholeOrganism(String wholeOrganismOntologyId, Taxon taxon, 
 			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Structure wholeOrganism = new Structure("whole_organism", null, wholeOrganismOntologyId);
 		taxon.setWholeOrganism(wholeOrganism);
 		addStructureToStructureIdTaxonStructuresMap(wholeOrganism, taxon, structureIdTaxonStructuresMap);
 	}
 
-	private void addStructureToStructureIdTaxonStructuresMap(
+	protected void addStructureToStructureIdTaxonStructuresMap(
 			Structure structure, Taxon taxon, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		StructureIdentifier structureIdentifier = new StructureIdentifier(structure);
 		if(!structureIdTaxonStructuresMap.containsKey(structureIdentifier))
@@ -203,7 +204,7 @@ public class SemanticMarkupReader implements Reader {
 		}
 	}
 
-	private Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
+	protected Taxon createTaxon(Document document, Map<String, Structure> idStructureMap, 
 			Map<String, Relation> idRelationMap, Map<Character, Character> characters, TaxonIdentification taxonIdentification, 
 			Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap, String wholeOrganismOntologyId) {
 		Taxon taxon = new Taxon();
@@ -217,8 +218,10 @@ public class SemanticMarkupReader implements Reader {
 			
 			List<Element> structures = statement.getChildren("biological_entity");
 			for(Element structure : structures) {
-				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure"))
+				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure")){
 					taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
+				}
+					
 			}
 			
 			List<Element> relations = statement.getChildren("relation");
@@ -230,7 +233,7 @@ public class SemanticMarkupReader implements Reader {
 		return taxon;
 	}
 
-	private LinkedList<RankData> createRankDatas(Document document, HashMap<RankData, RankData> rankDataInstances) {
+	protected LinkedList<RankData> createRankDatas(Document document, HashMap<RankData, RankData> rankDataInstances) {
 		LinkedList<RankData> rankDatas = new LinkedList<RankData>();
 		
 		List<Element> taxonNames = new LinkedList<Element>();
@@ -258,7 +261,7 @@ public class SemanticMarkupReader implements Reader {
 		return rankDatas;
 	}
 
-	private Relation createRelation(Element relation, Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap) {
+	protected Relation createRelation(Element relation, Map<String, Structure> idStructureMap, Map<String, Relation> idRelationMap) {
 		Relation result = new Relation();
 		String fromId = relation.getAttributeValue("from");
 		String toId = relation.getAttributeValue("to");
@@ -299,7 +302,7 @@ public class SemanticMarkupReader implements Reader {
 		return result;
 	}
 
-	private Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters, 
+	protected Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters, 
 			Taxon taxon, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Structure result = new Structure();
 		String id = structure.getAttributeValue("id");
@@ -319,7 +322,7 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(structure.getAttributeValue("provenance"));
 		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
-		if(result.getName().equals("whole_organism"))
+		if(result.getName().equals("whole_organism")&&taxon.getWholeOrganism()==null)
 			taxon.setWholeOrganism(result);
 		idStructureMap.put(id, result);
 		this.addStructureToStructureIdTaxonStructuresMap(result, taxon, structureIdTaxonStructuresMap);
@@ -363,11 +366,8 @@ public class SemanticMarkupReader implements Reader {
 				isModifier = Boolean.parseBoolean(characterElement.getAttributeValue("is_modifier"));
 			} catch(Exception e) {	} 
 			value.setIsModifier(isModifier);
-						
 
-			
 			result.addCharacterValue(character, value);
-			
 			/*StructureIdentifier toAddStructureIdentifier = null;
 			if(character instanceof AbsentPresentCharacter) {
 				toAddStructureIdentifier = ((AbsentPresentCharacter) character).getBearedStructureIdentifier();
@@ -380,12 +380,12 @@ public class SemanticMarkupReader implements Reader {
 				structureIdTaxonStructuresMap.get(toAddStructureIdentifier).put(taxon, new LinkedList<Structure>());
 			structureIdTaxonStructuresMap.get(toAddStructureIdentifier).get(taxon).add(result);*/
 		}
-		
+	
 		return result;
 	}
 
-	private Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name) {
-		if(name.equals("presence"))
+	protected Character createCharacter(Taxon taxon, StructureIdentifier structureIdentifier, String name) {
+		if("presence".equals(name))
 			return new AbsentPresentCharacter(structureIdentifier, new StructureIdentifier(taxon.getWholeOrganism()), this);
 		return new AttributeCharacter(name, "of", structureIdentifier, this);
 	}

@@ -75,6 +75,7 @@ import org.tdwg.rs.ubif._2006.TechnicalMetadata;
 import org.tdwg.rs.ubif._2006.UnivarSimpleStatMeasureData;
 import org.tdwg.rs.ubif._2006.ValueRangeWithClass;
 
+import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.matrixgeneration.config.Configuration;
 import edu.arizona.biosemantics.matrixgeneration.io.ValueTypeDeterminer;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
@@ -1353,5 +1354,6 @@ public class SDDWriter implements Writer {
 		}
 		return charName;
 	}
+
 
 }

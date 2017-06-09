@@ -3,6 +3,12 @@ package edu.arizona.biosemantics.matrixgeneration;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import edu.arizona.biosemantics.common.biology.TaxonGroup;
+import edu.arizona.biosemantics.common.log.LogLevel;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.MicroPIESemanticMarkupReader;
+import edu.arizona.biosemantics.matrixgeneration.io.complete.in.SemanticMarkupReader;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
+
 public class Test {
 
 	public static void main(String[] args) throws Throwable {
@@ -18,13 +24,21 @@ public class Test {
 				, "-output_format", "csv"
 				, "-taxon_group", "PLANT"
 				};*/
+//		Matrix matrix = new MicroPIESemanticMarkupReader("C:/micropie/output").read();
+//		System.out.println("Read matrix:\n Taxa: " + matrix.getTaxaCount() + "\n Characters: " + matrix.getCharactersCount() + 
+//				"\n Values: " + matrix.getSetCharacterValues());
+		/**/
 		String[] startArgs = {
+
 			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/FiveRanks/",
-			"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/Cathy/",
-			"-output", "Test.csv",
+			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/Cathy/",
+			//"-output", "Test.csv",
+
+			"-input", "C:/micropie/output",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
+			"-output", "C:/micropie/outputser/MicroPIETest.csv",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
-			"-taxon_group", "PLANT",
+			"-taxon_group", "BACTERIA",//BACTERIA
 			"-output_format", "csv"
 		};
 		CLIMain.main(startArgs);

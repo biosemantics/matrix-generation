@@ -50,6 +50,12 @@ public class Taxon implements Serializable {
 		if(!structure.getName().equals("whole_organism") || (structure.getName().equals("whole_organism") && structures.get(structure.getName()).isEmpty()))
 			structures.get(structure.getName()).add(structure);
 	}
+	
+	public void appendStructure(Structure structure) {
+		if(!structures.containsKey(structure.getName()))
+			structures.put(structure.getName(), new HashSet<Structure>());
+		structures.get(structure.getName()).add(structure);
+	}
 
 	public Collection<Structure> getStructures() {
 		Collection<Structure> result = new LinkedList<Structure>();
