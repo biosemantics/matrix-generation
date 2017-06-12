@@ -29,6 +29,7 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.AttributeCharact
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Relation;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Statement;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
@@ -89,7 +90,7 @@ public class SemanticMarkupReader implements Reader {
 	}
 
 	protected List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
-			Map<TaxonIdentification, Taxon> rankTaxaMap) {		
+			Map<TaxonIdentification, Taxon> rankTaxaMap) {
 		List<Taxon> rootTaxa = new LinkedList<Taxon>();
 		for(TaxonIdentification taxonIdentification : taxonIdentifications) {
 			LinkedList<RankData> rankData = taxonIdentification.getRankData();
@@ -204,10 +205,14 @@ public class SemanticMarkupReader implements Reader {
 			String text = statement.getChild("text").getText();
 			descriptionBuilder.append(text + ". ");
 			
+			//create and add the statement
+			Statement sent = new Statement(statement.getAttribute("id").toString(),text);
+			taxon.addStatement(sent);
+			
 			List<Element> structures = statement.getChildren("biological_entity");
 			for(Element structure : structures) {
 				if(structure.getAttribute("type") != null && structure.getAttributeValue("type").equals("structure")){
-					taxon.addStructure(createStructure(structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
+					taxon.addStructure(createStructure(sent, structure, idStructureMap, characters, taxon, structureIdTaxonStructuresMap));
 				}
 					
 			}
@@ -290,7 +295,7 @@ public class SemanticMarkupReader implements Reader {
 		return result;
 	}
 
-	protected Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters, 
+	protected Structure createStructure(Statement statement, Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters, 
 			Taxon taxon, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Structure result = new Structure();
 		String id = structure.getAttributeValue("id");
@@ -348,6 +353,8 @@ public class SemanticMarkupReader implements Reader {
 			value.setOntologyId(characterElement.getAttributeValue("ontologyid"));
 			value.setProvenance(characterElement.getAttributeValue("provenance"));
 			value.setNotes(characterElement.getAttributeValue("notes"));
+			
+			value.setStatement(statement);
 			
 			boolean isModifier = false;
 			try {

@@ -8,6 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Table(excel) based matrix
+ */
 public class Matrix implements Serializable {
 
 	private static final long serialVersionUID = 1L;
