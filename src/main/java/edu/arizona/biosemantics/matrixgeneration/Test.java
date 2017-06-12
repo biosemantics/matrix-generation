@@ -29,12 +29,12 @@ public class Test {
 //				"\n Values: " + matrix.getSetCharacterValues());
 		/**/
 		String[] startArgs = {
-			"-input", "C:/micropie/output",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
-			"-output", "C:/micropie/outputser/MicroPIETest.csv",
+			"-input", "C:\\etcsitebase\\etcsite\\data\\users\\4\\test_mg_new",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
+			"-output", "C:/micropie/outputser/MicroPIETest.ser",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
 			"-taxon_group", "BACTERIA",//BACTERIA
-			"-output_format", "csv"
+			"-output_format", "serialize" //serialize,csv
 		};
 		CLIMain.main(startArgs);
 	}
