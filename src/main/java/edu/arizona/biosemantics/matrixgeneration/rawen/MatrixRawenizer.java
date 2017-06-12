@@ -147,6 +147,7 @@ public class MatrixRawenizer {
 
 	private void createDescendantRowHeads(Taxon taxon, RowHead rowHead) {
 		for(Taxon child : taxon.getChildren()) {
+			System.out.println("hierarchy debug:"+child.toString());
 			RowHead childRowHead = rowHeadRawenizer.transform(child);
 			rowHead.addChild(childRowHead);
 			childRowHead.setParent(rowHead);

@@ -71,8 +71,9 @@ public class SemanticMarkupReader implements Reader {
 		
 		readPlainData(idStructureMap, idRelationMap, characters, taxonIdentifications, rankTaxaMap, structureIdTaxonStructuresMap, sourceFilesMap);
 		List<Taxon> rootTaxa = createTaxaHierarchy(taxonIdentifications, rankTaxaMap);
+		//rankTaxaMap holds taxon hierarchical relationships
 		Matrix result = new Matrix(rootTaxa, characters, structureIdTaxonStructuresMap, sourceFilesMap, rankTaxaMap);
-		//have to pass through id references becuase maps may not have been complete due to how things are ordered in xml
+		//have to pass through id references because maps may not have been complete due to how things are ordered in xml
 		//e.g. there are cases where a relation references a structure mentioned in the subsequent statement 
 		//(probably due to charaparser error but it exists there)
 		ensureIdsReferenced(result, idStructureMap, idRelationMap);
@@ -89,6 +90,12 @@ public class SemanticMarkupReader implements Reader {
 		}
 	}
 
+	/**
+	 * 
+	 * @param taxonIdentifications
+	 * @param rankTaxaMap
+	 * @return one rootTaxon, update rankTaxaMap
+	 */
 	protected List<Taxon> createTaxaHierarchy(List<TaxonIdentification> taxonIdentifications, 
 			Map<TaxonIdentification, Taxon> rankTaxaMap) {
 		List<Taxon> rootTaxa = new LinkedList<Taxon>();
@@ -105,7 +112,7 @@ public class SemanticMarkupReader implements Reader {
 	    		while(parentRankDatas.size() > 1) {
 	    			parentRankDatas.removeLast();
 	    			TaxonIdentification parentTaxonIdentificaiton = new TaxonIdentification(parentRankDatas, 
-		    				taxonIdentification.getAuthor(), taxonIdentification.getDate());
+		    				taxonIdentification.getAuthor(), taxonIdentification.getDate()); //This is problematic -- parent taxon's pub metadata (author/date) may not be the same as the child taxon. Solution: make tI.getAuthor() and tI.getDate() returns fixed dummy values.
 					//RankData parentRankData = rankData.get(parentRankIndex);
 					parentTaxon = rankTaxaMap.get(parentTaxonIdentificaiton);
 					//parentRankIndex--;
@@ -133,8 +140,12 @@ public class SemanticMarkupReader implements Reader {
 			if(file.isFile()) {
 				Document document = saxBuilder.build(file);
 				Element sourceElement = sourceXpath.evaluateFirst(document);
-				String author = sourceElement.getChildText("author");
-				String date = sourceElement.getChildText("date");
+				//Make author/date (metadata of the source pub) values fixed so taxa would be essentially identified using name+authority+date, 
+				//This won't affect the show of pub author and pub date info in the context panel of the TextCapture Review step. Those strings are fetched from input xml file.
+				//This won't affect Taxonomy Comparison because "sec" info will be manually entered by the users.
+				//Hong 4/25/17
+				String author = "the authors"/*sourceElement.getChildText("author")*/;
+				String date = "the date" /*sourceElement.getChildText("date")*/;
 				
 				LinkedList<RankData> rankDatas = createRankDatas(document, rankDataInstances);
 				TaxonIdentification taxonIdentification = new TaxonIdentification(rankDatas, author, date);
