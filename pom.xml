@@ -3,13 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.arizona.biosemantics.matrixgeneration</groupId>
 	<artifactId>matrix-generation</artifactId>
-	<version>${project.version}</version>
+	<version>0.1.56-SNAPSHOT-debug</version>
 
 	<properties>
-		<project.version>0.1.56-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<aspectj.version>1.8.10</aspectj.version>
 	</properties>
 	
@@ -78,17 +77,17 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.2</version>
+			<version>1.7.25</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.9</version>
+			<version>1.9.13</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.9</version>
+			<version>1.9.13</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -103,17 +102,17 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.common</groupId>
 			<artifactId>log</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.3-SNAPSHOT-debug</version>
 		</dependency>
 		<dependency>
 			<groupId>edu.arizona.biosemantics.common</groupId>
 			<artifactId>taxonomy</artifactId>
-			<version>0.0.18-SNAPSHOT</version>
+			<version>0.0.24-SNAPSHOT-debug</version>
 		</dependency>
 		<dependency>
 			<groupId>edu.arizona.biosemantics.common.ontology</groupId>
 			<artifactId>search</artifactId>
-			<version>0.0.26.2-SNAPSHOT</version>
+			<version>0.0.26-SNAPSHOT-debug</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>owlapi-distribution</artifactId>
@@ -130,12 +129,12 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.oto</groupId>
 			<artifactId>oto-common</artifactId>
-			<version>0.0.13.3-SNAPSHOT</version>
+			<version>0.0.27-SNAPSHOT-debug</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>
@@ -150,7 +149,7 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.common</groupId>
 			<artifactId>biology</artifactId>
-			<version>0.0.11-SNAPSHOT</version>
+			<version>0.0.10-SNAPSHOT-debug</version>
 		</dependency>
 	</dependencies>
 
@@ -165,7 +164,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.6.1</version>
 				<configuration>
 				  <source>${java.version}</source>
 				  <target>${java.version}</target>
@@ -176,7 +175,7 @@
 			 <plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.9</version>
+				<version>1.10</version>
 				<configuration>
 				  <!--<showWeaveInfo>true</showWeaveInfo>-->
 				  <source>${java.version}</source>
