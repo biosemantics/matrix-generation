@@ -148,8 +148,10 @@ public class Taxon implements Serializable {
 
 	public List<String> getStatementString() {
 		List<String> statements = new ArrayList();
-		for(Statement st:this.statements){
-			statements.add(st.getText());
+		if(this.statements!=null){
+			for(Statement st:this.statements){
+				statements.add(st.getText());
+			}
 		}
 		return statements;
 	}
