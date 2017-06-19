@@ -29,8 +29,13 @@ public class Test {
 //				"\n Values: " + matrix.getSetCharacterValues());
 		/**/
 		String[] startArgs = {
-			"-input", "C:\\etcsitebase\\etcsite\\data\\users\\4\\test_mg_new",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
-			"-output", "C:/micropie/outputser/MicroPIETest.ser",
+
+			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/FiveRanks/",
+			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/Cathy/",
+			//"-output", "Test.csv",
+
+			"-input", "C:\\etcsitebase\\etcsite\\data\\users\\4\\smicropie_demo_output_by_TC_task_Micropie_tc_demo1_06-18-2017",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
+			"-output", "C:\\etcsitebase\\etcsite\\data\\matrixGeneration\\403\\Matrix.ser",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
 			"-taxon_group", "BACTERIA",//BACTERIA
