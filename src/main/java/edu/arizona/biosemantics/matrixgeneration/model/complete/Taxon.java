@@ -2,11 +2,13 @@ package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
@@ -19,12 +21,16 @@ public class Taxon implements Serializable {
 	private LinkedHashSet<Taxon> children = new LinkedHashSet<Taxon>();
 	
 	private Structure wholeOrganism;
+	//structure name, structures
 	private LinkedHashMap<String, Set<Structure>> structures = new LinkedHashMap<String, Set<Structure>>();
 	private LinkedHashMap<Relation, Relation> relations = new LinkedHashMap<Relation, Relation>();
 	
 	private String description;
 	private File sourceFile;
 	private Taxon parent;
+	
+	//Jin add May, 2017
+	private List<Statement> statements = new ArrayList();
 	
 	public Taxon() { }
 	
@@ -136,5 +142,22 @@ public class Taxon implements Serializable {
 		this.sourceFile = sourceFile;
 	}
 
+	public void addStatement(Statement statement) {
+		this.statements.add(statement);		
+	}
+
+	public List<String> getStatementString() {
+		List<String> statements = new ArrayList();
+		if(this.statements!=null){
+			for(Statement st:this.statements){
+				statements.add(st.getText());
+			}
+		}
+		return statements;
+	}
+	
+	public List<Statement> getStatement(){
+		return statements;
+	}
 
 }

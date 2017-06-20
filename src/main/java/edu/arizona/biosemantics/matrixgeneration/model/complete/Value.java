@@ -37,6 +37,8 @@ public class Value implements Cloneable, Serializable {
 	private String provenance;
 	private String notes;
 	private boolean isModifier = false;
+	
+	private Statement statement;
 
 	private List<Provenance> generationProvenance = new LinkedList<Provenance>();
 	
@@ -132,6 +134,10 @@ public class Value implements Cloneable, Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public void setStatement(Statement statement){
+		this.statement = statement;
 	}
 
 	public void setOntologyId(String ontologyId) {
@@ -244,6 +250,11 @@ public class Value implements Cloneable, Serializable {
 		return notes;
 	}
 
+	@JsonIgnore
+	public Statement getStatement() {
+		return statement;
+	}
+	
 	@Override
 	public Value clone() {
 		Value value = new Value(this.value, new ArrayList<Provenance>(this.generationProvenance));
@@ -269,6 +280,7 @@ public class Value implements Cloneable, Serializable {
 		value.setType(this.type);
 		value.setUnit(this.unit);
 		value.setUpperRestricted(this.upperRestricted);
+		value.setStatement(statement);
 		return value;
 	}
 
