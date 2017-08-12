@@ -14,6 +14,7 @@ import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 import edu.arizona.biosemantics.matrixgeneration.model.SemanticMarkupProvenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Relation;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.Statement;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
@@ -37,12 +38,16 @@ public class MicroPIESemanticMarkupReader extends SemanticMarkupReader{
 		createWholeOrganism(wholeOrganismOntologyId, taxon, structureIdTaxonStructuresMap);
 		for (Element statement : statementXpath.evaluate(document)) {
 			String text = statement.getChild("text").getText();
-			descriptionBuilder.append(text + ". ");
+			descriptionBuilder.append(text);//+ ". " micropie results contain dot.
+			
+			//create and add the statement
+			Statement sent = new Statement(statement.getAttribute("id").getValue(),text);
+			taxon.addStatement(sent);
 			
 			List<Element> bioEntities = statement.getChildren("biological_entity");
 			for(Element bioentity : bioEntities) {
 				if(bioentity.getAttribute("type") != null && bioentity.getAttributeValue("type").equals("structure")){
-					Structure s = createStructure(bioentity, idStructureMap, characters, taxon, structureIdTaxonStructuresMap);
+					this.createStructure(sent, bioentity, idStructureMap, characters, taxon, structureIdTaxonStructuresMap);
 				}
 			}
 			
@@ -56,12 +61,10 @@ public class MicroPIESemanticMarkupReader extends SemanticMarkupReader{
 	}
 	
 	@Override
-	protected Structure createStructure(Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters, 
+	protected Structure createStructure(Statement statement, Element structure, Map<String, Structure> idStructureMap, Map<Character, Character> characters, 
 			Taxon taxon, Map<StructureIdentifier, Map<Taxon, List<Structure>>> structureIdTaxonStructuresMap) {
 		Structure wholeOgranism = taxon.getWholeOrganism();
-		
 		StructureIdentifier structureIdentifier = new StructureIdentifier(wholeOgranism);
-		
 		for(Element characterElement : structure.getChildren("character")) {
 			String name = characterElement.getAttributeValue("name");
 			Character character = createCharacter(taxon, structureIdentifier, name);
@@ -94,7 +97,8 @@ public class MicroPIESemanticMarkupReader extends SemanticMarkupReader{
 			value.setOntologyId(characterElement.getAttributeValue("ontologyid"));
 			value.setProvenance(characterElement.getAttributeValue("provenance"));
 			value.setNotes(characterElement.getAttributeValue("notes"));
-			
+			value.setStatement(statement);
+			System.out.println("create value:["+value.getValue()+"] ====> sources:"+statement.getText());
 			boolean isModifier = false;
 			try {
 				isModifier = Boolean.parseBoolean(characterElement.getAttributeValue("is_modifier"));

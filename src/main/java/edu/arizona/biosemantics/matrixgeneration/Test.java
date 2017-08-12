@@ -33,13 +33,12 @@ public class Test {
 			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/FiveRanks/",
 			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/Cathy/",
 			//"-output", "Test.csv",
-
 			"-input", "C:/micropie/output",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
 			"-output", "C:/micropie/outputser/MicroPIETest.csv",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
 			"-taxon_group", "BACTERIA",//BACTERIA
-			"-output_format", "csv"
+			"-output_format", "serialize" //serialize,csv
 		};
 		CLIMain.main(startArgs);
 	}

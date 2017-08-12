@@ -11,6 +11,8 @@ import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix;
 
+
+//serialize raw matrix
 public class SerializeWriter implements Writer {
 
 	private String outputFile;

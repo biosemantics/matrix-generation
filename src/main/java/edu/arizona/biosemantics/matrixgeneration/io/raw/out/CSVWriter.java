@@ -19,6 +19,8 @@ import edu.arizona.biosemantics.matrixgeneration.model.raw.ColumnHead;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.raw.RowHead;
 
+
+//raw matrix to csv
 public class CSVWriter implements Writer {
 
 	private String outputFile;
