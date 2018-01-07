@@ -486,4 +486,3 @@ public class Value implements Cloneable, Serializable {
 		return this.value;
 	}
 }
-

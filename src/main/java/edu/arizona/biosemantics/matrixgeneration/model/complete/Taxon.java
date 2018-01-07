@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
 
 public class Taxon implements Serializable {

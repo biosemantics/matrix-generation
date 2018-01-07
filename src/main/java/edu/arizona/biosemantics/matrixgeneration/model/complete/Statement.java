@@ -35,3 +35,4 @@ public class Statement implements Cloneable, Serializable {
 		this.text = text;
 	}
 }
+
