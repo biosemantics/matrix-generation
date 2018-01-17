@@ -17,3 +17,5 @@ hs_err_pid*
 .classpath
 .settings
 .settings/*
+/debug.log
+/Test.csv
