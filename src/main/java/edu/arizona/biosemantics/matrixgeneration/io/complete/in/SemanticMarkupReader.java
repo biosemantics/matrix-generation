@@ -341,12 +341,15 @@ public class SemanticMarkupReader implements Reader {
 			
 			String v = characterElement.getAttributeValue("value");
 			Value value = new Value(v, new SemanticMarkupProvenance(taxon, character));
+			value.setIsModifier(Boolean.getBoolean(characterElement.getAttributeValue("is_modifier")));
+			value.setValueOriginal(characterElement.getAttributeValue("value_original"));
 			value.setCharType(characterElement.getAttributeValue("char_type"));
 			value.setConstraint(characterElement.getAttributeValue("constraint"));
 			value.setConstraintId(characterElement.getAttributeValue("constraintid"));
 			value.setFrom(characterElement.getAttributeValue("from"));
 			value.setFromInclusive(characterElement.getAttributeValue("from_inclusive"));
 			value.setFromUnit(characterElement.getAttributeValue("from_unit"));
+			value.setFromModifier(characterElement.getAttributeValue("from_modifier"));
 			value.setModifier(characterElement.getAttributeValue("modifier"));
 			value.setGeographicalConstraint(characterElement.getAttributeValue("geographical_constraint"));
 			value.setInBrackets(characterElement.getAttributeValue("in_brackets"));
@@ -357,6 +360,7 @@ public class SemanticMarkupReader implements Reader {
 			value.setTo(characterElement.getAttributeValue("to"));
 			value.setToInclusive(characterElement.getAttributeValue("to_inclusive"));
 			value.setToUnit(characterElement.getAttributeValue("to_unit"));
+			value.setToModifier(characterElement.getAttributeValue("to_modifier"));
 			value.setType(characterElement.getAttributeValue("type"));
 			value.setUpperRestricted(characterElement.getAttributeValue("upper_restricted"));
 			value.setUnit(characterElement.getAttributeValue("unit"));
@@ -364,6 +368,9 @@ public class SemanticMarkupReader implements Reader {
 			value.setOntologyId(characterElement.getAttributeValue("ontologyid"));
 			value.setProvenance(characterElement.getAttributeValue("provenance"));
 			value.setNotes(characterElement.getAttributeValue("notes"));
+			value.setNegation(characterElement.getAttributeValue("negation"));
+			value.setEstablishmentMeans(characterElement.getAttributeValue("establishment_means"));
+			value.setSrc(characterElement.getAttributeValue("src"));
 			
 			value.setStatement(statement);
 			

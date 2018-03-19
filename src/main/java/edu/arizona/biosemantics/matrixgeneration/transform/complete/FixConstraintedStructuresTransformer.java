@@ -34,7 +34,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 	public FixConstraintedStructuresTransformer(TaxonGroup taxonGroup) {
 		searchers = new LinkedList<Searcher>();
 
-		for(Ontology ontology : TaxonGroupOntology.getOntologies(taxonGroup)) 
+		for(Ontology ontology : TaxonGroupOntology.getEntityOntologies(taxonGroup)) 
 			searchers.add(new FileSearcher(ontology, Configuration.ontologyDirectory, Configuration.wordNetDirectory));
 	}
 	
@@ -100,7 +100,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 					log(LogLevel.DEBUG, "Try searcher " + searcher);
 					List<OntologyEntry> ontologyEntries = new LinkedList<OntologyEntry>();
 					try {
-						ontologyEntries = searcher.getEntries(searchString, Type.ENTITY);
+						ontologyEntries = searcher.getEntityEntries(searchString, "", "");
 					} catch(Throwable t) {
 						log(LogLevel.ERROR, "Searcher failed! ", t);
 					}

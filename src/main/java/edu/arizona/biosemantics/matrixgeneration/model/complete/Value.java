@@ -14,6 +14,7 @@ public class Value implements Cloneable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String value;
+	private String valueOriginal; //added
 	private String type;
 	private String constraint;
 	private String charType;
@@ -21,6 +22,7 @@ public class Value implements Cloneable, Serializable {
 	private String from;
 	private String fromInclusive;
 	private String fromUnit;
+	private String fromModifier;//added 3.20.18
 	private String modifier;
 	private String geographicalConstraint;
 	private String inBrackets;
@@ -31,16 +33,21 @@ public class Value implements Cloneable, Serializable {
 	private String to;
 	private String toInclusive;
 	private String toUnit;
+	private String toModifier;//added
 	private String upperRestricted;
 	private String unit;
 	private String ontologyId;
 	private String provenance;
 	private String notes;
-	private boolean isModifier = false;
+	private boolean isModifier; 
+	private String negation; //added
+	private String establishmentMeans;//added
+	private String src;//added
+
 	
 	private Statement statement;
-
-	private List<Provenance> generationProvenance = new LinkedList<Provenance>();
+	
+    private List<Provenance> generationProvenance = new LinkedList<Provenance>();
 	
 	public Value(String value, Provenance generationProvenance) {
 		this.value = value;
@@ -51,6 +58,58 @@ public class Value implements Cloneable, Serializable {
 		this.value = value;
 		this.addGenerationProvenance(generationProvenance);
 	}
+	
+	public String getValueOriginal() {
+		return valueOriginal;
+	}
+
+	public void setValueOriginal(String valueOriginal) {
+		this.valueOriginal = valueOriginal;
+	}
+
+	public String getFromModifier() {
+		return fromModifier;
+	}
+
+	public void setFromModifier(String fromModifier) {
+		this.fromModifier = fromModifier;
+	}
+
+	public String getToModifier() {
+		return toModifier;
+	}
+
+	public void setToModifier(String toModifier) {
+		this.toModifier = toModifier;
+	}
+
+	public String getNegation() {
+		return negation;
+	}
+
+	public void setNegation(String negation) {
+		this.negation = negation;
+	}
+
+	public String getEstablishmentMeans() {
+		return establishmentMeans;
+	}
+
+	public void setEstablishmentMeans(String establishmentMeans) {
+		this.establishmentMeans = establishmentMeans;
+	}
+
+	public String getSrc() {
+		return src;
+	}
+
+	public void setSrc(String src) {
+		this.src = src;
+	}
+
+
+
+	
 	
 	public String getValue() {
 		return value;
@@ -485,4 +544,6 @@ public class Value implements Cloneable, Serializable {
 	public String toString(){
 		return this.value;
 	}
+
+
 }
