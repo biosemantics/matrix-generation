@@ -171,6 +171,8 @@ public class SemanticMarkupReader implements Reader {
 						String name = structure.getAttributeValue("name");
 						String constraint = structure.getAttributeValue("constraint");
 						String ontologyId = structure.getAttributeValue("ontologyid"); //TODO: parse ontologyid value
+						//ontologyid="http://purl.obolibrary.org/obo/PO_0025060[blade:cardinal part of multi-tissue plant structure/laminablade:1.0];"
+						ontologyId = ontologyId!=null && ontologyId.contains("[")? ontologyId.substring(0, ontologyId.indexOf("[")):ontologyId;
 						if(name != null && name.equals("whole_organism") && (constraint == null || constraint.trim().isEmpty())) {
 							result = ontologyId;
 						}
@@ -211,7 +213,7 @@ public class SemanticMarkupReader implements Reader {
 		taxon.setTaxonIdentification(taxonIdentification);
 		StringBuilder descriptionBuilder = new StringBuilder();
 		
-		createWholeOrganism(wholeOrganismOntologyId, taxon, structureIdTaxonStructuresMap);//??
+		createWholeOrganism(wholeOrganismOntologyId, taxon, structureIdTaxonStructuresMap);
 		for (Element statement : statementXpath.evaluate(document)) {
 			String text = statement.getChild("text").getText();
 			descriptionBuilder.append(text + ". ");
@@ -326,8 +328,16 @@ public class SemanticMarkupReader implements Reader {
 		result.setProvenance(structure.getAttributeValue("provenance"));
 		result.setTaxonConstraint(structure.getAttributeValue("taxon_constraint"));
 		
-		if(result.getName().equals("whole_organism")&&taxon.getWholeOrganism()==null)
-			taxon.setWholeOrganism(result);
+		//bad code, should link character info to the existing WholeOrganism
+		//if(result.getName().equals("whole_organism")&&taxon.getWholeOrganism()==null)
+		//	taxon.setWholeOrganism(result);
+		if(result.getName().equals("whole_organism")){
+			if(taxon.getWholeOrganism()==null)
+				taxon.setWholeOrganism(result);
+			else
+				result = taxon.getWholeOrganism();
+		}
+					
 		idStructureMap.put(id, result);
 		this.addStructureToStructureIdTaxonStructuresMap(result, taxon, structureIdTaxonStructuresMap);
 		StructureIdentifier structureIdentifier = new StructureIdentifier(result);
