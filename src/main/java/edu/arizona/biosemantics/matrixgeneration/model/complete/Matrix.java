@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
-
-public class Matrix implements Serializable {
+import com.google.gwt.user.client.rpc.IsSerializable;
+public class Matrix implements Serializable, IsSerializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -226,6 +227,25 @@ public class Matrix implements Serializable {
 			taxonStructuresMap.put(taxon,  new LinkedList<Structure>());
 		List<Structure> taxonStructures = taxonStructuresMap.get(taxon);
 		taxonStructures.add(structure);
+		
+		//update character
+		for(Character character: this.getCharacters()){
+			StructureIdentifier si = character.getBearerStructureIdentifier();//keep character identity
+			if(si.compareTo(oldStructureIdentifier)==0){
+				Character newCharacter = new AttributeCharacter(character.getName(), "of", 
+						new StructureIdentifier(structure), this);	
+				//update characters, remove old, put in new
+				characters.remove(character);
+				characters.put(newCharacter, newCharacter);
+
+				//update structure.values
+				Values v = structure.getCharacterValues(character); //use existing character value for new character
+				structure.removeCharacterValues(character);
+				structure.setCharacterValues(newCharacter, v);
+			}
+		}
+
+		
 	}
 	
 }

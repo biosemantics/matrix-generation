@@ -50,7 +50,14 @@ public class Structure implements Cloneable, Serializable {
 	}
 
 	public Values getCharacterValues(Character character) {
-		return values.get(character);
+		Set<Character> chars = values.keySet();
+		for(Character chara:chars){
+			if(chara.equals(character)){
+				return values.get(chara); //same structure (same objectid) but values become null
+			}
+		}
+		return null;
+		//return values.get(character);
 	}
 	
 	public int getSetCharactersValuesCount() {
@@ -60,9 +67,10 @@ public class Structure implements Cloneable, Serializable {
 	public void addCharacterValue(Character character, Value value) {
 		if(values.containsKey(character))
 			log(LogLevel.WARN, "Structure " + this.getName() + " already contains a value for character " + character.getName() + 
-					". Set:\n" + value.getValue() + "\nwhere\n" + values.get(character).toString() + "\nwas already set.");
+					". Add new value:" + value.getValue() + "\nto existing value\n" + values.get(character).toString() + "\n");
 		if(!values.containsKey(character))
 			values.put(character, new Values());
+		
 		values.get(character).add(value);
 	}
 

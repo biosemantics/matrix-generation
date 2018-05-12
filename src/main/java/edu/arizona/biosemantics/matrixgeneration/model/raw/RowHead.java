@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
-
-public class RowHead implements Serializable {
+import com.google.gwt.user.client.rpc.IsSerializable;
+public class RowHead implements Serializable, IsSerializable {
 	
 	private static final long serialVersionUID = 1L;
 

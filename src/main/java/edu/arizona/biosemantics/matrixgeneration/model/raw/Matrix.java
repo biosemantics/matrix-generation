@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * Table(excel) based matrix
  */
-public class Matrix implements Serializable {
+public class Matrix implements Serializable, IsSerializable {
 
 	private static final long serialVersionUID = 1L;
 	

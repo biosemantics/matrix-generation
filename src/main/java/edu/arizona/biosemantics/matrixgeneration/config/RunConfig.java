@@ -50,6 +50,7 @@ public class RunConfig extends BaseConfig {
 			Arrays.asList(new String[] { "with", "attach", "include", "attached", "included", "part_of", "part of"}));
 	private Set<String> absentRelation = new HashSet<String>(
 			Arrays.asList(new String[] { "without", "lack of", "devoid of", "missing", "misses" }));
+	//TODO update modifier lists
 	private Set<String> frequencyModifiers = new HashSet<String>(Arrays.asList(new String[] { "frequently", "rarely", "often" }));
 	private Set<String> negationModifiers = new HashSet<String>(Arrays.asList(new String[] { "not" }));
 	private Set<String> comparisonModifiers = new HashSet<String>(Arrays.asList(new String[] { "than" } ));

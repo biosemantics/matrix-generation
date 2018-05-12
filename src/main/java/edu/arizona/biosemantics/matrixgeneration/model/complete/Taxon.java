@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
-
-public class Taxon implements Serializable {
+import com.google.gwt.user.client.rpc.IsSerializable;
+public class Taxon implements Serializable, IsSerializable {
 	
 	private static final long serialVersionUID = 1L;
 	

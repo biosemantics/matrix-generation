@@ -49,7 +49,7 @@ public class MatrixGenerationRun extends AbstractRun {
 		log(LogLevel.INFO, "Complete Transformers: " + completeTransformers);
 		log(LogLevel.INFO, "Raw Transformers: " + rawTransformers);
 		
-		Matrix matrix = reader.read();
+		Matrix matrix = reader.read();//?? different whole_organism structure in taxon vs. idtaxonstructure map! the structure in taxon has empty values!
 		log(LogLevel.INFO, "Read matrix:\n Taxa: " + matrix.getTaxaCount() + "\n Characters: " + matrix.getCharactersCount() + 
 				"\n Values: " + matrix.getSetCharacterValues());
 		

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
-
-public class ColumnHead implements Serializable, Comparable<ColumnHead> {
+import com.google.gwt.user.client.rpc.IsSerializable;
+public class ColumnHead implements Serializable, IsSerializable, Comparable<ColumnHead> {
 	
 	private static final long serialVersionUID = 1L;
 

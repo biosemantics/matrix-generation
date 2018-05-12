@@ -1,10 +1,13 @@
 package edu.arizona.biosemantics.matrixgeneration.transform.complete;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.inject.Inject;
 
@@ -21,6 +24,7 @@ import edu.arizona.biosemantics.matrixgeneration.model.complete.Matrix;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Structure;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.StructureIdentifier;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Taxon;
+import edu.arizona.biosemantics.matrixgeneration.model.complete.AttributeCharacter;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Character;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
@@ -104,11 +108,14 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 					} catch(Throwable t) {
 						log(LogLevel.ERROR, "Searcher failed! ", t);
 					}
-						
-					searchCache.put(searchString, !ontologyEntries.isEmpty());
-					if(!ontologyEntries.isEmpty()) {
+					
+					
+				
+					boolean match = ontologyMatchSuccess(searchString, ontologyEntries);
+					searchCache.put(searchString, match);
+					if(match) { //check what has been matched!!
 						log(LogLevel.DEBUG, "Found ontology match for " + searchString);
-						updateStructure(structure, characterModifierValues);
+						updateStructure(structure, characterModifierValues); //use modifier as structure constraint
 						return;
 					}
 				}
@@ -117,6 +124,14 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 		}
 	}
 
+	private boolean ontologyMatchSuccess(String searchString, List<OntologyEntry> ontologyEntries){
+		for(OntologyEntry entry: ontologyEntries){
+			if(Double.compare(entry.getScore(), 1.0)>=0 || entry.getLabel().compareTo(searchString)==0){
+				return true;
+			}
+		}
+		return false;
+	}
 	private void updateStructure(Structure structure,
 			LinkedHashMap<Character, Values> matchedCharacterModifierValues) {
 		//Structure result = structure.clone();
@@ -135,12 +150,16 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 			}
 		}
 		constraintAddition = constraintAddition.trim();
-		
-		if(structure.getConstraint() == null)
+		if(structure.getConstraint() == null){
 			structure.setConstraint(constraintAddition);
-		else 
+			log(LogLevel.DEBUG, "Structure "+structure.getName() + " constraint is now "+constraintAddition);
+		}
+		else {
 			structure.setConstraint(constraintAddition + " " + structure.getConstraint());
+		}
+		
 	}
+	
 	
 	@Override
 	public String toString() {

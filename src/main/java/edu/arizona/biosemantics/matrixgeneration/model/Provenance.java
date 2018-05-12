@@ -1,8 +1,9 @@
 package edu.arizona.biosemantics.matrixgeneration.model;
 
 import java.io.Serializable;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class Provenance implements Serializable {
+public class Provenance implements Serializable, IsSerializable {
 
 	protected Class<?> source;
 	

@@ -3,8 +3,8 @@ package edu.arizona.biosemantics.matrixgeneration.model.raw;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-public class Column implements Serializable, Comparable<Column> {
+import com.google.gwt.user.client.rpc.IsSerializable;
+public class Column implements Serializable, IsSerializable, Comparable<Column> {
 	
 	private static final long serialVersionUID = 1L;
 

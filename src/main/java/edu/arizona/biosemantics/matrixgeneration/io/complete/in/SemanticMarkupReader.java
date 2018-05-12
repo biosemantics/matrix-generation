@@ -170,7 +170,7 @@ public class SemanticMarkupReader implements Reader {
 					for(Element structure : structures) {
 						String name = structure.getAttributeValue("name");
 						String constraint = structure.getAttributeValue("constraint");
-						String ontologyId = structure.getAttributeValue("ontologyid");
+						String ontologyId = structure.getAttributeValue("ontologyid"); //TODO: parse ontologyid value
 						if(name != null && name.equals("whole_organism") && (constraint == null || constraint.trim().isEmpty())) {
 							result = ontologyId;
 						}
@@ -211,7 +211,7 @@ public class SemanticMarkupReader implements Reader {
 		taxon.setTaxonIdentification(taxonIdentification);
 		StringBuilder descriptionBuilder = new StringBuilder();
 		
-		createWholeOrganism(wholeOrganismOntologyId, taxon, structureIdTaxonStructuresMap);
+		createWholeOrganism(wholeOrganismOntologyId, taxon, structureIdTaxonStructuresMap);//??
 		for (Element statement : statementXpath.evaluate(document)) {
 			String text = statement.getChild("text").getText();
 			descriptionBuilder.append(text + ". ");
@@ -339,7 +339,7 @@ public class SemanticMarkupReader implements Reader {
 				characters.put(character, character);
 			character = characters.get(character);
 			
-			String v = characterElement.getAttributeValue("value");
+			String v = characterElement.getAttributeValue("value"); //attribute value: growth_form's value is *plant*
 			Value value = new Value(v, new SemanticMarkupProvenance(taxon, character));
 			value.setIsModifier(Boolean.getBoolean(characterElement.getAttributeValue("is_modifier")));
 			value.setValueOriginal(characterElement.getAttributeValue("value_original"));
@@ -372,7 +372,7 @@ public class SemanticMarkupReader implements Reader {
 			value.setEstablishmentMeans(characterElement.getAttributeValue("establishment_means"));
 			value.setSrc(characterElement.getAttributeValue("src"));
 			
-			value.setStatement(statement);
+			value.setStatement(statement); //statement: object wrapping the sentence
 			
 			boolean isModifier = false;
 			try {

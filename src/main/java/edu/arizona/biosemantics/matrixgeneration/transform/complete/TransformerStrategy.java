@@ -18,7 +18,7 @@ public class TransformerStrategy implements Transformer {
 		for(Transformer transformer : transformers) {
 			log(LogLevel.DEBUG, "Transform using " + transformer.getClass());
 			transformer.transform(matrix);
-			log(LogLevel.INFO, "Matrix successfully transformed.\n Taxa: " + matrix.getTaxaCount() + 
+			log(LogLevel.INFO, "Matrix successfully transformed using "+transformer+" .\n Taxa: " + matrix.getTaxaCount() + 
 					"\n Characters: " + matrix.getCharactersCount() + "\n Values: " + matrix.getSetCharacterValues());
 			
 		}

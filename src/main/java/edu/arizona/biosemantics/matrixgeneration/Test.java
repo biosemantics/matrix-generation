@@ -29,18 +29,21 @@ public class Test {
 //				"\n Values: " + matrix.getSetCharacterValues());
 		/**/
 		String[] startArgs = {
-
 			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/FiveRanks/",
 			//"-input", "C:/Users/hongcui/Documents/trash/CathyTaxonComparisonDebug/Cathy/",
 			//"-output", "Test.csv",
 			//"-input", "C:/micropie/output",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
 			//"-output", "C:/micropie/outputser/MicroPIETest.csv",
-			"-input", "C:/Users/hongcui/Documents/etcsite/data/textCapture/charaparser/19/out",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
-			"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/21/matrix.ser",
+			
+
+			"-input", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/enhance",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
+			//"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/matrix.ser",
+			"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/matrix.csv",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
 			"-taxon_group", "PLANT",//PLANT, BACTERIA
-			"-output_format", "serialize" //serialize,csv
+			//"-output_format", "serialize" //serialize,csv
+			"-output_format", "csv" 
 		};
 		CLIMain.main(startArgs);
 	}
