@@ -138,7 +138,7 @@ public class CLIMain {
 			try {
 				TaxonGroup taxonGroup = TaxonGroup.valueOf(commandLine.getOptionValue("taxon_group"));
 				config.setTaxonGroup(taxonGroup);
-				if(taxonGroup.equals(TaxonGroup.BACTERIA))
+				if(taxonGroup.equals(TaxonGroup.PROKARYOTES))
 					config.setReader(MicroPIESemanticMarkupReader.class);
 				else
 					config.setReader(SemanticMarkupReader.class);
