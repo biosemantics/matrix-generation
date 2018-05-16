@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
-import com.google.gwt.user.client.rpc.IsSerializable;
+//import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class Taxon implements Serializable, IsSerializable {
+public class Taxon implements Serializable/*, IsSerializable*/ {
 	
 	private static final long serialVersionUID = 1L;
 	

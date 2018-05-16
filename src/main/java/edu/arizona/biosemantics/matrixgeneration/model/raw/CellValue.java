@@ -10,8 +10,8 @@ import java.util.Set;
 import edu.arizona.biosemantics.matrixgeneration.model.Provenance;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Value;
 import edu.arizona.biosemantics.matrixgeneration.model.complete.Values;
-import com.google.gwt.user.client.rpc.IsSerializable;
-public class CellValue implements Serializable, IsSerializable {
+//import com.google.gwt.user.client.rpc.IsSerializable;
+public class CellValue implements Serializable/*, IsSerializable*/ {
 	
 	private static final long serialVersionUID = 1L;
 

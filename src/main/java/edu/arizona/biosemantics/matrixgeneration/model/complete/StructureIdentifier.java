@@ -1,8 +1,8 @@
 package edu.arizona.biosemantics.matrixgeneration.model.complete;
 
 import java.io.Serializable;
-import com.google.gwt.user.client.rpc.IsSerializable;
-public class StructureIdentifier implements Serializable,IsSerializable, Comparable<StructureIdentifier> {
+//import com.google.gwt.user.client.rpc.IsSerializable;
+public class StructureIdentifier implements Serializable,/*IsSerializable,*/ Comparable<StructureIdentifier> {
 	
 	private static final long serialVersionUID = 1L;
 	

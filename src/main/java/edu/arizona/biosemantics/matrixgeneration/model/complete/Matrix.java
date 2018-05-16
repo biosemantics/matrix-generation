@@ -17,8 +17,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import edu.arizona.biosemantics.common.log.LogLevel;
 import edu.arizona.biosemantics.common.taxonomy.RankData;
 import edu.arizona.biosemantics.common.taxonomy.TaxonIdentification;
-import com.google.gwt.user.client.rpc.IsSerializable;
-public class Matrix implements Serializable, IsSerializable {
+//import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class Matrix implements Serializable/*, IsSerializable*/ {
 	
 	private static final long serialVersionUID = 1L;
 
