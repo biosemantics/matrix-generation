@@ -12,11 +12,10 @@ public class NameOrganColumnHeadRawenizer implements ColumnHeadRawenizer {
 	@Override
 	public ColumnHead transform(Character character) {
 		String name = character.getName();
-		if(!character.getBearerStructureIdentifier().getStructureName().equals("whole_organism")){ 
-			//??structure display name need to be constructed from structure, not character.getBearerStructureIdentifier(), because it is not updated in FixConstraintedStructuresTransformer
+		//if(!character.getBearerStructureIdentifier().getStructureName().equals("whole_organism")){ //whole_organism hide/show later in etcsite matrixGenerationService
 			name = character.getName() + " " + character.getConnector() + " " + character.getBearerStructureIdentifier().getDisplayName();
-		}else
-			name = character.getName();		//not show string 'whole_organism' in matrix, but still keep the character
+		//}else
+		//	name = character.getName();		
 		return new ColumnHead(name, character, this);
 	}
 
