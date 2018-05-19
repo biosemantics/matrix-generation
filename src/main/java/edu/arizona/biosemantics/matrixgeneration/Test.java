@@ -36,9 +36,9 @@ public class Test {
 			//"-output", "C:/micropie/outputser/MicroPIETest.csv",
 			
 
-			"-input", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/enhance",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
+			"-input", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/117/enhance",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
 			//"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/matrix.ser",
-			"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/matrix.csv",
+			"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/117/matrix.csv",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
 			"-taxon_group", "PLANT",//PLANT, PROKARYOTES

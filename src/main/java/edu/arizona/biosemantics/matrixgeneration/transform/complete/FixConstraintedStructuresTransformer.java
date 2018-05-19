@@ -33,7 +33,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 
 	private LinkedList<Searcher> searchers;
 	private Map<String, Boolean> searchCache = new HashMap<String, Boolean>();
-	
+
 	@Inject
 	public FixConstraintedStructuresTransformer(TaxonGroup taxonGroup) {
 		searchers = new LinkedList<Searcher>();
@@ -41,7 +41,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 		for(Ontology ontology : TaxonGroupOntology.getEntityOntologies(taxonGroup)) 
 			searchers.add(new FileSearcher(ontology, Configuration.ontologyDirectory, Configuration.wordNetDirectory));
 	}
-	
+
 	@Override
 	public void transform(Matrix matrix) {
 		for(Taxon taxon : matrix.getTaxa()) {
@@ -50,67 +50,91 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 				fixStructure(structure);
 				StructureIdentifier newStructureIdentifier = new StructureIdentifier(structure);
 				//if(!oldStructureIdentifier.equals(newStructureIdentifier))
-					matrix.updateStructure(structure, oldStructureIdentifier,  newStructureIdentifier, taxon);
+				matrix.updateStructure(structure, oldStructureIdentifier,  newStructureIdentifier, taxon);
 			}
 		}
 	}
 
 	private void fixStructure(Structure structure) {	
 		StructureIdentifier structureIdentifier = new StructureIdentifier(structure);
-		
-		//restore order because we only want to search the terms in ontology in order they appeared in text
+
+		// old
+		// restore order because we only want to search the terms in ontology in order they appeared in text
 		// e.g. rarely secondary leaf apex. rarely, secondary and leaf are is_modifier characters to apex structure
 		// then we only want to search for, the following, and in that order:
 		// rarely secondary leaf apex
 		// secondary leaf apex
 		// leaf apex
 		// apex
+
+		// new
+		//simpler search, search only the qualified value closest to structure
 		LinkedHashMap<Character, Values> characterModifierValues = new LinkedHashMap<Character, Values>();
-		
-		/*for(Character character : structure.getCharacters()) {
-			for(Value value : structure.getCharacterValues(character)) {
-				log(LogLevel.DEBUG, "value: " + value.getIsModifier());
-				System.out.println(value.getIsModifier());
-			}
-		}*/
-		
+		Value lastModifierValue = null;
+		Character lastModifierCharacter = null;
 		for(Character character : structure.getCharacters()) {
-			Values values = structure.getCharacterValues(character);
-			
-			for(Value value : values) {
-				if(value.getIsModifier() && !character.getName().equals("quantity") ) {
-					if(!characterModifierValues.containsKey(character))
-						characterModifierValues.put(character, new Values());
-					characterModifierValues.get(character).add(value);
+			if(!character.getName().equals("quantity")) {
+				Values values = structure.getCharacterValues(character);
+				
+                //          old: include all modifiers  
+				//			for(Value value : values) {
+				//				if(value.getIsModifier()) { 
+				//					if(!characterModifierValues.containsKey(character))
+				//						characterModifierValues.put(character, new Values());
+				//					characterModifierValues.get(character).add(value);
+				//
+				//				}
+				//			}
+
+				//new : find qualified modifiers
+
+				for(Value value : values) {
+					if(value.getIsModifier())
+						lastModifierValue = value;
+				}
+
+				if(lastModifierValue!=null && !lastModifierValue.getValue().contains(" - ")){
+					lastModifierCharacter = character;
 				}
 			}
 		}
 		
-		while(!characterModifierValues.isEmpty()) {
+		if(lastModifierCharacter!=null && lastModifierValue!=null){
+			if(!characterModifierValues.containsKey(lastModifierCharacter))
+				characterModifierValues.put(lastModifierCharacter, new Values());
+			characterModifierValues.get(lastModifierCharacter).add(lastModifierValue);
+		}
+
+		while(!characterModifierValues.isEmpty()){//only one values. 
 			String searchString = "";
 			for(Values modifierValues : characterModifierValues.values()) {
-				searchString += modifierValues.getCombinedText(" ") + " ";
+				//searchString += modifierValues.getCombinedText(" ") + " ";
+				searchString = modifierValues.getCombinedText(" ") + " "; //new: keep only the last modifier, which is the closest to the structure in original description
 			}
+
 			searchString = (searchString + structureIdentifier.getDisplayName()).trim();
 			log(LogLevel.DEBUG, "Search for " + searchString + " (Is_modifier characters " + characterModifierValues.keySet().size() + ")");
-			
+
 			if(!searchString.isEmpty()) {
 				if(searchCache.containsKey(searchString) && searchCache.get(searchString)) {
 					updateStructure(structure, characterModifierValues);
 					return;
 				}
-				
+
 				for(Searcher searcher : searchers) {
 					log(LogLevel.DEBUG, "Try searcher " + searcher);
 					List<OntologyEntry> ontologyEntries = new LinkedList<OntologyEntry>();
 					try {
 						ontologyEntries = searcher.getEntityEntries(searchString, "", "");
+						if(!ontologyEntries.isEmpty()){
+							log(LogLevel.DEBUG, searcher +" found ontology match for " + searchString);
+						}
 					} catch(Throwable t) {
 						log(LogLevel.ERROR, "Searcher failed! ", t);
 					}
-					
-					
-				
+
+                    //elongate lower pedicel => match score 1.0, label:  lower region and (part_of some pedicel)
+
 					boolean match = ontologyMatchSuccess(searchString, ontologyEntries);
 					searchCache.put(searchString, match);
 					if(match) { //check what has been matched!!
@@ -126,7 +150,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 
 	private boolean ontologyMatchSuccess(String searchString, List<OntologyEntry> ontologyEntries){
 		for(OntologyEntry entry: ontologyEntries){
-			if(Double.compare(entry.getScore(), 1.0)>=0 || entry.getLabel().compareTo(searchString)==0){
+			if(entry.getLabel().compareTo(searchString)==0){// //elongate lower pedicel => match score 1.0, label:  lower region and (part_of some pedicel)
 				return true;
 			}
 		}
@@ -135,14 +159,14 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 	private void updateStructure(Structure structure,
 			LinkedHashMap<Character, Values> matchedCharacterModifierValues) {
 		//Structure result = structure.clone();
-		
+
 		String constraintAddition = "";
 		for(Character matchedCharacter : matchedCharacterModifierValues.keySet()) {
 			Values values = structure.getCharacterValues(matchedCharacter);
 			if(values != null) {
 				Values toRemove = matchedCharacterModifierValues.get(matchedCharacter);
 				constraintAddition += toRemove.getCombinedText(" ") + " ";
-				
+
 				values.removeAll(toRemove);
 				if(values.isEmpty()) {
 					structure.removeCharacterValues(matchedCharacter);
@@ -157,10 +181,10 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 		else {
 			structure.setConstraint(constraintAddition + " " + structure.getConstraint());
 		}
-		
+
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName();
