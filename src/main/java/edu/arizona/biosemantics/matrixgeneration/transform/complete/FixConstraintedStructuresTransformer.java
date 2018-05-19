@@ -78,7 +78,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 			Values values = structure.getCharacterValues(character);
 			
 			for(Value value : values) {
-				if(value.getIsModifier()) {
+				if(value.getIsModifier() && !character.getName().equals("quantity") ) {
 					if(!characterModifierValues.containsKey(character))
 						characterModifierValues.put(character, new Values());
 					characterModifierValues.get(character).add(value);
