@@ -70,7 +70,8 @@ public class Matrix implements Serializable/*, IsSerializable*/ {
 		for(Taxon taxon : getTaxa()) {
 			for(Structure structure : taxon.getStructures()) {
 				for(Character character : structure.getCharacters()) {
-					values.addAll(structure.getCharacterValues(character).getAll());
+					if(structure.getCharacterValues(character)!=null)
+						values.addAll(structure.getCharacterValues(character).getAll());
 				}
 			}
 		}
