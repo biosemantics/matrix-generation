@@ -7,6 +7,7 @@ import edu.arizona.biosemantics.matrixgeneration.transform.complete.NormalizeUni
 
 /**
  * 4. allow the user to set the unit (m or mm etc.) to be used.
+ * NOT USED. StandardizeUnits conducted in enhance!
  * @author rodenhausen
  */
 public class NormalizeUnitsTransformer implements Transformer {
