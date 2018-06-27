@@ -41,6 +41,8 @@ public class Test {
 			"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/117/matrix.csv",
 			"-up_ontology_inheritance",
 			"-down_ontology_inheritance",
+			"-presence_relation",
+			"-presence_entity",
 			"-taxon_group", "PLANT",//PLANT, PROKARYOTES
 			//"-output_format", "serialize" //serialize,csv
 			"-output_format", "csv" 
