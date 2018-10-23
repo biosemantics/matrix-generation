@@ -188,7 +188,7 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.oto</groupId>
 			<artifactId>oto-common</artifactId>
-			<version>0.0.30-SNAPSHOT</version>
+			<version>0.0.34-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

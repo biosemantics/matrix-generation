@@ -36,16 +36,19 @@ public class Test {
 			//"-output", "C:/micropie/outputser/MicroPIETest.csv",
 			
 
-			"-input", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/117/enhance",//76,00_output_by_TC_task_56,C:/etcsitebase/etcsite/data/users/1/000   C:/micropie/output
+			"-input", "C:/Users/hongcui/Documents/research/AuthorOntology/Data/Descriptions and Parsing/Carex_from_FNA_no_Keys_Term_Reviewed/out",
+			
+			//"C:/Users/hongcui/Lorena/Farjon_parsed0712_hong_local_parse_enhance",
 			//"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/matrix.ser",
-			"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/117/matrix.csv",
-			"-up_ontology_inheritance",
-			"-down_ontology_inheritance",
-			"-presence_relation",
-			"-presence_entity",
+			"-output", "C:/Users/hongcui/Documents/research/AuthorOntology/Data/Descriptions and Parsing/Carex_from_FNA_no_Keys_Term_Reviewed/matrix.ser",
+			//"C:/Users/hongcui/Lorena/Farjon_Matrix_etc_site/Farjon_matrix_local_enhance_mg_no_inference_no_inheritance.ser",
+			//"-up_ontology_inheritance",
+			//"-down_ontology_inheritance",
+			//"-presence_relation",
+			//"-presence_entity",
 			"-taxon_group", "PLANT",//PLANT, PROKARYOTES
-			//"-output_format", "serialize" //serialize,csv
-			"-output_format", "csv" 
+			"-output_format", "serialize" //serialize,csv //Matrix.ser, then run MatrixGenerationService.main to get final matrix 8/13/2018 
+			//"-output_format", "csv" 
 		};
 		CLIMain.main(startArgs);
 	}

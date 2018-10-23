@@ -93,7 +93,7 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 						lastModifierValue = value;
 				}
 
-				if(lastModifierValue!=null && !lastModifierValue.getValue().contains(" - ")){
+				if(lastModifierValue!=null && lastModifierValue.getValue()!=null && !lastModifierValue.getValue().contains(" - ")){
 					lastModifierCharacter = character;
 				}
 			}
