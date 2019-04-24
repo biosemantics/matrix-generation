@@ -37,9 +37,18 @@ public class FixConstraintedStructuresTransformer implements Transformer {
 	@Inject
 	public FixConstraintedStructuresTransformer(TaxonGroup taxonGroup) {
 		searchers = new LinkedList<Searcher>();
+		
+		HashSet<String> entityOntologyNames = new HashSet<String>();
+		HashSet<String> qualityOntologyNames = new HashSet<String>();
 
-		for(Ontology ontology : TaxonGroupOntology.getEntityOntologies(taxonGroup)) 
-			searchers.add(new FileSearcher(ontology, Configuration.ontologyDirectory, Configuration.wordNetDirectory));
+		for(Ontology ontology : TaxonGroupOntology.getEntityOntologies(taxonGroup)){ 
+			entityOntologyNames.add(ontology.name());
+		}
+		
+		/*for(Ontology ontology : TaxonGroupOntology.getExtraQualityOntologies(taxonGroup)){ 
+			qualityOntologyNames.add(ontology.name());
+		}*/
+		searchers.add(new FileSearcher(entityOntologyNames, qualityOntologyNames, Configuration.ontologyDirectory, Configuration.wordNetDirectory, true));
 	}
 
 	@Override

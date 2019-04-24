@@ -36,11 +36,11 @@ public class Test {
 			//"-output", "C:/micropie/outputser/MicroPIETest.csv",
 			
 
-			"-input", "C:/Users/hongcui/Documents/research/AuthorOntology/Data/Descriptions and Parsing/Carex_from_FNA_no_Keys_Term_Reviewed/out",
+			"-input", "C:/Users/hongcui/Documents/etc-development/enhance/out",
 			
 			//"C:/Users/hongcui/Lorena/Farjon_parsed0712_hong_local_parse_enhance",
 			//"-output", "C:/Users/hongcui/Documents/etcsite/data/matrixGeneration/71/matrix.ser",
-			"-output", "C:/Users/hongcui/Documents/research/AuthorOntology/Data/Descriptions and Parsing/Carex_from_FNA_no_Keys_Term_Reviewed/matrix.ser",
+			"-output", "C:/Users/hongcui/Documents/etc-development/enhance/input-xml-Matrix.ser",
 			//"C:/Users/hongcui/Lorena/Farjon_Matrix_etc_site/Farjon_matrix_local_enhance_mg_no_inference_no_inheritance.ser",
 			//"-up_ontology_inheritance",
 			//"-down_ontology_inheritance",

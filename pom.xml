@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.arizona.biosemantics.matrixgeneration</groupId>
 	<artifactId>matrix-generation</artifactId>
-	<version>0.1.72-SNAPSHOT</version>
+	<version>0.1.73-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.common.ontology</groupId>
 			<artifactId>search</artifactId>
-			<version>0.0.30-SNAPSHOT</version>
+			<version>0.0.31-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>owlapi-distribution</artifactId>
@@ -188,7 +188,7 @@
 		<dependency>
 			<groupId>edu.arizona.biosemantics.oto</groupId>
 			<artifactId>oto-common</artifactId>
-			<version>0.0.34-SNAPSHOT</version>
+			<version>0.0.35-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
